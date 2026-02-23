@@ -1,0 +1,17 @@
+{
+  "id": "testing-logins-00",
+  "url": "https://dev.clever.com/docs/il-testing",
+  "path": "/docs/il-testing",
+  "section": "Discovered",
+  "title": "Testing Logins",
+  "heading": "Testing Logins",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Testing Logins"
+  ],
+  "content": "## \n\nBefore you start testing...\n\n[](#before-you-start-testing)\n\n-   Have you implemented [Instant Login with OAuth 2.0?](/docs/identity-api)?\n-   Have you configured your redirect URLs?\n\n## \n\nTesting Individual Users\n\n[](#testing-individual-users)\n\n## \n\nUsing sandbox user credentials\n\n[](#using-sandbox-user-credentials)\n\nIf you're using Clever's default sandbox district (auto-connected with your application):\n\n1.  Initiate a login. You can do this one of three ways:\n\n-   Go to the district overview in your Clever dashboard. Copy the Portal URL, and after logging in, click your application's icon.\n-   Go to the district overview in your Clever dashboard. Copy the Instant Login link and log in there.\n-   Use a Log in with Clever button.\n\n2.  All sandboxes should be set up so the default credentials are:\n\n-   Student: username and password are the student's `student_number` (e.g., 243615677)\n-   Teacher: username and password are the teacher's `teacher_number` (e.g., 215041)\n-   School admin: username and password are the school admin's `staff_id` (e.g., 12342)\n-   District admins may only be tested in [custom sandbox districts](/docs/custom-sandbox-districts).\n\nYou can download the default district CSVs to test other users [here](https://assets.clever.com/devdocs/default_sandbox_data.zip).\n\nIf you're using a [custom sandbox](/docs/custom-sandbox-districts) district instead, you must configure and review your Single Sign On user credentials settings.\n\n## \n\nSecure Sync only: SSO debugging tools\n\n[](#secure-sync-only-sso-debugging-tools)\n\nIn the Data Browser, open up the Detail View for a user where there is a link to log in as the user. This link sends a user-authenticated request to your app, so you can see what the user sees when they access your app through Clever.\n\nThis works for all user types that your application supports: students, teachers, school and district admins.\n\n![1290](https://files.readme.io/4e40e39-debugging-instant-login.png \"debugging-instant-login.png\")",
+  "tokenEstimate": 502,
+  "crawledAt": "2026-02-23T02:55:12.724Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

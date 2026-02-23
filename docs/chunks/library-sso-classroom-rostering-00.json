@@ -1,0 +1,17 @@
+{
+  "id": "library-sso-classroom-rostering-00",
+  "url": "https://dev.clever.com/docs/library-sso",
+  "path": "/docs/library-sso",
+  "section": "Clever SSO",
+  "title": "Library SSO + Classroom Rostering",
+  "heading": "Library SSO + Classroom Rostering",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Library SSO + Classroom Rostering"
+  ],
+  "content": "This page provides a high-level set of considerations for the Library SSO and Rostering integration type with Clever.",
+  "tokenEstimate": 30,
+  "crawledAt": "2026-02-23T02:55:07.205Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

@@ -1,0 +1,17 @@
+{
+  "id": "district-sso-vs-library-sso-00",
+  "url": "https://dev.clever.com/docs/district-sso-vs-library-sso",
+  "path": "/docs/district-sso-vs-library-sso",
+  "section": "Clever SSO",
+  "title": "District SSO vs Library SSO",
+  "heading": "District SSO vs Library SSO",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "District SSO vs Library SSO"
+  ],
+  "content": "This page will cover the key differences and workflows between these two SSO integration types.",
+  "tokenEstimate": 24,
+  "crawledAt": "2026-02-23T02:55:07.957Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

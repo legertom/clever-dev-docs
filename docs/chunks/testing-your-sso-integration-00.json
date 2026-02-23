@@ -1,0 +1,17 @@
+{
+  "id": "testing-your-sso-integration-00",
+  "url": "https://dev.clever.com/docs/testing-your-sso-integration",
+  "path": "/docs/testing-your-sso-integration",
+  "section": "Clever SSO",
+  "title": "Testing Your SSO Integration",
+  "heading": "Testing Your SSO Integration",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Testing Your SSO Integration"
+  ],
+  "content": "This page will walk you through how you can test your SSO integration(s) in preparation for certification.",
+  "tokenEstimate": 27,
+  "crawledAt": "2026-02-23T02:55:07.877Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

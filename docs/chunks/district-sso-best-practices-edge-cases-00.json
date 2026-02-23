@@ -1,0 +1,17 @@
+{
+  "id": "district-sso-best-practices-edge-cases-00",
+  "url": "https://dev.clever.com/docs/best-practices-edge-cases",
+  "path": "/docs/best-practices-edge-cases",
+  "section": "Clever SSO",
+  "title": "District SSO - Best Practices & Edge Cases",
+  "heading": "District SSO - Best Practices & Edge Cases",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "District SSO - Best Practices & Edge Cases"
+  ],
+  "content": "This page highlights best practices for a successful SSO integration and describes how to handle certain edge cases.",
+  "tokenEstimate": 29,
+  "crawledAt": "2026-02-23T02:55:06.692Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

@@ -1,0 +1,17 @@
+{
+  "id": "districts-00",
+  "url": "https://dev.clever.com/docs/districts",
+  "path": "/docs/districts",
+  "section": "APIs & Data Model",
+  "title": "Districts",
+  "heading": "Districts",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Districts"
+  ],
+  "content": "Clever has a district-centric data model – our top-level object is the district. Districts contain schools, terms, courses, sections, and users.",
+  "tokenEstimate": 36,
+  "crawledAt": "2026-02-23T02:55:02.947Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

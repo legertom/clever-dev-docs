@@ -1,0 +1,17 @@
+{
+  "id": "clever-lms-connect-grade-passback-api-error-responses-00",
+  "url": "https://dev.clever.com/docs/clever-lms-connect-grade-passback-api-error-responses",
+  "path": "/docs/clever-lms-connect-grade-passback-api-error-responses",
+  "section": "LMS Connect (v3.1)",
+  "title": "Clever LMS Connect - Grade Passback API Error Responses",
+  "heading": "Clever LMS Connect - Grade Passback API Error Responses",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Clever LMS Connect - Grade Passback API Error Responses"
+  ],
+  "content": "The table below lists specific Grade Passback API Error messages and what actions trigger the error.\n\n  \n\nAction\n\nHTTP Code\n\nClever API Response\n\nDid not include required fields when creating an assignment\n\n400\n\n`{\"message\":\"missing required field(s): title, description, due_date\"}`\n\nDid not include request body when creating an assignment\n\n400\n\n`{\"message\":\"request body is required, but was empty\"}`\n\nDue\\_date value provided references a date in the past\n\n400\n\n`{\"message\":\"due_date must be in the future\"}`\n\nInvalid character provided in request body\n\n400\n\n`Invalid character ' ' in string escape code`\n\nDid not include a value for submission\\_types\n\n400\n\n`{\"message\":\"validation failure list:\\nsubmission_types.0 in body should be one of [link file text discussion]\"}`\n\nDid not include a value for a field in the request body, but a comma is present in JSON formatting  \n  \nE.g.:  \n`{`  \n`\"assignee_mode\": ,`  \n`}`\n\n400\n\n`{\"message\":\"invalid character ',' looking for beginning of value\"}`\n\nInvalid JSON formatting\n\n400\n\n`{\"message\":\"invalid character ':' after object key:value pair\"}`\n\nGET call to /sections/{id}/assignments/{id} with a misconfigured/invalid assignment ID\n\n400\n\n`{\"message\":\"INVALID_ID\"}`\n\nUpdating a submission with an invalid teacher Clever ID value for grader\\_id\n\n400\n\n`{\"message\":\"NOT_FOUND: Person with id clever:{{lms_canvas_demo_teacher_id}} not found for this integration.\"}`\n\nAttempting to update an assignment due date to a date in the past\n\n400\n\n`{\"message\":\"parsing time \\\"YYYY-MM-DD\\\": day out of range\"}`\n\nDid not include District-app token in API call\n\n401\n\n`{\"message\": \"No authorization provided\"}`\n\nIncorrect/invalid token provided in request\n\n403\n\n`{\"message\": \"Could not authorize token\"}`\n\nGET call after assignment has been deleted (in LMS UI or via DEL call)\n\n404\n\n`{\"message\":\"Assignment does not exist\"}`\n\nQuerying or updating submissions for a user not currently enrolled in section or assigned to the assignment\n\n404\n\n`{\"message\":\"User not found\"}`\n\nUsing an unsupported HTTP method in API query\n\n405 (method not allowed)\n\nEmpty message",
+  "tokenEstimate": 523,
+  "crawledAt": "2026-02-23T02:55:01.713Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

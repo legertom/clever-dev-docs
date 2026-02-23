@@ -1,0 +1,17 @@
+{
+  "id": "example-sso-application-00",
+  "url": "https://dev.clever.com/docs/il-example",
+  "path": "/docs/il-example",
+  "section": "Discovered",
+  "title": "Example SSO Application",
+  "heading": "Example SSO Application",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Example SSO Application"
+  ],
+  "content": "Walking through the Clever SSO flow using an example Python application",
+  "tokenEstimate": 18,
+  "crawledAt": "2026-02-23T02:55:13.359Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

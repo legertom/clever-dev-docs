@@ -1,0 +1,17 @@
+{
+  "id": "liwc-ios-update-00",
+  "url": "https://dev.clever.com/docs/liwc-ios-update",
+  "path": "/docs/liwc-ios-update",
+  "section": "Clever with iOS",
+  "title": "LIWC iOS Update",
+  "heading": "LIWC iOS Update",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "LIWC iOS Update"
+  ],
+  "content": "We've updated how we manage logging in with Clever via native iOS applications. We've updated our documentation to ensure that you don't run into any unexpected behaviors and to improve the overall quality of life of your applications.",
+  "tokenEstimate": 59,
+  "crawledAt": "2026-02-23T02:55:10.716Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

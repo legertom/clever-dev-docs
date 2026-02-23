@@ -1,0 +1,17 @@
+{
+  "id": "schools-00",
+  "url": "https://dev.clever.com/docs/schools",
+  "path": "/docs/schools",
+  "section": "APIs & Data Model",
+  "title": "Schools",
+  "heading": "Schools",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Schools"
+  ],
+  "content": "While schools are not the highest-level object in Clever's data model, every user, term, course, and section must be associated with at least one school. User records can be associated with multiple schools!",
+  "tokenEstimate": 52,
+  "crawledAt": "2026-02-23T02:55:03.338Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

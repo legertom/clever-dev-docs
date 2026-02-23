@@ -1,0 +1,17 @@
+{
+  "id": "concept-guide-00",
+  "url": "https://dev.clever.com/docs/contacts-migrations-concept-guide",
+  "path": "/docs/contacts-migrations-concept-guide",
+  "section": "What's New",
+  "title": "Concept Guide",
+  "heading": "Concept Guide",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Concept Guide"
+  ],
+  "content": "This page will walk you through the key concepts behind a migration from v2.x contacts to v3.x contacts.",
+  "tokenEstimate": 26,
+  "crawledAt": "2026-02-23T02:55:00.094Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

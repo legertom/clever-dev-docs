@@ -1,0 +1,17 @@
+{
+  "id": "schema-00",
+  "url": "https://dev.clever.com/docs/schema-1",
+  "path": "/docs/schema-1",
+  "section": "APIs & Data Model",
+  "title": "Schema",
+  "heading": "Schema",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Schema"
+  ],
+  "content": "Below each object, we've added a sample record with available fields - we've sorted the fields for clarity, but they may be returned in any order.",
+  "tokenEstimate": 37,
+  "crawledAt": "2026-02-23T02:55:02.778Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

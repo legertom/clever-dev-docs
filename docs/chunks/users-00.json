@@ -1,0 +1,17 @@
+{
+  "id": "users-00",
+  "url": "https://dev.clever.com/docs/users",
+  "path": "/docs/users",
+  "section": "APIs & Data Model",
+  "title": "Users",
+  "heading": "Users",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Users"
+  ],
+  "content": "The User object is a brand new object within Clever's Data Model and is reflected in updates to other objects and endpoints as well. The User object consolidates all user types, namely students, teachers, contacts, district admins, and staff.",
+  "tokenEstimate": 61,
+  "crawledAt": "2026-02-23T02:55:04.170Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

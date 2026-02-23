@@ -1,0 +1,17 @@
+{
+  "id": "lti-1-3-sso-testing-and-end-user-behavior-00",
+  "url": "https://dev.clever.com/docs/lti-13-sso-setup-and-end-user-behavior",
+  "path": "/docs/lti-13-sso-setup-and-end-user-behavior",
+  "section": "LMS Connect (v3.1)",
+  "title": "LTI 1.3 SSO - Testing and End-User Behavior",
+  "heading": "LTI 1.3 SSO - Testing and End-User Behavior",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "LTI 1.3 SSO - Testing and End-User Behavior"
+  ],
+  "content": "This document covers the implementation details of LTI 1.3 SSO with Clever LMS Connect.",
+  "tokenEstimate": 22,
+  "crawledAt": "2026-02-23T02:55:01.169Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

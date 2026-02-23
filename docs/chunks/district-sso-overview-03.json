@@ -1,0 +1,17 @@
+{
+  "id": "district-sso-overview-03",
+  "url": "https://dev.clever.com/docs/identity-api",
+  "path": "/docs/identity-api",
+  "section": "Discovered",
+  "title": "District SSO Overview",
+  "heading": "District SSO Overview",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "District SSO Overview"
+  ],
+  "content": "> ## 📘\n> \n> Get Set Up for OIDC\n> \n> To use OpenID Connect with Clever and receive identity tokens, you must first contact [\\[email protected\\]](/cdn-cgi/l/email-protection#6c050218090b1e0d180503021f2c0f00091a091e420f0301) to have your application appropriately configured.\n\n## \n\nThe Discovery Endpoint\n\n[](#the-discovery-endpoint)\n\nAn OIDC compliant provider such as Clever shares necessary information about their requirements at something called the discovery endpoint. Clever's discovery endpoint is:\n\n`https://clever.com/.well-known/openid-configuration`\n\nEven this endpoint is set up according to a standard format, so in many cases all you need to know is that Clever supports OIDC and the issuer is `https://clever.com`.\n\nThe discovery endpoint tells any authentication service where and how to kick off the authentication process, get tokens, and verify the tokens.\n\n## \n\nAn Example Configuration\n\n[](#an-example-configuration)\n\nSetting up OIDC with most authentication services usually only requires filling out a few fields. This example is for AWS Cognito, but the required fields should be similar for many other providers:\n\n![593](https://files.readme.io/f022a80-AWS_OIDC_configuration.png \"AWS OIDC configuration.png\")\n\nExample OIDC configuration for AWS Cognitio\n\n-   **Provider name:** this can be anything you'd like to use, but \"Clever\" makes a lot of sense here!\n-   **Client ID:** your application's Client ID, found on the Clever application dashboard\n-   **Client secret:** your application's Client secret. This is required for authenticating with Clever\n-   **Attributes request method:** Clever supports both POST and GET\n-   **Authorize scope:** Clever manages scopes through application configuration, so this is not required by Clever. However, some authentication services may still require a value of openid at a minimum\n-   **Issuer:** this is used to make a call to the discovery endpoint to grab the rest of the information needed to connect with Clever",
+  "tokenEstimate": 497,
+  "crawledAt": "2026-02-23T02:55:11.682Z",
+  "chunkIndex": 3,
+  "totalChunks": 4
+}

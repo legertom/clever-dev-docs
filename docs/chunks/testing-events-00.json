@@ -1,0 +1,17 @@
+{
+  "id": "testing-events-00",
+  "url": "https://dev.clever.com/docs/testing-events",
+  "path": "/docs/testing-events",
+  "section": "Discovered",
+  "title": "Testing Events",
+  "heading": "Testing Events",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Testing Events"
+  ],
+  "content": "In order to test events, you'll need to create a [custom sandbox district](/docs/custom-sandbox-districts) - this will allow you to switch data sets and generate events. Each of our data sets has several days worth of data, which will cover common data changes from districts.\n\nIn addition to testing events, make sure you test your onboarding and initialization processes, and run a full data sync to ensure that all data is being handled correctly.",
+  "tokenEstimate": 113,
+  "crawledAt": "2026-02-23T02:55:11.622Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

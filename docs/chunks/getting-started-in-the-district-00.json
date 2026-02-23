@@ -1,0 +1,17 @@
+{
+  "id": "getting-started-in-the-district-00",
+  "url": "https://dev.clever.com/docs/district-getting-started",
+  "path": "/docs/district-getting-started",
+  "section": "District Rostering (Secure Sync)",
+  "title": "Getting Started in the District",
+  "heading": "Getting Started in the District",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Getting Started in the District"
+  ],
+  "content": "> ## 📣\n> \n> New: Clever Complete\n> \n> With Clever Complete, your application can now support any K–12 district, even those that aren’t using Clever. Clever now provides a partner-branded district experience, so you can deliver rostering, SSO, LMS integrations, and more for districts that don’t want to manage a separate Clever account. Sign up [here](https://www.clever.com/developer-signup) to learn more.\n\n  \n\n# \n\nClever Secure Sync\n\n[](#clever-secure-sync)\n\nClever Secure Sync lets you sync data from every SIS with one integration. Instead of building a separate connector for OneRoster files, PowerSchool, Aeries, Skyward, Infinite Campus, eSchoolPlus, and more, you can quickly provision accounts and use that time to improve your core product.\n\n## \n\nSecure Sync\n\n[](#secure-sync)\n\nSecure Sync allows you to:\n\n-   Access information about users and provision accounts in advance.\n-   Access roster information such as student-teacher associations and classroom data.\n\nClassroom-only applications have access to user information only when the user logs in through Instant Login (IL).\n\nNot sure if Secure Sync is right for you? Reach out to [\\[email protected\\]](/cdn-cgi/l/email-protection#a6c7d6d6cacfc5c7d2cfc9c88bcfc8d2c3d4c3d5d2e6c5cac3d0c3d488c5c9cb) and we'll get you in touch with our Application Partnerships team.\n\n## \n\nGetting Started with Secure Sync\n\n[](#getting-started-with-secure-sync)\n\nFirst, check out [Clever's Data Model](/docs/data-model) to understand how data is organized in Clever. There are three major components to a solid Secure Sync integration:\n\n1.  **Onboarding Districts**: Identifying the district-app token and preparing to ingest data.\n2.  **Initial Sync**: Matching existing data and provisioning accounts for the first time.\n3.  **Ongoing Sync**: Handling changes to data on an ongoing basis, including semester and school-year rollover.\n\nWe'll go over best practices for each of these pieces in the next three pages.",
+  "tokenEstimate": 491,
+  "crawledAt": "2026-02-23T02:55:04.055Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

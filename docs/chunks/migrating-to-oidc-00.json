@@ -1,0 +1,17 @@
+{
+  "id": "migrating-to-oidc-00",
+  "url": "https://dev.clever.com/docs/migrating-to-oidc",
+  "path": "/docs/migrating-to-oidc",
+  "section": "OAuth and OIDC",
+  "title": "Migrating to OIDC",
+  "heading": "Migrating to OIDC",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Migrating to OIDC"
+  ],
+  "content": "This page is for migrating your Clever SSO app to use OIDC.",
+  "tokenEstimate": 15,
+  "crawledAt": "2026-02-23T02:55:09.663Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

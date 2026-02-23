@@ -1,0 +1,17 @@
+{
+  "id": "terms-00",
+  "url": "https://dev.clever.com/docs/terms",
+  "path": "/docs/terms",
+  "section": "APIs & Data Model",
+  "title": "Terms",
+  "heading": "Terms",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Terms"
+  ],
+  "content": "Terms are an optional data type - these are only created if a district sends us term information.",
+  "tokenEstimate": 25,
+  "crawledAt": "2026-02-23T02:55:03.240Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

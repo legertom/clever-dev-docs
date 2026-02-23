@@ -1,0 +1,17 @@
+{
+  "id": "resources-00",
+  "url": "https://dev.clever.com/docs/resources",
+  "path": "/docs/resources",
+  "section": "APIs & Data Model",
+  "title": "Resources",
+  "heading": "Resources",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Resources"
+  ],
+  "content": "Resources are an optional data type - resources can be created by applications and assigned to courses by district admins. If a resource is created and assigned to a course, the fields below are guaranteed.",
+  "tokenEstimate": 52,
+  "crawledAt": "2026-02-23T02:55:03.541Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

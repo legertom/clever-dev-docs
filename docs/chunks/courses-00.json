@@ -1,0 +1,17 @@
+{
+  "id": "courses-00",
+  "url": "https://dev.clever.com/docs/courses",
+  "path": "/docs/courses",
+  "section": "APIs & Data Model",
+  "title": "Courses",
+  "heading": "Courses",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Courses"
+  ],
+  "content": "Courses are an optional data type - courses are only created if a district chooses to sync course information to Clever.",
+  "tokenEstimate": 30,
+  "crawledAt": "2026-02-23T02:55:03.508Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

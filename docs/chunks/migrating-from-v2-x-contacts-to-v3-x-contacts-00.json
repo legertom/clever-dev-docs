@@ -1,0 +1,17 @@
+{
+  "id": "migrating-from-v2-x-contacts-to-v3-x-contacts-00",
+  "url": "https://dev.clever.com/docs/migrating-from-v2x-contacts-to-v3x-contacts",
+  "path": "/docs/migrating-from-v2x-contacts-to-v3x-contacts",
+  "section": "What's New",
+  "title": "Migrating from v2.x Contacts to v3.x Contacts",
+  "heading": "Migrating from v2.x Contacts to v3.x Contacts",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Migrating from v2.x Contacts to v3.x Contacts"
+  ],
+  "content": "This page will describe high-level considerations when migrating from v2 contacts to v3 contacts.",
+  "tokenEstimate": 25,
+  "crawledAt": "2026-02-23T02:55:00.082Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

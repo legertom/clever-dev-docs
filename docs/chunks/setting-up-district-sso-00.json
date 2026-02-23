@@ -1,0 +1,17 @@
+{
+  "id": "setting-up-district-sso-00",
+  "url": "https://dev.clever.com/docs/setting-up-district-sso",
+  "path": "/docs/setting-up-district-sso",
+  "section": "Clever SSO",
+  "title": "Setting up District SSO",
+  "heading": "Setting up District SSO",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Setting up District SSO"
+  ],
+  "content": "This page will walk you through the steps of getting a District SSO integration up and running with Clever",
+  "tokenEstimate": 27,
+  "crawledAt": "2026-02-23T02:55:06.546Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

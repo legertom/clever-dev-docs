@@ -1,0 +1,17 @@
+{
+  "id": "sso-using-an-implicit-grant-02",
+  "url": "https://dev.clever.com/docs/il-implicit-grant",
+  "path": "/docs/il-implicit-grant",
+  "section": "Discovered",
+  "title": "SSO using an Implicit Grant",
+  "heading": "SSO using an Implicit Grant",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "SSO using an Implicit Grant"
+  ],
+  "content": "That said, exceptional events do happen. In the event that something unusual happens and the user is authenticated through Clever and redirected to your `redirect_uri` in an error state, we'll provide an `error` parameter instead of an `access_token` on the URI fragment you receive.\n\nIn practice, such errors are rarely programmatically recoverable based on their disposition. If you receive one of these errors, display a simple message to your end user and allow them to try again. Consult section 4.2.2.1 of the OAuth 2.0 specification for more information.",
+  "tokenEstimate": 141,
+  "crawledAt": "2026-02-23T02:55:12.099Z",
+  "chunkIndex": 2,
+  "totalChunks": 3
+}

@@ -1,0 +1,17 @@
+{
+  "id": "clever-lms-connect-gradebook-sync-beginner-s-guide-00",
+  "url": "https://dev.clever.com/docs/lms-connect-beginners-guide",
+  "path": "/docs/lms-connect-beginners-guide",
+  "section": "LMS Connect (v3.1)",
+  "title": "Clever LMS Connect - Gradebook Sync Beginner's Guide",
+  "heading": "Clever LMS Connect - Gradebook Sync Beginner's Guide",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Clever LMS Connect - Gradebook Sync Beginner's Guide"
+  ],
+  "content": "This page offers a guide of the LMS Connect gradebook sync API, detailing its functionality and capabilities.",
+  "tokenEstimate": 28,
+  "crawledAt": "2026-02-23T02:55:00.954Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

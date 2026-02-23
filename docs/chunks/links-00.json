@@ -1,0 +1,17 @@
+{
+  "id": "links-00",
+  "url": "https://dev.clever.com/docs/links",
+  "path": "/docs/links",
+  "section": "APIs & Data Model",
+  "title": "Links",
+  "heading": "Links",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Links"
+  ],
+  "content": "Relative links are one way to discover and navigate related data.",
+  "tokenEstimate": 17,
+  "crawledAt": "2026-02-23T02:55:02.898Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

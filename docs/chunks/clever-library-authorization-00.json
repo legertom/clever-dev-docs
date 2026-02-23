@@ -1,0 +1,17 @@
+{
+  "id": "clever-library-authorization-00",
+  "url": "https://dev.clever.com/docs/clever-library-user-flow",
+  "path": "/docs/clever-library-user-flow",
+  "section": "Clever SSO",
+  "title": "Clever Library - Authorization",
+  "heading": "Clever Library - Authorization",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Clever Library - Authorization"
+  ],
+  "content": "This page will briefly describe the unique authorization flow for the Library integration.",
+  "tokenEstimate": 23,
+  "crawledAt": "2026-02-23T02:55:07.344Z",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}
