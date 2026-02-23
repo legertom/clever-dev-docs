@@ -11,7 +11,8 @@
   ],
   "content": "The main flavor of SSO at Clever is OAuth 2.0. This guide will serve to illustrate key steps in the authorization grant flow of OAuth 2.0 with Clever.",
   "tokenEstimate": 38,
-  "crawledAt": "2026-02-23T02:55:06.444Z",
+  "crawledAt": "2026-02-23T02:59:52.978Z",
+  "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1
 }

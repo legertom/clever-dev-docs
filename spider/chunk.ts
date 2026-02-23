@@ -13,6 +13,7 @@ export interface DocChunk {
   content: string;
   tokenEstimate: number;
   crawledAt: string;
+  fetchMethod: "static" | "playwright";
   chunkIndex: number;
   totalChunks: number;
 }
@@ -201,6 +202,7 @@ export function chunkPage(page: CrawlResult): DocChunk[] {
     content: section.content,
     tokenEstimate: estimateTokens(section.content),
     crawledAt: page.crawledAt,
+    fetchMethod: page.fetchMethod,
     chunkIndex: i,
     totalChunks,
   }));

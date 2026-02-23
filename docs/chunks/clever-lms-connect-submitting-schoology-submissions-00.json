@@ -11,7 +11,8 @@
   ],
   "content": "Schoology requires students to submit their own work. As a result, there is an additional requirement for students to make submissions via Clever LMS Connect to Schoology.\n\nStudents will need to have launched the LTI link to the app in Schoology **_at least once_** since the District-App Connection has been Clever LMS Connect enabled. Attempting to update a submission for a student that has not gone through the LTI flow at least once in Schoology will receive the error: _Error Code: 500 {\"message\":\"Error updating submission\"}_\n\nThe rest of the process to update submissions is largely the same as the other supported LMS’s, but when including the **attachments** array, it’s important to know that Schoology only supports the **File** and **Text** types. Including the **Link** type will result in an error message from the Clever API: _{\"message\":\"Schoology does not support submission type of link\"}_\n\nIf you'd like to submit links in a Schoology submission via Clever LMS Connect, you can use the **Text** type instead (HTML is also supported)\n\nExample PATCH request JSON body that includes the attachments array:\n\n```json\n{  \n \"attachments\": [  \n        {  \n            \"type\": \"text\",  \n            \"text\": \"https://clever.com\"  \n        }  \n    ]  \n}\n```",
   "tokenEstimate": 317,
-  "crawledAt": "2026-02-23T02:55:01.560Z",
+  "crawledAt": "2026-02-23T02:59:38.333Z",
+  "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1
 }

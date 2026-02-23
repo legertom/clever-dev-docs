@@ -11,7 +11,8 @@
   ],
   "content": "Courses are an optional data type - courses are only created if a district chooses to sync course information to Clever.",
   "tokenEstimate": 30,
-  "crawledAt": "2026-02-23T02:55:03.508Z",
+  "crawledAt": "2026-02-23T02:59:47.350Z",
+  "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1
 }

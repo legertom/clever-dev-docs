@@ -11,7 +11,8 @@
   ],
   "content": "Below each object, we've added a sample record with available fields - we've sorted the fields for clarity, but they may be returned in any order.",
   "tokenEstimate": 37,
-  "crawledAt": "2026-02-23T02:55:02.778Z",
+  "crawledAt": "2026-02-23T02:59:42.585Z",
+  "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1
 }

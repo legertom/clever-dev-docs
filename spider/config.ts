@@ -5,6 +5,11 @@ export const REQUEST_DELAY_MS = 300;
 export const MAX_CHUNK_TOKENS = 1500;
 export const MIN_CHUNK_TOKENS = 100;
 
+// Pages with fewer estimated tokens than this after static fetch
+// will be re-fetched with Playwright (headless browser) to capture
+// JS-rendered content.
+export const THIN_PAGE_THRESHOLD = 200;
+
 export const OUTPUT_DIR = "docs";
 export const CHUNKS_DIR = "docs/chunks";
 export const MANIFEST_FILE = "docs/manifest.json";

@@ -11,7 +11,8 @@
   ],
   "content": "Districts using our SFTP upload feature can share student contacts as part of the `students.csv` upload. The following fields are supported:\n\ncontact field\n\nSFTP spec field\n\n`name`\n\n`contact_name`\n\n`type`\n\n`contact_type`\n\n`relationship`\n\n`contact_relationship`\n\n`phone`\n\n`contact_phone`\n\n`phone_type`\n\n`contact_phone_type`\n\n`email`\n\n`contact_email`\n\n`sis_id`\n\n`contact_sis_id`\n\nLimitations: Using SFTP limits a student's number of contacts to 5 contacts maximum. No custom mappings are supported.\n\n### \n\nSIS-Managed Auto-Sync\n\n[](#sis-managed-auto-sync)\n\n**Limitations**: Contacts field support varies district-to-district.\n\n-   `contact_relationship` is often missing and sometimes you may find `contact_type` containing data you'd typically look for in `contact_relationship`\n-   `phone_type` cannot be set\n-   `contact.sis_id` is supported for Infinite Campus, IC OneRoster API, Skyward, and Skyward API only",
   "tokenEstimate": 228,
-  "crawledAt": "2026-02-23T02:55:05.246Z",
+  "crawledAt": "2026-02-23T02:59:50.280Z",
+  "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2
 }

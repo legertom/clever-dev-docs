@@ -11,7 +11,8 @@
   ],
   "content": "This page outlines the basic concepts of implementing Single-SIgn-On (SSO) with Clever, including a description of the high-level workflows and the different SSO offerings at Clever.",
   "tokenEstimate": 46,
-  "crawledAt": "2026-02-23T02:55:06.275Z",
+  "crawledAt": "2026-02-23T02:59:52.741Z",
+  "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1
 }

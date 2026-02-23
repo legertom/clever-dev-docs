@@ -11,7 +11,8 @@
   ],
   "content": "section\\_id (string, ObjectID), assignment\\_id (string, UUID), user\\_id (string, ObjectID)\n\n–\n\n–\n\nUpdate Submission\n\n`PATCH https://api.clever.com/v3.1/sections/<section_id>/assignments/<assignment_id>/submissions/<user_id>`\n\nUpdates an existing submission of the specified assignment for a user\n\nsection\\_id (string, ObjectID), assignment\\_id (string, UUID), user\\_id (string, ObjectID)\n\n–\n\n**One or more of:**  \nattachments (list of submission attachments), grader\\_id (string, ObjectID), flags (string \\[\\]), grade\\_comment (string), grade\\_points (number), grade (string), extra\\_attempts (string), override\\_due\\_date (Date), state (string)\n\nAllowed values for flags: \\[\"missing\", \"late\", \"excluded\"\\]",
   "tokenEstimate": 177,
-  "crawledAt": "2026-02-23T02:55:00.976Z",
+  "crawledAt": "2026-02-23T02:59:34.152Z",
+  "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2
 }

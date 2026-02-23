@@ -11,7 +11,8 @@
   ],
   "content": "This page provides a high-level set of considerations for the Library SSO and Rostering integration type with Clever.",
   "tokenEstimate": 30,
-  "crawledAt": "2026-02-23T02:55:07.205Z",
+  "crawledAt": "2026-02-23T02:59:57.422Z",
+  "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1
 }
