@@ -11,7 +11,7 @@
   ],
   "content": "That said, exceptional events do happen. In the event that something unusual happens and the user is authenticated through Clever and redirected to your `redirect_uri` in an error state, we'll provide an `error` parameter instead of an `access_token` on the URI fragment you receive.\n\nIn practice, such errors are rarely programmatically recoverable based on their disposition. If you receive one of these errors, display a simple message to your end user and allow them to try again. Consult section 4.2.2.1 of the OAuth 2.0 specification for more information.",
   "tokenEstimate": 141,
-  "crawledAt": "2026-02-23T03:17:17.788Z",
+  "crawledAt": "2026-02-23T06:24:24.362Z",
   "fetchMethod": "static",
   "chunkIndex": 2,
   "totalChunks": 3

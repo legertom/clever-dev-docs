@@ -11,7 +11,7 @@
   ],
   "content": "### \n\n5\\. Graceful SSO Handling\n\n[](#5-graceful-sso-handling)\n\n-   Clever SSO identifies users as a `type` on the `/me` endpoint, but does not specify a **role** on login.\n-   Your app is responsible for determining available roles for the user and handling routing or context accordingly.\n\n## \n\nFAQs\n\n[](#faqs)\n\n### \n\nQ: Do users have a primary role?\n\n[](#q-do-users-have-a-primary-role)\n\nA: No. The `roles` array includes all roles the user holds. There’s no designated \"primary\" role in Clever v3.x.\n\n### \n\nQ: Should I consolidate or separate user accounts per role?\n\n[](#q-should-i-consolidate-or-separate-user-accounts-per-role)\n\nA: It depends on your app. For simplicity and usability, most apps consolidate. But if roles have distinct workflows, role-specific accounts may be better—with a clean way for users to switch views.\n\n### \n\nQ: What if I’m upgrading from v2.x?\n\n[](#q-what-if-im-upgrading-from-v2x)\n\nA: You’ll likely need to refactor logic that assumes a single role per user account/ID, update permission systems, and user IDs for `teacher`, `staff`, and `district admin` users.\n\n### \n\nQ: Can contacts have multiple roles?\n\n[](#q-can-contacts-have-multiple-roles)\n\nA: Contacts are provided with a multi-role user ID, same as the other user types, however, **contacts cannot be assigned multiple roles in a district**. For example, if a `teacher` is also a `contact` in the district, you will see two records: one for their teacher record, and one for their contact record, each with their own Clever User ID.",
   "tokenEstimate": 382,
-  "crawledAt": "2026-02-23T03:17:02.325Z",
+  "crawledAt": "2026-02-23T06:24:08.125Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2
