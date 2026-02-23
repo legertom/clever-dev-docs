@@ -104,7 +104,15 @@ function extractFromHtml(
   const $content = cheerio.load(contentHtml);
   $content("button, [class*='try-it'], [class*='playground']").remove();
 
-  const markdown = turndown.turndown($content.html() ?? "").trim();
+  let markdown = turndown.turndown($content.html() ?? "").trim();
+
+  // Sanitize Base64 auth strings to avoid secret-detection false positives.
+  // Clever's docs include example creds like "Basic YW5Wc..." which trigger
+  // tools like GitGuardian. Replace with a descriptive placeholder.
+  markdown = markdown.replace(
+    /Basic [A-Za-z0-9+/=]{20,}/g,
+    "Basic <BASE64_ENCODED_CLIENT_ID_AND_SECRET>"
+  );
 
   // Discover other /docs/ links on this page
   const discoveredPaths: string[] = [];

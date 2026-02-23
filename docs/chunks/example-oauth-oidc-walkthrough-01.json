@@ -11,7 +11,7 @@
   ],
   "content": "The access\\_token can be used to query [www.clever.com/v3.0/me](/docs/api-v3-upgrade-guide#5-accounting-for-identity-api-changes-sso). This can be done easily in Postman by opening a new GET query, then going to the Authorization tab and setting the Type to Bearer token. You can then paste the access\\_token into the field and hit Send!.\n\n  \n\nFor the id\\_token, you can paste this into a JSON Web Token decoder that allows users to decode such tokens.",
   "tokenEstimate": 113,
-  "crawledAt": "2026-02-23T03:00:06.778Z",
+  "crawledAt": "2026-02-23T03:17:13.467Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2
