@@ -11,7 +11,7 @@
   ],
   "content": "Resources are an optional data type - resources can be created by applications and assigned to courses by district admins. If a resource is created and assigned to a course, the fields below are guaranteed.",
   "tokenEstimate": 52,
-  "crawledAt": "2026-02-23T06:23:54.050Z",
+  "crawledAt": "2026-03-02T06:18:03.214Z",
   "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1

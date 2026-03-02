@@ -11,7 +11,7 @@
   ],
   "content": "While schools are not the highest-level object in Clever's data model, every user, term, course, and section must be associated with at least one school. User records can be associated with multiple schools!",
   "tokenEstimate": 52,
-  "crawledAt": "2026-02-23T06:23:49.649Z",
+  "crawledAt": "2026-03-02T06:18:00.633Z",
   "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1

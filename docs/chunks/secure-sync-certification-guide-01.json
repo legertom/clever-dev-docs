@@ -11,7 +11,7 @@
   ],
   "content": "-   What access levels of administrator/super-teacher users do you support, and how do they map (or not map) to Clever user types?\n-   How do you handle teachers who are also administrators in Clever, having two Clever IDs (one for the teacher record and one for the administrator record)?\n\n* * *\n\n## \n\nIf Your Application Uses Roster Data\n\n[](#if-your-application-uses-roster-data)\n\n-   If syncing sections, is there any data on the section object that changes your application's behavior or assigns content/curriculum?\n-   How do you handle users not associated with any sections or student-teacher associations?\n-   How do you handle users with multiple sections/student-teacher associations?\n-   How do you handle users associated with classes/teachers/students in multiple schools?\n-   Do you support co-teachers? If yes, is there a maximum number of co-teachers per class?\n\n* * *\n\n## \n\nIf You Use Events\n\n[](#if-you-use-events)\n\n-   Can you initiate a full data (non-events) sync if needed?\n-   Which records do you process events for?\n\n* * *\n\n## \n\nSample Edge Case Data\n\n[](#sample-edge-case-data)\n\nWe provide a 5-school dataset to help you test edge cases:\n\n-   [Certification ISD](https://assets.clever.com/devdocs/CertificationISD.zip)\n\nFor a full list of edge cases and users, check [Certification ISD Edge Cases](https://docs.google.com/spreadsheets/d/1ETku1FnlFN1fNADSpziASnnJIHJMFaUmPWdZzQ06xko/pubhtml).",
   "tokenEstimate": 355,
-  "crawledAt": "2026-02-23T06:24:17.212Z",
+  "crawledAt": "2026-03-02T06:18:28.977Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

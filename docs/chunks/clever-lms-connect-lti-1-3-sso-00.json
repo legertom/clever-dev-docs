@@ -11,7 +11,7 @@
   ],
   "content": "As part of the LMS Connect offering, your application can be integrated into a district's LMS as an LTI 1.3-compliant SSO link. To get started, simply ensure you have a functioning [Clever District SSO](/docs/district-sso) integration—we'll handle the rest!\n\nTo learn more about how districts can set up LTI SSO with your application in their LMS, check out this [Help Center article.](https://support.clever.com/hc/s/articles/000001647?language=en_US)\n\n> ## ☝️\n> \n> Supported LMSs\n> \n> Please note that LTI 1.3 SSO is currently only supported for **Canvas** and **Schoology**.",
   "tokenEstimate": 145,
-  "crawledAt": "2026-02-23T06:23:41.324Z",
+  "crawledAt": "2026-03-02T06:17:49.246Z",
   "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1
