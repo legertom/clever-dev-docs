@@ -1,0 +1,19 @@
+{
+  "id": "clever-lms-connect-api-reference-05",
+  "url": "https://dev.clever.com/docs/api-reference",
+  "path": "/docs/api-reference",
+  "section": "LMS Connect (v3.1)",
+  "title": "Clever LMS Connect - API Reference",
+  "heading": "Submissions",
+  "headingLevel": 2,
+  "parentHeadings": [
+    "Clever LMS Connect - API Reference",
+    "Submissions"
+  ],
+  "content": "**Schoology**\n\n`state` cannot be updated\n\nAuto-updates to `submitted` with an attachment, or `returned` if `grade_points` are included. `reclaimed` is not supported.\n\n**Schoology**\n\n`grade` behavior\n\nDefaults to the `grade_points` value rather than using any string value provided.\n\n**Schoology**\n\nGrading category error\n\nSubmissions return 200 OK but **fail to appear in Schoology** if the assignment does not have a `grading_category` manually set by the teacher in the UI.\n\n**Schoology**\n\nAttachment types\n\nOnly `text` attachment types are supported for writes (`link` is only supported for reads).\n\n  \n\n  \n\n> ## 🚧\n> \n> Save your assignment IDs!\n> \n> There is currently no way for you to call the API for a list of your existing assignment IDs. Once an assignment has been created and an **assignment ID** has been generated, you will need to save each assignment ID you generate in your own database so that you can make adjustments to the assignments later. Failure to do this will result in an inability to access previously created assignments in the API. If this happens, please reach out to [\\[email protected\\]](/cdn-cgi/l/email-protection#563f382233312437223f39382516353a332033247835393b)",
+  "tokenEstimate": 300,
+  "crawledAt": "2026-03-16T06:30:56.985Z",
+  "fetchMethod": "static",
+  "chunkIndex": 5,
+  "totalChunks": 6
+}

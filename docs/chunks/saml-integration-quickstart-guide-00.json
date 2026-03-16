@@ -1,0 +1,18 @@
+{
+  "id": "saml-integration-quickstart-guide-00",
+  "url": "https://dev.clever.com/docs/saml",
+  "path": "/docs/saml",
+  "section": "Discovered",
+  "title": "SAML Integration Quickstart Guide",
+  "heading": "SAML Integration Quickstart Guide",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "SAML Integration Quickstart Guide"
+  ],
+  "content": "> ## ❗️\n> \n> Clever Complete Agreement Required\n> \n> This feature is included with a Clever Complete subscription. Sign up [here](https://www.clever.com/developer-signup) or email your Application Success Manager to learn more.\n\n## \n\nTable of Contents\n\n[](#table-of-contents)\n\n[Overview](https://dev.clever.com/null/null#clever-saml-integration)\n\n* * *\n\n## \n\nClever SAML Integration\n\n[](#clever-saml-integration)\n\nClever offers the ability to connect with your application as a SAML identity provider. This connection type requires more configuration steps for districts, but can be quick to set up within Clever!\n\nAs SAML does not offer authorization and scoping, we consider it to be less secure. In general, we recommend that you build out an OAuth or OIDC integration (see [1\\. OAuth and OIDC Overview](/docs/oauth-oidc-overview)). However, if you need a quick way to get a connection established and help teachers and students start logging in as soon as possible, then a SAML connector can be a useful tool.\n\nOnce your SAML connector is set up with Clever, you can choose to make it publicly available in the Clever application search. For the most part, you will manage this SAML Connector through a Clever dashboard just as you would manage any other integration type with Clever. The one difference will be the need to manage customer-specific configuration values.\n\nFor more details on the process, see our additional SAML guides in the left side menu in the Clever Single Sign-On section.\n\n> ## 🚧\n> \n> Technical Support\n> \n> While Clever does support SAML connections, it does not work out-of-the-box like other parts of the Clever product, so there are some configuration steps that will require working with our Partner Engineering team. Please reach out to [\\[email protected\\]](/cdn-cgi/l/email-protection#9cfdececf0f5fffde8f5f3f2b1f5f2e8f9eef9efe8dcfff0f9eaf9eeb2fff3f1) if you are interested in creating a SAML connector.\n\n> ## 📘\n> \n> Working with Districts\n> \n> It's worth mentioning again that relying on a SAML connection can require more work from district administrators during setup than an OAuth integration would. Please be sure to consider this before proceeding.",
+  "tokenEstimate": 548,
+  "crawledAt": "2026-03-16T06:31:42.651Z",
+  "fetchMethod": "static",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

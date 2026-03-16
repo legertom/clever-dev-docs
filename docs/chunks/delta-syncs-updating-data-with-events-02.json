@@ -1,0 +1,18 @@
+{
+  "id": "delta-syncs-updating-data-with-events-02",
+  "url": "https://dev.clever.com/docs/events-api",
+  "path": "/docs/events-api",
+  "section": "District Rostering (Secure Sync)",
+  "title": "Delta Syncs: Updating Data with Events",
+  "heading": "Delta Syncs: Updating Data with Events",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Delta Syncs: Updating Data with Events"
+  ],
+  "content": "In order to ensure parity, inspect the Clever ID of the object in your database before performing any action. See this flowchart for more detail:\n\n![](https://files.readme.io/9606d0f-events-flowchart.png \"events-flowchart.png\")\n\n  \n\n* * *\n\n# \n\nTesting Events\n\n[](#testing-events)\n\nIn order to test events, you'll need to create a [custom sandbox district](/docs/custom-sandbox-districts) - this will allow you to switch data sets and generate events. Each of our data sets has several days worth of data, which will cover common data changes from districts.\n\nIn addition to testing events, make sure you test your onboarding and initialization processes, and run a full data sync to ensure that all data is being handled correctly.",
+  "tokenEstimate": 183,
+  "crawledAt": "2026-03-16T06:31:19.135Z",
+  "fetchMethod": "static",
+  "chunkIndex": 2,
+  "totalChunks": 3
+}

@@ -1,0 +1,18 @@
+{
+  "id": "saml-00",
+  "url": "https://dev.clever.com/docs/saml-overview",
+  "path": "/docs/saml-overview",
+  "section": "SAML",
+  "title": "SAML",
+  "heading": "SAML",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "SAML"
+  ],
+  "content": "> ## ❗️\n> \n> Clever Complete Agreement Required\n> \n> This feature is included with a Clever Complete subscription. Sign up [here](https://www.clever.com/developer-signup) or email your Application Success Manager to learn more.\n\n## \n\nIntroduction\n\n[](#introduction)\n\nClever offers the ability to connect with your application as a SAML identity provider. This connection type requires more configuration steps for districts but can be quick to set up within Clever!\n\nAs SAML does not offer authorization and scoping, we consider it to be less secure. In general, we recommend that you build out an OAuth or OIDC integration (see [1\\. OAuth and OIDC Overview](/docs/oauth-oidc-overview)). However, if you need a quick way to get a connection established and help teachers and students start logging in as soon as possible, then a SAML connector can be a useful tool.\n\n> ## 🚧\n> \n> SAML Support\n> \n> While Clever does support SAML connections, it does not work out-of-the-box like other parts of the Clever product, so there are some configuration steps that will require working with our Partner Engineering team. Please reach out to [\\[email protected\\]](/cdn-cgi/l/email-protection#1a7b6a6a7673797b6e7375743773746e7f687f696e5a79767f6c7f6834797577) if you are interested in creating a SAML connector.\n\nOnce your SAML connector is set up with Clever, you can choose to make it publicly available in the Clever application search. For the most part, you will manage this SAML Connector through a Clever dashboard just as you would manage any other integration type with Clever. The one difference will be the need to manage customer-specific configuration values.\n\n> ## 📘\n> \n> Working with Districts\n> \n> It's worth mentioning again that relying on a SAML connection can require more work from district administrators during setup than an OAuth integration would. Please be sure to consider this before proceeding.\n\n> ## ❗️\n> \n> Want Clever Secure Sync or Clever Single Sign-On as well?\n> \n> **Note**: If you think you will want rostering data, or if you expect to upgrade to use OAuth with a Clever Single Sign-On integration in the future, please be aware that those scopes cannot be added to a SAML app. You will instead be provided with a separate app that supports those scopes.",
+  "tokenEstimate": 571,
+  "crawledAt": "2026-03-16T06:31:39.094Z",
+  "fetchMethod": "static",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

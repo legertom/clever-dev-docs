@@ -1,0 +1,18 @@
+{
+  "id": "clever-single-sign-on-overview-00",
+  "url": "https://dev.clever.com/docs/getting-started-with-clever-sso",
+  "path": "/docs/getting-started-with-clever-sso",
+  "section": "Clever SSO",
+  "title": "Clever Single Sign-On - Overview",
+  "heading": "Clever Single Sign-On - Overview",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Clever Single Sign-On - Overview"
+  ],
+  "content": "The main flavor of SSO at Clever is OAuth 2.0. This guide will serve to illustrate key steps in the authorization grant flow of OAuth 2.0 with Clever.",
+  "tokenEstimate": 38,
+  "crawledAt": "2026-03-16T06:31:20.077Z",
+  "fetchMethod": "static",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

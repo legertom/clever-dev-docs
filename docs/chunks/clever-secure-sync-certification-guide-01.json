@@ -1,0 +1,18 @@
+{
+  "id": "clever-secure-sync-certification-guide-01",
+  "url": "https://dev.clever.com/docs/secure-sync-certification-guide",
+  "path": "/docs/secure-sync-certification-guide",
+  "section": "Certifications",
+  "title": "Clever Secure Sync Certification Guide",
+  "heading": "Clever Secure Sync Certification Guide",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Clever Secure Sync Certification Guide"
+  ],
+  "content": "-   If syncing sections, is there any data on the section object that changes your application's behavior or assigns content/curriculum?\n-   How do you handle users not associated with any sections or student-teacher associations?\n-   How do you handle users with multiple sections/student-teacher associations?\n-   How do you handle users associated with classes/teachers/students in multiple schools?\n-   Do you support co-teachers? If yes, is there a maximum number of co-teachers per class?\n\n## \n\nIf You Use Events\n\n[](#if-you-use-events)\n\n-   Can you initiate a full data (non-events) sync if needed?\n-   Which records do you process events for?\n\n* * *\n\n# \n\nSample Edge Case Data\n\n[](#sample-edge-case-data)\n\nWe provide a 5-school dataset to help you test edge cases:\n\n-   [Certification ISD](https://assets.clever.com/devdocs/CertificationISD.zip)\n\nFor a full list of edge cases and users, check [Certification ISD Edge Cases](https://docs.google.com/spreadsheets/d/1ETku1FnlFN1fNADSpziASnnJIHJMFaUmPWdZzQ06xko/pubhtml).\n\n* * *\n\n# \n\nHow Long Does it Take?\n\n[](#how-long-does-it-take)\n\nThe time it takes to build an integration with Clever varies depending on your business needs, data model, and technical constraints. We typically allow 1 - 2 weeks to complete the certification after submission.\n\n## \n\nCertification Process\n\n[](#certification-process)\n\n1.  **Build Integration**: Complete your Clever integration.\n2.  **Submit for Certification**: Submit your integration for certification review.\n3.  **Review**: Our Partner Engineering team will review your integration in accordance with our Certification requirements.\n4.  **Results and Next Steps**: Receive an email with your certification results and recommended next steps. If needed, we will schedule a call to discuss your integration in greater detail.\n\n* * *\n\n# \n\nReady to Submit for Certification?\n\n[](#ready-to-submit-for-certification)\n\nPlease reach out to your Application Success Manager for a link to our certification form if you did not receive one during your Onboarding call.",
+  "tokenEstimate": 514,
+  "crawledAt": "2026-03-16T06:31:35.321Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 2
+}
