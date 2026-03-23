@@ -1,0 +1,18 @@
+{
+  "id": "oauth-implementation-03",
+  "url": "https://dev.clever.com/docs/oauth-implementation",
+  "path": "/docs/oauth-implementation",
+  "section": "OAuth and OIDC",
+  "title": "OAuth Implementation",
+  "heading": "OAuth Implementation",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "OAuth Implementation"
+  ],
+  "content": "> ## ❗️\n> \n> Token expiration\n> \n> Tokens expire after 24 hours and cannot be refreshed - do not store the token for long-term user identification. User sessions expire after 2 hours.\n\n  \n\n## \n\nUsing the Tokens\n\n[](#using-the-tokens)\n\nOnce an access token is acquired, it can be used at the `https://api.clever.com/v3.0/me` endpoint - this endpoint should return the user's Clever `id`, `district` ID, and the token `type`.\n\nTypically, once you've obtained the access token. you will want to immediately determine its owner. Access tokens obtained through Clever SSO grant access to a subset of Clever's Data API.\n\nIdentity tokens contain basic user information in the tokens themselves. This information is stored in a set of claims that have been Base-64 URL encoded. While you can decode the token directly, we recommend using a [language-specific library](https://jwt.io/libraries) to decode and verify the token.\n\n  \n\n## \n\nBearer tokens\n\n[](#bearer-tokens)\n\nYou now have an access token. It is yours to bear. Your application is the bearer of that access token. It is now your bearer token, and it symbolizes the relationship between the user and your application.\n\nBearer tokens are easily used with any HTTP library that allows you to manually specify an HTTP Authorization header.\n\nYour Authorization header value will be a string containing the word Bearer followed by a space character and then the access token value you received after exchanging your code.\n\nIf we were to issue a request using the bearer token we received in the last step, our authorization header would look something like:\n\n  \n\n```\nGET https://api.clever.com/some_clever_resource\nAuthorization: Bearer jsfUI2131da2f\n```\n\n* * *\n\n# \n\nThe authorized\\_by Field\n\n[](#the-authorized_by-field)\n\nThe district must authorize these connections in order for them to work. Districts do this by connecting to an application at the district level and then setting up sharing permissions. More on these processes can be found in the documentation below:\n\n[Connecting with Districts](https://support.clever.com/hc/s/articles/215120718?language=en_US)  \n[Sharing Permissions](https://support.clever.com/hc/s/articles/203115007?language=en_US)\n\nBelow is an example of how you can identify a Clever Single Sign-On authentication request using the /me endpoint. Notice \"authorized\\_by\" is set to \"district\".\n\n```\n{  \n    \"type\": \"user\",  \n    \"data\": {  \n        \"id\": \"5fc43758db087d0be186c29d\",  \n        \"district\": \"5d0a9e5d0958b300014e49d2\",  \n        \"type\": \"user\",  \n        \"authorized_by\": \"district\"  \n    },  \n    \"links\": [  \n        {  \n            \"rel\": \"self\",  \n            \"uri\": \"/me\"  \n        },  \n        {  \n            \"rel\": \"canonical\",  \n            \"uri\": \"/v3.0/users/5fc43758db087d0be186c29d\"  \n        },  \n        {  \n            \"rel\": \"district\",  \n            \"uri\": \"/v3.0/districts/5d0a9e5d0958b300014e49d2\"  \n        }  \n    ]  \n}\n```",
+  "tokenEstimate": 734,
+  "crawledAt": "2026-03-23T06:25:11.887Z",
+  "fetchMethod": "static",
+  "chunkIndex": 3,
+  "totalChunks": 4
+}

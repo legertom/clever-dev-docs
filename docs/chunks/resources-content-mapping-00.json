@@ -1,17 +1,17 @@
 {
-  "id": "resources-00",
+  "id": "resources-content-mapping-00",
   "url": "https://dev.clever.com/docs/resources",
   "path": "/docs/resources",
   "section": "APIs & Data Model",
-  "title": "Resources",
-  "heading": "Resources",
+  "title": "Resources (Content Mapping)",
+  "heading": "Resources (Content Mapping)",
   "headingLevel": 0,
   "parentHeadings": [
-    "Resources"
+    "Resources (Content Mapping)"
   ],
   "content": "Resources are an optional data type - resources can be created by applications and assigned to courses by district admins. If a resource is created and assigned to a course, the fields below are guaranteed.",
   "tokenEstimate": 52,
-  "crawledAt": "2026-03-16T06:31:12.546Z",
+  "crawledAt": "2026-03-23T06:24:50.623Z",
   "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1

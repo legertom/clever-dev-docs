@@ -9,9 +9,9 @@
   "parentHeadings": [
     "Example OAuth/OIDC Walkthrough"
   ],
-  "content": "Upon a successful query, you should see the access\\_token. You may also see an id\\_token if your dev app is configured to use OpenID Connect (OIDC).\n\nThe access\\_token can be used to query [www.clever.com/v3.0/me](/docs/api-v3-upgrade-guide#5-accounting-for-identity-api-changes-sso). This can be done easily in Postman by opening a new GET query, then going to the Authorization tab and setting the Type to Bearer token. You can then paste the access\\_token into the field and hit Send!.\n\nFor the id\\_token, you can paste this into a JSON Web Token decoder that allows users to decode such tokens.",
-  "tokenEstimate": 150,
-  "crawledAt": "2026-03-16T06:31:38.916Z",
+  "content": "* * *\n\n# \n\nObtaining the Bearer Token\n\n[](#obtaining-the-bearer-token)\n\nThe next step is to paste the code into Postman and query the Clever Identity API to obtain the Bearer Token - in the next 60 seconds!\n\nYou'll need to paste the Authorization Code in the Value field for code, then click Send:\n\n![1307](https://files.readme.io/dcf9005-oauth_tutorial_11.png \"oauth_tutorial_11.png\")\n\nScreenshot of authorization code in Postman\n\n* * *\n\n# \n\nUsing the access\\_token for Other API Endpoints\n\n[](#using-the-access_token-for-other-api-endpoints)\n\nUpon a successful query, you should see the access\\_token. You may also see an id\\_token if your dev app is configured to use OpenID Connect (OIDC).\n\nThe access\\_token can be used to query [www.clever.com/v3.0/me](/docs/api-v3-upgrade-guide#5-accounting-for-identity-api-changes-sso). This can be done easily in Postman by opening a new GET query, then going to the Authorization tab and setting the Type to Bearer token. You can then paste the access\\_token into the field and hit Send!.\n\nFor the id\\_token, you can paste this into a JSON Web Token decoder that allows users to decode such tokens.",
+  "tokenEstimate": 286,
+  "crawledAt": "2026-03-23T06:25:12.548Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

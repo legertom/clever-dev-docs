@@ -1,0 +1,18 @@
+{
+  "id": "setting-up-clever-single-sign-on-01",
+  "url": "https://dev.clever.com/docs/setting-up-district-sso",
+  "path": "/docs/setting-up-district-sso",
+  "section": "Clever SSO",
+  "title": "Setting up Clever Single Sign-On",
+  "heading": "Setting up Clever Single Sign-On",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Setting up Clever Single Sign-On"
+  ],
+  "content": "-   _Enable events_:\n    -   This setting is not relevant to this integration type\n-   **District Setup**\n    -   You can review this Help Center article for instructions and background on these settings: [For App Partners: District setup recommendations](https://support.clever.com/hc/s/articles/360043514192?language=en_US).",
+  "tokenEstimate": 82,
+  "crawledAt": "2026-03-23T06:24:59.327Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 2
+}

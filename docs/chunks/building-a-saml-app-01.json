@@ -1,0 +1,18 @@
+{
+  "id": "building-a-saml-app-01",
+  "url": "https://dev.clever.com/docs/saml-getting-started",
+  "path": "/docs/saml-getting-started",
+  "section": "SAML",
+  "title": "Building a SAML App",
+  "heading": "Building a SAML App",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Building a SAML App"
+  ],
+  "content": "> ## 🚧\n> \n> OAuth Integrations and SAML\n> \n> If you are building an OAuth integration, you cannot use the same developer dashboard to manage your SAML connector. Be sure to ask for an additional developer account if you plan on starting an OAuth integration.",
+  "tokenEstimate": 65,
+  "crawledAt": "2026-03-23T06:25:12.907Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 2
+}

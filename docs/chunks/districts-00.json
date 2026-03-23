@@ -11,7 +11,7 @@
   ],
   "content": "Clever has a district-centric data model – our top-level object is the district. Districts contain schools, terms, courses, sections, and users.",
   "tokenEstimate": 36,
-  "crawledAt": "2026-03-16T06:31:05.730Z",
+  "crawledAt": "2026-03-23T06:24:43.330Z",
   "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1

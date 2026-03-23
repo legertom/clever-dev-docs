@@ -1,17 +1,17 @@
 {
-  "id": "schema-00",
+  "id": "hidden-schema-00",
   "url": "https://dev.clever.com/docs/schema-1",
   "path": "/docs/schema-1",
   "section": "APIs & Data Model",
-  "title": "Schema",
-  "heading": "Schema",
+  "title": "[HIDDEN] Schema",
+  "heading": "[HIDDEN] Schema",
   "headingLevel": 0,
   "parentHeadings": [
-    "Schema"
+    "[HIDDEN] Schema"
   ],
   "content": "Below each object, we've added a sample record with available fields - we've sorted the fields for clarity, but they may be returned in any order.",
   "tokenEstimate": 37,
-  "crawledAt": "2026-03-16T06:31:05.034Z",
+  "crawledAt": "2026-03-23T06:24:42.996Z",
   "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1
