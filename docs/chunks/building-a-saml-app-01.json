@@ -9,9 +9,9 @@
   "parentHeadings": [
     "Building a SAML App"
   ],
-  "content": "> ## 🚧\n> \n> OAuth Integrations and SAML\n> \n> If you are building an OAuth integration, you cannot use the same developer dashboard to manage your SAML connector. Be sure to ask for an additional developer account if you plan on starting an OAuth integration.",
-  "tokenEstimate": 65,
-  "crawledAt": "2026-03-23T06:25:12.907Z",
+  "content": "Once testing is complete, our Partner Engineering team will work with you to move your SAML connector to the production environment in Clever so that you can get started connecting with districts and end users!\n\n> 🚧\n> \n> ### \n> \n> OAuth Integrations and SAML\n> \n> [](#oauth-integrations-and-saml)\n> \n> If you are building an OAuth integration, you cannot use the same developer dashboard to manage your SAML connector. Be sure to ask for an additional developer account if you plan on starting an OAuth integration.",
+  "tokenEstimate": 129,
+  "crawledAt": "2026-03-30T06:36:51.283Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

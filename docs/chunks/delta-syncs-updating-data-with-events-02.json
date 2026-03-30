@@ -9,9 +9,9 @@
   "parentHeadings": [
     "Delta Syncs: Updating Data with Events"
   ],
-  "content": "In order to ensure parity, inspect the Clever ID of the object in your database before performing any action. See this flowchart for more detail:\n\n![](https://files.readme.io/9606d0f-events-flowchart.png \"events-flowchart.png\")\n\n  \n\n* * *\n\n# \n\nTesting Events\n\n[](#testing-events)\n\nIn order to test events, you'll need to create a [custom sandbox district](/docs/custom-sandbox-districts) - this will allow you to switch data sets and generate events. Each of our data sets has several days worth of data, which will cover common data changes from districts.\n\nIn addition to testing events, make sure you test your onboarding and initialization processes, and run a full data sync to ensure that all data is being handled correctly.",
-  "tokenEstimate": 183,
-  "crawledAt": "2026-03-23T06:24:57.894Z",
+  "content": "Events must be processed in chronological order, as they are presented in our API. Processing events in a different order significantly increases the chances of sync errors.\n\nIn order to ensure parity, inspect the Clever ID of the object in your database before performing any action. See this flowchart for more detail:\n\n![](https://files.readme.io/9606d0f-events-flowchart.png \"events-flowchart.png\")  \n\n* * *\n\n# \n\nTesting Events\n\n[](#testing-events)\n\nIn order to test events, you'll need to create a [custom sandbox district](/docs/custom-sandbox-districts) - this will allow you to switch data sets and generate events. Each of our data sets has several days worth of data, which will cover common data changes from districts.\n\nIn addition to testing events, make sure you test your onboarding and initialization processes, and run a full data sync to ensure that all data is being handled correctly.",
+  "tokenEstimate": 226,
+  "crawledAt": "2026-03-30T06:36:32.554Z",
   "fetchMethod": "static",
   "chunkIndex": 2,
   "totalChunks": 3
