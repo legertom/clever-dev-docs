@@ -1,0 +1,18 @@
+{
+  "id": "getting-started-with-clever-00",
+  "url": "https://dev.clever.com/docs/getting-started",
+  "path": "/docs/getting-started",
+  "section": "Getting Started",
+  "title": "Getting Started with Clever",
+  "heading": "Getting Started with Clever",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Getting Started with Clever"
+  ],
+  "content": "/\\*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com \\*/ @layer theme, base, components, utilities; @layer utilities;\n\nCreate your Clever development app, access the dashboard, build your integration, and prepare it for certification.\n\n## \n\nStep 1: Create your development application\n\n[](#step-1-create-your-development-application)\n\n1.  Register for your development application at [https://www.clever.com/developer-signup](https://www.clever.com/developer-signup).\n2.  Request access to additional integration types if you need them:\n    -   For **Clever Single Sign-On**, **Clever Secure Sync**, or **Clever LMS Connect**, contact [\\[email protected\\]](/cdn-cgi/l/email-protection#761706061a1f1517021f19185b1f1802130413050236151a130013045815191b).\n3.  Build in a sandbox district environment during development.\n4.  Plan for certification before working with live district data:\n    -   Access to **live district data** requires **Clever certification**.\n    -   Learn more in [Certification Overview](doc:certification-overview).\n5.  Contact [\\[email protected\\]](/cdn-cgi/l/email-protection#066f687263617467726f69687546656a637063742865696b) if you need a multi-application environment.\n\n## \n\nStep 2: Access the applications dashboard\n\n[](#step-2-access-the-applications-dashboard)\n\n1.  Sign in with the dashboard account created for you during sign-up.\n    -   Your username is your email address.\n    -   You set your password when you accept the invite to your account.\n2.  Configure dashboard SSO if you want to manage dashboard access through SAML.\n    -   Dashboard SSO uses a **SAML** connection.\n    -   During setup and testing, password access remains available for admin users and can remain available afterward by request.\n    -   After SSO verification, password logins are disabled by default unless you request otherwise.\n    -   To configure dashboard SSO, contact [\\[email protected\\]](/cdn-cgi/l/email-protection#ee87809a8b899c8f9a8781809dae8d828b988b9cc08d8183).\n\n## \n\nStep 3: Complete your build\n\n[](#step-3-complete-your-build)\n\nChoose the guide that matches the integration you want to build:\n\n-   If you need a district-managed integration, start with [Clever Complete Integration Types and Quickstart Guides](https://dev.clever.com/docs/integration-types).\n-   If you want to build without a Clever Complete subscription, start with [Clever Library - Overview](https://dev.clever.com/docs/library-sso).\n-   If you are still deciding where to start, read [What is Clever?](https://dev.clever.com/docs/what-is-clever).\n\nThen use the relevant product guide to build and test your integration.\n\n## \n\nStep 4: Submit your app for certification\n\n[](#step-4-submit-your-app-for-certification)\n\nWhen your build is complete and ready to go live on Clever, submit your app for certification.\n\nRead [Certification Overview](doc:certification-overview) to review the process and requirements.",
+  "tokenEstimate": 730,
+  "crawledAt": "2026-04-13T06:42:02.373Z",
+  "fetchMethod": "static",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

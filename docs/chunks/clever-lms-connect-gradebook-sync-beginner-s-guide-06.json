@@ -1,0 +1,19 @@
+{
+  "id": "clever-lms-connect-gradebook-sync-beginner-s-guide-06",
+  "url": "https://dev.clever.com/docs/lms-connect-beginners-guide",
+  "path": "/docs/lms-connect-beginners-guide",
+  "section": "LMS Connect (v3.1)",
+  "title": "Clever LMS Connect - Gradebook Sync Beginner's Guide",
+  "heading": "Student",
+  "headingLevel": 4,
+  "parentHeadings": [
+    "Clever LMS Connect - Gradebook Sync Beginner's Guide",
+    "Student"
+  ],
+  "content": "#### Student\n\nOnce you've created a submission, you can also take a look from the student perspective. Please reach out to [\\[email protected\\]](/cdn-cgi/l/email-protection#5f36312b3a382d3e2b3630312c1f3c333a293a2d713c3032) to request end-user credentials for testing.\n\n![Description of the image](https://files.readme.io/75652850e1b28a77fc31294588ee7522a7e567f59730d9692bfff45bac35436a-image.png)  \n_The graded submission from the student view_",
+  "tokenEstimate": 111,
+  "crawledAt": "2026-04-13T06:42:04.526Z",
+  "fetchMethod": "static",
+  "chunkIndex": 6,
+  "totalChunks": 7
+}

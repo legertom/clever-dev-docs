@@ -1,0 +1,18 @@
+{
+  "id": "clever-single-sign-on-quickstart-guide-01",
+  "url": "https://dev.clever.com/docs/district-sso-1",
+  "path": "/docs/district-sso-1",
+  "section": "Discovered",
+  "title": "Clever Single Sign-On Quickstart Guide",
+  "heading": "Clever Single Sign-On Quickstart Guide",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Clever Single Sign-On Quickstart Guide"
+  ],
+  "content": "> 🚧\n> \n> ### \n> \n> **Build the Basic Auth header correctly**\n> \n> [](#build-the-basic-auth-header-correctly)\n> \n> The Authorization header must contain your client ID and client secret joined by a colon and Base64-encoded.\n\nIf the request succeeds, Clever returns a response similar to:\n\n```\n{\n  \"access_token\": \"token_abc123...\"\n}\n```\n\n## \n\nStep 4: Identify the user\n\n[](#step-4-identify-the-user)\n\nUse the access token to call `/v3.0/me` and identify the signed-in user.\n\n```\ncurl -X GET \"https://api.clever.com/v3.0/me\" \\\n  -H \"Authorization: Bearer token_abc123...\"\n```\n\nExample response:\n\n```\n{\n  \"data\": {\n    \"id\": \"5f3e4b1c...\",\n    \"district\": \"5de12345...\",\n    \"type\": \"student\",\n    \"name\": {\n      \"first\": \"John\",\n      \"last\": \"Doe\"\n    }\n  },\n  \"links\": [...]\n}\n```\n\nUse the `id` from this response to look up the user in your database and start an application session.\n\n## \n\nWhat’s next?\n\n[](#whats-next)\n\n-   **Map users to your database**  \n    Use `/v3.0/me` to identify the user. If you also need roster data, use the user ID with Secure Sync endpoints such as `/v3.0/users/{id}`.\n    \n-   **Test with sandbox users**  \n    Use the **Custom Test User** tool in your Clever Dashboard to simulate logins for different user types.",
+  "tokenEstimate": 313,
+  "crawledAt": "2026-04-13T06:42:19.654Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 2
+}

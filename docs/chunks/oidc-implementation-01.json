@@ -1,0 +1,18 @@
+{
+  "id": "oidc-implementation-01",
+  "url": "https://dev.clever.com/docs/oidc-implementation",
+  "path": "/docs/oidc-implementation",
+  "section": "OAuth and OIDC",
+  "title": "OIDC Implementation",
+  "heading": "OIDC Implementation",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "OIDC Implementation"
+  ],
+  "content": "> 📘\n> \n> ### \n> \n> **OIDC limitations**\n> \n> [](#oidc-limitations)\n> \n> Identity tokens are not available for Clever Library integrations.\n> \n> If you are building for Clever Library, use the `/userinfo` endpoint instead:\n> \n> `https://api.clever.com/userinfo`\n\nThe access token can also be used with the `/userinfo` endpoint as part of the OIDC flow.",
+  "tokenEstimate": 88,
+  "crawledAt": "2026-04-13T06:42:16.718Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 2
+}

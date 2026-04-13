@@ -1,0 +1,18 @@
+{
+  "id": "testing-your-sso-integration-01",
+  "url": "https://dev.clever.com/docs/testing-your-sso-integration",
+  "path": "/docs/testing-your-sso-integration",
+  "section": "Clever SSO",
+  "title": "Testing Your SSO Integration",
+  "heading": "Testing Your SSO Integration",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Testing Your SSO Integration"
+  ],
+  "content": "This shortcut only works in your developer account. It does not work in production if you do not have Clever Secure Sync access.\n\n![](https://files.readme.io/4f8d5c2699fd235e34737f9121ad79b41a1ece4c187a50b52ca94db9bbacba51-image.png) ![](https://files.readme.io/e2e9ecce6dd6734a6586db6e20a3152fb6d0ce5872107743927c4cf69032aee0-image.png)\n\n### \n\nImpersonate your sandbox district admin\n\n[](#impersonate-your-sandbox-district-admin)\n\nIf you have access to your sandbox district, you can test the end-user experience by impersonating your sandbox district admin.\n\n-   **For Clever Secure Sync subscribers only:**  \n    You can use the **Data Browser** in your developer dashboard to test logins through the UI.\n-   Click a user’s name in the Data Browser to open the detail view.\n-   In that view, use the **Log in as...** button in the top-right corner.\n\n![](https://files.readme.io/ea541c1bba4e9883c444f8929260db40fdc9c04b33fa8517cc9c546c99cfd1cd-image.png)\n\n## \n\nSandbox district\n\n[](#sandbox-district)\n\n### \n\nDefault sandbox district\n\n[](#default-sandbox-district)\n\nYour developer account includes an auto-generated sandbox district.\n\nBy default, you do not have access to manage this sandbox district. Managing it is not required to test your integration, but Clever can provide access if needed.\n\nTo request access, provide an **email address that is not already associated with a Clever account**.\n\nOnce access is enabled, you can use the following resources to manage the sandbox district and test the Clever end-user experience:\n\n-   User impersonation: [https://support.clever.com/hc/s/articles/360000406146](https://support.clever.com/hc/s/articles/360000406146)\n-   Data browser: [https://support.clever.com/hc/s/articles/202483068](https://support.clever.com/hc/s/articles/202483068)\n-   Custom data: [https://support.clever.com/hc/s/articles/360035757332](https://support.clever.com/hc/s/articles/360035757332)\n-   Uploading data: [https://support.clever.com/hc/s/articles/202494408](https://support.clever.com/hc/s/articles/202494408)\n\nYou can download the default sandbox dataset [here](https://assets.clever.com/devdocs/default_sandbox_data.zip).\n\n### \n\nCustom sandbox district\n\n[](#custom-sandbox-district)\n\nClever only creates custom sandbox districts for Clever Secure Sync integrations.\n\nIf you need to customize your test data, use the sandbox management resources listed above.",
+  "tokenEstimate": 600,
+  "crawledAt": "2026-04-13T06:42:14.660Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 2
+}

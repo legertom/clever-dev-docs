@@ -1,0 +1,18 @@
+{
+  "id": "clever-api-v3-1-data-schema-00",
+  "url": "https://dev.clever.com/docs/clever-api-v31-data-schema-copy",
+  "path": "/docs/clever-api-v31-data-schema-copy",
+  "section": "Discovered",
+  "title": "Clever API v3.1 Data Schema",
+  "heading": "Clever API v3.1 Data Schema",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Clever API v3.1 Data Schema"
+  ],
+  "content": "/\\*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com \\*/ @layer theme, base, components, utilities; @layer utilities;\n\n> ❗️\n> \n> ### \n> \n> Clever Complete Agreement Required\n> \n> [](#clever-complete-agreement-required)\n> \n> This feature is included with a Clever Complete subscription. Sign up [here](https://www.clever.com/developer-signup) or email your Application Success Manager to learn more.",
+  "tokenEstimate": 103,
+  "crawledAt": "2026-04-13T06:42:22.711Z",
+  "fetchMethod": "static",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

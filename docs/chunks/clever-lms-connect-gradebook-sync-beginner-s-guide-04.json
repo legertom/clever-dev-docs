@@ -1,0 +1,19 @@
+{
+  "id": "clever-lms-connect-gradebook-sync-beginner-s-guide-04",
+  "url": "https://dev.clever.com/docs/lms-connect-beginners-guide",
+  "path": "/docs/lms-connect-beginners-guide",
+  "section": "LMS Connect (v3.1)",
+  "title": "Clever LMS Connect - Gradebook Sync Beginner's Guide",
+  "heading": "Teacher",
+  "headingLevel": 4,
+  "parentHeadings": [
+    "Clever LMS Connect - Gradebook Sync Beginner's Guide",
+    "Teacher"
+  ],
+  "content": "#### Teacher\n\nYou can confirm the creation of your assignment by logging in to Canvas as a demo teacher. Please reach out to [\\[email protected\\]](/cdn-cgi/l/email-protection#274e495342405546534e48495467444b425142550944484a) to request end-user credentials for testing.\n\n![Description of the image](https://files.readme.io/437a7069375df49a21b4a89cc3e692cc155cbb13b032cdbbc382bfd7349fcf24-image.png)  \n_Creating the assignment from the teacher view_\n\n![Description of the image](https://files.readme.io/359a0f98fca301a52d12e06c1fd898cb9b82339b00087c028dcadcc59a7aedc8-image.png)  \n_After updating the assignment from the teacher view_\n\n#### Student\n\nOnce you've created a submission, you can also take a look from the student perspective. Please reach out to [\\[email protected\\]](/cdn-cgi/l/email-protection#a7cec9d3c2c0d5c6d3cec8c9d4e7c4cbc2d1c2d589c4c8ca) to request end-user credentials for testing.\n\n\\[Insert Image Here\\]  \n_The graded submission from the student view_\n\n  \nSchoology",
+  "tokenEstimate": 247,
+  "crawledAt": "2026-04-13T06:42:04.526Z",
+  "fetchMethod": "static",
+  "chunkIndex": 4,
+  "totalChunks": 7
+}

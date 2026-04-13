@@ -1,0 +1,18 @@
+{
+  "id": "api-v3-1-updates-01",
+  "url": "https://dev.clever.com/docs/api-v31",
+  "path": "/docs/api-v31",
+  "section": "What's New",
+  "title": "API v3.1 Updates",
+  "heading": "API v3.1 Updates",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "API v3.1 Updates"
+  ],
+  "content": "API v3.1 Access\n\n[](#api-v31-access)\n\nIf you are interested in v3.1 access, please contact your application success manager or contact the Clever Partner Engineering Team at [\\[email protected\\].](/cdn-cgi/l/email-protection#4e27203a2b293c2f3a2721203d0e2d222b382b3c602d212360)",
+  "tokenEstimate": 69,
+  "crawledAt": "2026-04-13T06:42:03.064Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 2
+}

@@ -1,0 +1,18 @@
+{
+  "id": "clever-lms-connect-gradebook-sync-beginner-s-guide-01",
+  "url": "https://dev.clever.com/docs/lms-connect-beginners-guide",
+  "path": "/docs/lms-connect-beginners-guide",
+  "section": "LMS Connect (v3.1)",
+  "title": "Clever LMS Connect - Gradebook Sync Beginner's Guide",
+  "heading": "Clever LMS Connect - Gradebook Sync Beginner's Guide",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Clever LMS Connect - Gradebook Sync Beginner's Guide"
+  ],
+  "content": "In this step, we're going to take a look at **submissions**. As mentioned before, each student enrolled in a section will have a submission record auto-generated when the **assignment** is created. We can see this in action by clicking into the _GET GC/View Submissions_ request.\n\nEnsure the `temp_assignment_id` variable is populated and click \"Send\".\n\n![Description of the image](https://files.readme.io/4c790a7445cc1a154432e7dd115366927ee605f5bfa938431f78805a29f614a5-image.png)\n\nYou should receive a status `200` as well as a response body containing a record for each student where the `user_id` represents the student and the `id` represents their submission ID. You will always refer to submissions via the `user_id`, as we'll see in the next step.\n\n  \nUpdating a Submission  \n\nNext, we want to edit the submission state and assign a grade. Click into the _PATCH GC/Update Submission_ request. The request body should be pre-populated for you. Feel free to explore the [data model](#) for other options.\n\n```json\n{\n  \"state\": \"submitted\",\n  \"grade_comment\": \"test\",\n  \"grade_points\": 80,\n  \"grade\": \"B\"\n}\n```\n\nEnsure the `temp_assignment_id` variable is populated and click \"Send\".\n\n![Description of the image](https://files.readme.io/5dcc81bb9c2bb0148f8e94e45b38a10c4c96fdfa4126e7db92d95e1fbd2462f0-image.png)\n\nYou should receive a status `200` as well as a response body containing the submission information. Back in Google Classroom, you should see an updated submission score for one of the students.\n\n  \nDeleting an Assignment  \n\nLastly, we're going to delete the assignment you created to leave the demo environment in a nice, clean state for future use. Click into the _DEL GC/Delete Assignment_ request.\n\nEnsure the `temp_assignment_id` variable is populated and click \"Send\".\n\nYou should receive a `200` status. You can confirm that the assignment has been deleted in Google Classroom.\n\n  \n\n  \n\n* * *\n\n# \n\nChecking Your Work\n\n[](#checking-your-work)\n\nSelect your LMS below to verify that your API calls successfully created and updated the assignments.\n\nGoogle Classroom",
+  "tokenEstimate": 522,
+  "crawledAt": "2026-04-13T06:42:04.526Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 7
+}

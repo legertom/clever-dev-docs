@@ -9,9 +9,9 @@
   "parentHeadings": [
     "Setting up Clever Single Sign-On"
   ],
-  "content": "-   _Enable events_:\n    -   This setting is not relevant to this integration type\n-   **District Setup**\n    -   You can review this Help Center article for instructions and background on these settings: [For App Partners: District setup recommendations](https://support.clever.com/hc/s/articles/360043514192?language=en_US).",
-  "tokenEstimate": 82,
-  "crawledAt": "2026-04-06T06:36:48.165Z",
+  "content": "-   _Additional Settings (REQUIRED)_:\n    -   This section contains **Supported User Types**. This setting controls which user types have access to SSO through your integration.\n    -   Be sure to set this up correctly and consider which user types you will be serving with this integration.\n\n![](https://files.readme.io/c9b0e67-image.png)\n\n-   _Enable events_:\n    -   This setting is not relevant to this integration type\n-   **District Setup**\n    -   You can review this Help Center article for instructions and background on these settings: [For App Partners: District setup recommendations](https://support.clever.com/hc/s/articles/360043514192?language=en_US).",
+  "tokenEstimate": 167,
+  "crawledAt": "2026-04-13T06:42:12.759Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

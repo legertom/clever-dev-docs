@@ -1,0 +1,18 @@
+{
+  "id": "clever-single-sign-on-overview-01",
+  "url": "https://dev.clever.com/docs/getting-started-with-clever-sso",
+  "path": "/docs/getting-started-with-clever-sso",
+  "section": "Clever SSO",
+  "title": "Clever Single Sign-On - Overview",
+  "heading": "Clever Single Sign-On - Overview",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Clever Single Sign-On - Overview"
+  ],
+  "content": "![An authorization code appended to a redirect URI. This represents the first step in the authorization code flow.](https://files.readme.io/6245b56-image.png)\n\nAn authorization code appended to a redirect URI. This represents the first step in the authorization code flow.\n\n## \n\nStep 2: Exchange the code for an access token\n\n[](#step-2-exchange-the-code-for-an-access-token)\n\nCopy the authorization code from the URL and replace `ENTER_CODE_HERE` in the cURL command below. Keep the double quotes around the code value.\n\nThe authorization header uses this format:\n\n`Authorization: Basic \" + Base64.encode(client_id + \":\" + client_secret)`\n\n```\ncurl --request POST \\\n     --url https://clever.com/oauth/tokens \\\n     --header 'Authorization: Basic <BASE64_ENCODED_CLIENT_ID_AND_SECRET>' \\\n     --header 'accept: application/json' \\\n     --header 'content-type: application/json' \\\n     --data '\n{\n  \"code\": \"ENTER_CODE_HERE\",\n  \"grant_type\": \"authorization_code\",\n  \"redirect_uri\": \"https://localhost:3000\"\n}\n'\n```\n\nRun the command. If the request succeeds, Clever returns an access token.\n\n![An access token retrieved from the Clever /tokens endpoint by exchanging an authorization code.](https://files.readme.io/a4665f4-image.png)\n\nAn access token retrieved from the Clever /tokens endpoint by exchanging an authorization code.\n\n## \n\nStep 3: Use the token to retrieve user data\n\n[](#step-3-use-the-token-to-retrieve-user-data)\n\nReplace `ENTER_TOKEN_HERE` in the command below with the access token you received. This request calls the `/me` endpoint.\n\n```\ncurl --request GET \\\n     --url https://api.clever.com/v3.0/me \\\n     --header 'Authorization: Bearer ENTER_TOKEN_HERE' \\\n     --header 'accept: application/json'\n```\n\nThe response should look similar to this:\n\n![](https://files.readme.io/f18781c-image.png)\n\n> 📘\n> \n> ### \n> \n> Want to test using Postman?\n> \n> [](#want-to-test-using-postman)\n> \n> Start with [Exploring the Clever API](https://dev.clever.com/docs/exploring-the-clever-api).",
+  "tokenEstimate": 500,
+  "crawledAt": "2026-04-13T06:42:12.119Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 2
+}

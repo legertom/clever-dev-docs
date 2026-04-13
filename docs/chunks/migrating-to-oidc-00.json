@@ -1,0 +1,18 @@
+{
+  "id": "migrating-to-oidc-00",
+  "url": "https://dev.clever.com/docs/migrating-to-oidc",
+  "path": "/docs/migrating-to-oidc",
+  "section": "OAuth and OIDC",
+  "title": "Migrating to OIDC",
+  "heading": "Migrating to OIDC",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Migrating to OIDC"
+  ],
+  "content": "/\\*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com \\*/ @layer theme, base, components, utilities; @layer utilities;\n\n> ❗️\n> \n> ### \n> \n> Clever Complete Agreement Required\n> \n> [](#clever-complete-agreement-required)\n> \n> This feature is included with a Clever Complete subscription. Sign up [here](https://www.clever.com/developer-signup) or email your Application Success Manager to learn more.\n\nUse this page to migrate an existing Clever SSO integration from OAuth 2.0 or SAML to OIDC.\n\n> ❗️\n> \n> ### \n> \n> **Before you start**\n> \n> [](#before-you-start)\n> \n> Make sure you understand how to use the `/userinfo` endpoint and how to obtain an `id_token`.\n> \n> Your application must also have OIDC scopes enabled. If you are not sure whether your app is configured for OIDC, contact [Clever Support](https://support.clever.com).\n\n## \n\nMigrate from OAuth 2.0 to OIDC\n\n[](#migrate-from-oauth-20-to-oidc)\n\nIf your app already uses the standard Clever OAuth flow, you can move to OIDC in two ways:\n\n-   Use the `access_token` returned from `POST /oauth/tokens` to call `https://api.clever.com/userinfo`\n-   Decode the `id_token` returned from `POST /oauth/tokens` to obtain user identity data\n    -   this requires OIDC scopes on your Clever SSO application\n\nFor implementation details, review:\n\n-   [OAuth Implementation](https://dev.clever.com/docs/oauth-implementation)\n-   [OIDC Implementation](https://dev.clever.com/docs/oidc-implementation)\n-   [The /userinfo Endpoint](https://dev.clever.com/docs/the-userinfo-endpoint)\n\n## \n\nMigrate from SAML to OIDC\n\n[](#migrate-from-saml-to-oidc)\n\nA Clever SSO application cannot support both SAML and OIDC on the same application.\n\nIf you want to move from SAML to OIDC, request a new OIDC-enabled application from [Clever Support](https://support.clever.com).\n\nAfter you receive the new application, build and test your OIDC integration using the OIDC-specific documentation:\n\n-   [OIDC Implementation](https://dev.clever.com/docs/oidc-implementation)\n-   [The /userinfo Endpoint](https://dev.clever.com/docs/the-userinfo-endpoint)",
+  "tokenEstimate": 523,
+  "crawledAt": "2026-04-13T06:42:17.098Z",
+  "fetchMethod": "static",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}
