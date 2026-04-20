@@ -12,7 +12,7 @@
   ],
   "content": "## Districts\n\nGET /districts/<district\\_id> (District LMS status)  \nIncludes LMS integration information in the District object. Sample Request Body  \n_(No Request Body for GET requests)_  \nSample Response  \n\n```json\n{\n  \"data\": {\n    \"id\": \"5800eb48a6d68b0223000001\",\n    \"name\": \"Demo District\",\n    \"lms_state\": \"success\"\n  }\n}\n```\n\n  \nRequired fields and values  \n\nParameter / Field\n\nLocation\n\nType\n\nNotes\n\n`district_id`\n\nPath\n\nString (ObjectID)\n\n**Required.** Allowed values for lms\\_state: \\[\"success\", \"matching\\_in\\_progress\", \"disconnected\", \"error\", \"\"\\]\n\n  \n**Unsupported fields**  \n_(None)_  \n**LMS-specific data quirks**  \n_(None)_",
   "tokenEstimate": 161,
-  "crawledAt": "2026-04-13T06:42:04.494Z",
+  "crawledAt": "2026-04-20T06:43:14.133Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 6

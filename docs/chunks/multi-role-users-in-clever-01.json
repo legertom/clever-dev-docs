@@ -11,7 +11,7 @@
   ],
   "content": "[](#do-users-have-a-primary-role)\n\nNo. The `roles` object includes all roles the user holds. Clever v3.x does not define a primary role.\n\n### \n\nShould I consolidate or separate accounts by role?\n\n[](#should-i-consolidate-or-separate-accounts-by-role)\n\nIt depends on your app. Many apps consolidate roles for simplicity, but role-specific experiences may work better when workflows differ significantly.\n\n### \n\nWhat if I’m upgrading from v2.x?\n\n[](#what-if-im-upgrading-from-v2x)\n\nYou will likely need to refactor any logic that assumes a user has only one role. You may also need to update permission handling and user-ID assumptions for teacher, staff, and district admin users.\n\n### \n\nCan contacts have multiple roles?\n\n[](#can-contacts-have-multiple-roles)\n\nContacts receive a multi-role user ID like other user types, but contacts cannot actually be assigned multiple roles in a district.\n\nFor example, if a teacher is also a contact in the district, Clever returns two separate records:\n\n-   one teacher record\n-   one contact record\n\nEach record has its own Clever user ID.",
   "tokenEstimate": 270,
-  "crawledAt": "2026-04-13T06:42:13.106Z",
+  "crawledAt": "2026-04-20T06:43:22.554Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

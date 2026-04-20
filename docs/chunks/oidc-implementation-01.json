@@ -11,7 +11,7 @@
   ],
   "content": "> 📘\n> \n> ### \n> \n> **OIDC limitations**\n> \n> [](#oidc-limitations)\n> \n> Identity tokens are not available for Clever Library integrations.\n> \n> If you are building for Clever Library, use the `/userinfo` endpoint instead:\n> \n> `https://api.clever.com/userinfo`\n\nThe access token can also be used with the `/userinfo` endpoint as part of the OIDC flow.",
   "tokenEstimate": 88,
-  "crawledAt": "2026-04-13T06:42:16.718Z",
+  "crawledAt": "2026-04-20T06:43:26.864Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

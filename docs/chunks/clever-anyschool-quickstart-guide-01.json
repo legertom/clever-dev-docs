@@ -1,0 +1,18 @@
+{
+  "id": "clever-anyschool-quickstart-guide-01",
+  "url": "https://dev.clever.com/docs/anyschool-rostering",
+  "path": "/docs/anyschool-rostering",
+  "section": "Discovered",
+  "title": "Clever AnySchool Quickstart Guide",
+  "heading": "Clever AnySchool Quickstart Guide",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Clever AnySchool Quickstart Guide"
+  ],
+  "content": "![](https://files.readme.io/e0d7e0f5c7621d939141e6c81d88bc1fc8c3c222ba899e5280ff9023eef64644-screen-recording-2026-04-16-11-50-20-0m35s.gif)",
+  "tokenEstimate": 35,
+  "crawledAt": "2026-04-20T06:43:28.710Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 2
+}

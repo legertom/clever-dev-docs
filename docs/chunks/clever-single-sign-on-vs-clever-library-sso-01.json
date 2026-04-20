@@ -1,8 +1,8 @@
 {
   "id": "clever-single-sign-on-vs-clever-library-sso-01",
-  "url": "https://dev.clever.com/docs/clever-single-sign-on-vs-clever-library-sso-copy",
-  "path": "/docs/clever-single-sign-on-vs-clever-library-sso-copy",
-  "section": "Discovered",
+  "url": "https://dev.clever.com/docs/district-sso-vs-library-sso",
+  "path": "/docs/district-sso-vs-library-sso",
+  "section": "Clever SSO",
   "title": "Clever Single Sign-On vs Clever Library SSO",
   "heading": "Clever Single Sign-On vs Clever Library SSO",
   "headingLevel": 0,
@@ -11,7 +11,7 @@
   ],
   "content": "Clever Single Sign-On\n\n[](#clever-single-sign-on-2)\n\nClever Single Sign-On gives access to the following fields:\n\nData Type\n\nAvailable Fields\n\nDistricts\n\n\\- District Clever ID - District Name\n\nSchools\n\n\\- Not available\n\nSections\n\n\\- Not available\n\nUsers\n\n\\- User Clever ID - User First Name, Last Name - User Email (when present)\n\n  \n\n## \n\nClever Library\n\n[](#clever-library-1)\n\nClever Library gives access to the following fields:\n\nData Type\n\nAvailable Fields\n\nDistricts\n\n\\- Not available\n\nSchools\n\n\\- Not available\n\nSections\n\n\\- Section Clever ID - Section Name - Section Grade - Section Subject - Section Teacher - Section Students\n\nUsers\n\n\\- Teacher Clever ID - Teacher First Name, Last Name - Teacher Email Address - Student Clever ID - Student First Name, **Last Initial**\n\n  \n\n> 🚧\n> \n> ### \n> \n> Missing Required Fields?\n> \n> [](#missing-required-fields)\n> \n> If these integration types don't give you access to fields that are considered \"required\" in your application, simply collect that information upon their first login.\n\n* * *\n\n# \n\nUser Registration\n\n[](#user-registration)\n\n## \n\nClever Single Sign-On\n\n[](#clever-single-sign-on-3)\n\nBecause you are limited in the information you receive for this integration type, it is common to first provision the users through Clever Secure Sync, another rostering service, or manual provisioning as a prerequisite to integrating. In some cases, there are applications that auto-provision on their first login using the fields available.\n\n## \n\nClever Library\n\n[](#clever-library-2)\n\nWith Clever Library, it is expected for you to auto-register a new teacher when they first \"install\" your Library application. For students, you should auto-provision their account as soon as their teacher authorizes the connection.\n\n* * *\n\n# \n\nTesting\n\n[](#testing)\n\n## \n\nClever Single Sign-On\n\n[](#clever-single-sign-on-4)\n\n> 🚧\n> \n> ### \n> \n> **Do not use the Clever Library Integration Guide in your Dashboard!**\n> \n> [](#do-not-use-the-clever-library-integration-guide-in-your-dashboard)\n> \n> Clicking around the dashboard, you may come across an \"Integration Guide\". This is specifically for the Library integration. Testing using this tool may result in some confusion during the certification process. Please be sure to instead use the documentation linked directly below to test your Clever Single Sign-On integration.\n\n-   [Testing - District SSO](https://dev.clever.com/docs/testing-district-sso)\n\n## \n\nClever Library\n\n[](#clever-library-3)\n\n-   [Testing - Library](https://dev.clever.com/docs/testing-library)\n\n* * *\n\n# \n\nCertification\n\n[](#certification)\n\nYou can certify for both of these integrations on the same client credentials at the same time and using the same certification [survey](https://airtable.com/app2ptMbyoNH48Wk9/pagHEY30LluyN15Vr/form)! Please be sure to review the certification guides linked below:\n\n## \n\nClever Single Sign-On\n\n[](#clever-single-sign-on-5)\n\n[District SSO Certification Guide](https://dev.clever.com/docs/district-sso-certification-guide)\n\n## \n\nClever Library\n\n[](#clever-library-4)\n\n[Library Certification Guide](https://dev.clever.com/docs/library-certification-guide)",
   "tokenEstimate": 790,
-  "crawledAt": "2026-04-13T06:42:20.971Z",
+  "crawledAt": "2026-04-20T06:43:23.580Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

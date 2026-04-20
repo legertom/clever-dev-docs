@@ -11,7 +11,7 @@
   ],
   "content": "/\\*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com \\*/ @layer theme, base, components, utilities; @layer utilities;\n\n### \n\nField Formats\n\n[](#field-formats)\n\nField\n\nField Description\n\n**Object ID**\n\nAll Clever IDs take the ObjectID format. We guarantee that ObjectIDs are globally unique across districts and User objects.\n\n**String**\n\nClever's `strings` have no maximum length - if you have to set maximum character lengths for fields, we recommend setting the max to 255 characters for safety.\n\n**Date**\n\nWe normalize dates in Clever to YYYY-MM-DD: \"2015-08-25\"\n\n**Timestamp**\n\nTimestamps are expressed in this format: \"2015-08-25T00:00:00.000Z\"\n\n**Boolean**\n\nBooleans have a value of either \"Y\" or \"N\"\n\n> 📘\n> \n> **Fields are not returned in a specific order so please ensure that your app does not rely on the order.**",
   "tokenEstimate": 209,
-  "crawledAt": "2026-04-13T06:42:06.564Z",
+  "crawledAt": "2026-04-20T06:43:16.566Z",
   "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1
