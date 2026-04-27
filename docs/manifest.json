@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-04-20T06:43:57.813Z",
-  "totalPages": 107,
-  "totalChunks": 172,
-  "totalTokenEstimate": 163966,
+  "generatedAt": "2026-04-27T06:52:16.738Z",
+  "totalPages": 105,
+  "totalChunks": 169,
+  "totalTokenEstimate": 161989,
   "sections": [
     "APIs & Data Model",
     "Attendance Data (v3.1)",
@@ -50,6 +50,66 @@
       "totalChunks": 1
     },
     {
+      "id": "clever-complete-integration-types-and-quickstart-guides-00",
+      "file": "chunks/clever-complete-integration-types-and-quickstart-guides-00.json",
+      "url": "https://dev.clever.com/docs/integration-types",
+      "path": "/docs/integration-types",
+      "section": "Getting Started",
+      "title": "Clever Complete Integration Types and Quickstart Guides",
+      "heading": "Clever Complete Integration Types and Quickstart Guides",
+      "parentHeadings": [
+        "Clever Complete Integration Types and Quickstart Guides"
+      ],
+      "tokenEstimate": 1495,
+      "chunkIndex": 0,
+      "totalChunks": 2
+    },
+    {
+      "id": "clever-complete-integration-types-and-quickstart-guides-01",
+      "file": "chunks/clever-complete-integration-types-and-quickstart-guides-01.json",
+      "url": "https://dev.clever.com/docs/integration-types",
+      "path": "/docs/integration-types",
+      "section": "Getting Started",
+      "title": "Clever Complete Integration Types and Quickstart Guides",
+      "heading": "Clever Complete Integration Types and Quickstart Guides",
+      "parentHeadings": [
+        "Clever Complete Integration Types and Quickstart Guides"
+      ],
+      "tokenEstimate": 1109,
+      "chunkIndex": 1,
+      "totalChunks": 2
+    },
+    {
+      "id": "api-v3-1-updates-00",
+      "file": "chunks/api-v3-1-updates-00.json",
+      "url": "https://dev.clever.com/docs/api-v31",
+      "path": "/docs/api-v31",
+      "section": "What's New",
+      "title": "API v3.1 Updates",
+      "heading": "API v3.1 Updates",
+      "parentHeadings": [
+        "API v3.1 Updates"
+      ],
+      "tokenEstimate": 1412,
+      "chunkIndex": 0,
+      "totalChunks": 2
+    },
+    {
+      "id": "api-v3-1-updates-01",
+      "file": "chunks/api-v3-1-updates-01.json",
+      "url": "https://dev.clever.com/docs/api-v31",
+      "path": "/docs/api-v31",
+      "section": "What's New",
+      "title": "API v3.1 Updates",
+      "heading": "API v3.1 Updates",
+      "parentHeadings": [
+        "API v3.1 Updates"
+      ],
+      "tokenEstimate": 250,
+      "chunkIndex": 1,
+      "totalChunks": 2
+    },
+    {
       "id": "api-v3-x-00",
       "file": "chunks/api-v3-x-00.json",
       "url": "https://dev.clever.com/docs/new-in-api-v3",
@@ -80,64 +140,19 @@
       "totalChunks": 2
     },
     {
-      "id": "clever-complete-integration-types-and-quickstart-guides-00",
-      "file": "chunks/clever-complete-integration-types-and-quickstart-guides-00.json",
-      "url": "https://dev.clever.com/docs/integration-types",
-      "path": "/docs/integration-types",
-      "section": "Getting Started",
-      "title": "Clever Complete Integration Types and Quickstart Guides",
-      "heading": "Clever Complete Integration Types and Quickstart Guides",
+      "id": "clever-lms-connect-overview-00",
+      "file": "chunks/clever-lms-connect-overview-00.json",
+      "url": "https://dev.clever.com/docs/lms-connect-overview",
+      "path": "/docs/lms-connect-overview",
+      "section": "LMS Connect (v3.1)",
+      "title": "Clever LMS Connect - Overview",
+      "heading": "Clever LMS Connect - Overview",
       "parentHeadings": [
-        "Clever Complete Integration Types and Quickstart Guides"
+        "Clever LMS Connect - Overview"
       ],
-      "tokenEstimate": 1443,
+      "tokenEstimate": 1028,
       "chunkIndex": 0,
-      "totalChunks": 2
-    },
-    {
-      "id": "clever-complete-integration-types-and-quickstart-guides-01",
-      "file": "chunks/clever-complete-integration-types-and-quickstart-guides-01.json",
-      "url": "https://dev.clever.com/docs/integration-types",
-      "path": "/docs/integration-types",
-      "section": "Getting Started",
-      "title": "Clever Complete Integration Types and Quickstart Guides",
-      "heading": "Clever Complete Integration Types and Quickstart Guides",
-      "parentHeadings": [
-        "Clever Complete Integration Types and Quickstart Guides"
-      ],
-      "tokenEstimate": 1075,
-      "chunkIndex": 1,
-      "totalChunks": 2
-    },
-    {
-      "id": "api-v3-1-updates-00",
-      "file": "chunks/api-v3-1-updates-00.json",
-      "url": "https://dev.clever.com/docs/api-v31",
-      "path": "/docs/api-v31",
-      "section": "What's New",
-      "title": "API v3.1 Updates",
-      "heading": "API v3.1 Updates",
-      "parentHeadings": [
-        "API v3.1 Updates"
-      ],
-      "tokenEstimate": 1501,
-      "chunkIndex": 0,
-      "totalChunks": 2
-    },
-    {
-      "id": "api-v3-1-updates-01",
-      "file": "chunks/api-v3-1-updates-01.json",
-      "url": "https://dev.clever.com/docs/api-v31",
-      "path": "/docs/api-v31",
-      "section": "What's New",
-      "title": "API v3.1 Updates",
-      "heading": "API v3.1 Updates",
-      "parentHeadings": [
-        "API v3.1 Updates"
-      ],
-      "tokenEstimate": 69,
-      "chunkIndex": 1,
-      "totalChunks": 2
+      "totalChunks": 1
     },
     {
       "id": "migrating-from-v2-x-contacts-to-v3-x-contacts-00",
@@ -213,21 +228,6 @@
       "tokenEstimate": 471,
       "chunkIndex": 1,
       "totalChunks": 2
-    },
-    {
-      "id": "clever-lms-connect-overview-00",
-      "file": "chunks/clever-lms-connect-overview-00.json",
-      "url": "https://dev.clever.com/docs/lms-connect-overview",
-      "path": "/docs/lms-connect-overview",
-      "section": "LMS Connect (v3.1)",
-      "title": "Clever LMS Connect - Overview",
-      "heading": "Clever LMS Connect - Overview",
-      "parentHeadings": [
-        "Clever LMS Connect - Overview"
-      ],
-      "tokenEstimate": 1028,
-      "chunkIndex": 0,
-      "totalChunks": 1
     },
     {
       "id": "updating-to-use-tls-1-2-on-connection-to-clever-api-00",
@@ -465,6 +465,21 @@
       "totalChunks": 7
     },
     {
+      "id": "lti-1-3-sso-testing-and-end-user-behavior-00",
+      "file": "chunks/lti-1-3-sso-testing-and-end-user-behavior-00.json",
+      "url": "https://dev.clever.com/docs/lti-13-sso-setup-and-end-user-behavior",
+      "path": "/docs/lti-13-sso-setup-and-end-user-behavior",
+      "section": "LMS Connect (v3.1)",
+      "title": "LTI 1.3 SSO - Testing and End-User Behavior",
+      "heading": "LTI 1.3 SSO - Testing and End-User Behavior",
+      "parentHeadings": [
+        "LTI 1.3 SSO - Testing and End-User Behavior"
+      ],
+      "tokenEstimate": 825,
+      "chunkIndex": 0,
+      "totalChunks": 1
+    },
+    {
       "id": "clever-lms-connect-lti-1-3-sso-00",
       "file": "chunks/clever-lms-connect-lti-1-3-sso-00.json",
       "url": "https://dev.clever.com/docs/lms-connect-lti-13-sso",
@@ -480,17 +495,17 @@
       "totalChunks": 1
     },
     {
-      "id": "lti-1-3-sso-testing-and-end-user-behavior-00",
-      "file": "chunks/lti-1-3-sso-testing-and-end-user-behavior-00.json",
-      "url": "https://dev.clever.com/docs/lti-13-sso-setup-and-end-user-behavior",
-      "path": "/docs/lti-13-sso-setup-and-end-user-behavior",
-      "section": "LMS Connect (v3.1)",
-      "title": "LTI 1.3 SSO - Testing and End-User Behavior",
-      "heading": "LTI 1.3 SSO - Testing and End-User Behavior",
+      "id": "clever-api-overview-00",
+      "file": "chunks/clever-api-overview-00.json",
+      "url": "https://dev.clever.com/docs/api-overview",
+      "path": "/docs/api-overview",
+      "section": "APIs & Data Model",
+      "title": "Clever API Overview",
+      "heading": "Clever API Overview",
       "parentHeadings": [
-        "LTI 1.3 SSO - Testing and End-User Behavior"
+        "Clever API Overview"
       ],
-      "tokenEstimate": 825,
+      "tokenEstimate": 1160,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -525,36 +540,6 @@
       "totalChunks": 2
     },
     {
-      "id": "clever-lms-connect-submitting-schoology-submissions-00",
-      "file": "chunks/clever-lms-connect-submitting-schoology-submissions-00.json",
-      "url": "https://dev.clever.com/docs/submitting-schoology-submissions",
-      "path": "/docs/submitting-schoology-submissions",
-      "section": "LMS Connect (v3.1)",
-      "title": "Clever LMS Connect - Submitting Schoology Submissions",
-      "heading": "Clever LMS Connect - Submitting Schoology Submissions",
-      "parentHeadings": [
-        "Clever LMS Connect - Submitting Schoology Submissions"
-      ],
-      "tokenEstimate": 593,
-      "chunkIndex": 0,
-      "totalChunks": 1
-    },
-    {
-      "id": "clever-api-overview-00",
-      "file": "chunks/clever-api-overview-00.json",
-      "url": "https://dev.clever.com/docs/api-overview",
-      "path": "/docs/api-overview",
-      "section": "APIs & Data Model",
-      "title": "Clever API Overview",
-      "heading": "Clever API Overview",
-      "parentHeadings": [
-        "Clever API Overview"
-      ],
-      "tokenEstimate": 1160,
-      "chunkIndex": 0,
-      "totalChunks": 1
-    },
-    {
       "id": "exploring-the-clever-api-00",
       "file": "chunks/exploring-the-clever-api-00.json",
       "url": "https://dev.clever.com/docs/working-with-the-clever-api",
@@ -585,17 +570,17 @@
       "totalChunks": 1
     },
     {
-      "id": "pagination-and-response-limits-00",
-      "file": "chunks/pagination-and-response-limits-00.json",
-      "url": "https://dev.clever.com/docs/paging-and-limits",
-      "path": "/docs/paging-and-limits",
-      "section": "APIs & Data Model",
-      "title": "Pagination and Response Limits",
-      "heading": "Pagination and Response Limits",
+      "id": "clever-lms-connect-submitting-schoology-submissions-00",
+      "file": "chunks/clever-lms-connect-submitting-schoology-submissions-00.json",
+      "url": "https://dev.clever.com/docs/submitting-schoology-submissions",
+      "path": "/docs/submitting-schoology-submissions",
+      "section": "LMS Connect (v3.1)",
+      "title": "Clever LMS Connect - Submitting Schoology Submissions",
+      "heading": "Clever LMS Connect - Submitting Schoology Submissions",
       "parentHeadings": [
-        "Pagination and Response Limits"
+        "Clever LMS Connect - Submitting Schoology Submissions"
       ],
-      "tokenEstimate": 842,
+      "tokenEstimate": 593,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -615,17 +600,17 @@
       "totalChunks": 1
     },
     {
-      "id": "clever-s-data-model-v3-x-00",
-      "file": "chunks/clever-s-data-model-v3-x-00.json",
-      "url": "https://dev.clever.com/docs/data-model",
-      "path": "/docs/data-model",
+      "id": "hidden-schema-00",
+      "file": "chunks/hidden-schema-00.json",
+      "url": "https://dev.clever.com/docs/schema-1",
+      "path": "/docs/schema-1",
       "section": "APIs & Data Model",
-      "title": "Clever's Data Model (v3.x)",
-      "heading": "Clever's Data Model (v3.x)",
+      "title": "[HIDDEN] Schema",
+      "heading": "[HIDDEN] Schema",
       "parentHeadings": [
-        "Clever's Data Model (v3.x)"
+        "[HIDDEN] Schema"
       ],
-      "tokenEstimate": 854,
+      "tokenEstimate": 209,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -645,17 +630,32 @@
       "totalChunks": 1
     },
     {
-      "id": "hidden-schema-00",
-      "file": "chunks/hidden-schema-00.json",
-      "url": "https://dev.clever.com/docs/schema-1",
-      "path": "/docs/schema-1",
+      "id": "pagination-and-response-limits-00",
+      "file": "chunks/pagination-and-response-limits-00.json",
+      "url": "https://dev.clever.com/docs/paging-and-limits",
+      "path": "/docs/paging-and-limits",
       "section": "APIs & Data Model",
-      "title": "[HIDDEN] Schema",
-      "heading": "[HIDDEN] Schema",
+      "title": "Pagination and Response Limits",
+      "heading": "Pagination and Response Limits",
       "parentHeadings": [
-        "[HIDDEN] Schema"
+        "Pagination and Response Limits"
       ],
-      "tokenEstimate": 209,
+      "tokenEstimate": 842,
+      "chunkIndex": 0,
+      "totalChunks": 1
+    },
+    {
+      "id": "clever-s-data-model-v3-x-00",
+      "file": "chunks/clever-s-data-model-v3-x-00.json",
+      "url": "https://dev.clever.com/docs/data-model",
+      "path": "/docs/data-model",
+      "section": "APIs & Data Model",
+      "title": "Clever's Data Model (v3.x)",
+      "heading": "Clever's Data Model (v3.x)",
+      "parentHeadings": [
+        "Clever's Data Model (v3.x)"
+      ],
+      "tokenEstimate": 854,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -671,21 +671,6 @@
         "Districts"
       ],
       "tokenEstimate": 1350,
-      "chunkIndex": 0,
-      "totalChunks": 1
-    },
-    {
-      "id": "schools-00",
-      "file": "chunks/schools-00.json",
-      "url": "https://dev.clever.com/docs/schools",
-      "path": "/docs/schools",
-      "section": "APIs & Data Model",
-      "title": "Schools",
-      "heading": "Schools",
-      "parentHeadings": [
-        "Schools"
-      ],
-      "tokenEstimate": 1221,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -716,6 +701,21 @@
         "Courses"
       ],
       "tokenEstimate": 588,
+      "chunkIndex": 0,
+      "totalChunks": 1
+    },
+    {
+      "id": "schools-00",
+      "file": "chunks/schools-00.json",
+      "url": "https://dev.clever.com/docs/schools",
+      "path": "/docs/schools",
+      "section": "APIs & Data Model",
+      "title": "Schools",
+      "heading": "Schools",
+      "parentHeadings": [
+        "Schools"
+      ],
+      "tokenEstimate": 1221,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -820,7 +820,7 @@
       "parentHeadings": [
         "Users"
       ],
-      "tokenEstimate": 1000,
+      "tokenEstimate": 1121,
       "chunkIndex": 1,
       "totalChunks": 4
     },
@@ -870,6 +870,51 @@
       "totalChunks": 1
     },
     {
+      "id": "contacts-and-guardians-00",
+      "file": "chunks/contacts-and-guardians-00.json",
+      "url": "https://dev.clever.com/docs/student-contacts",
+      "path": "/docs/student-contacts",
+      "section": "District Rostering (Secure Sync)",
+      "title": "Contacts and Guardians",
+      "heading": "Contacts and Guardians",
+      "parentHeadings": [
+        "Contacts and Guardians"
+      ],
+      "tokenEstimate": 1460,
+      "chunkIndex": 0,
+      "totalChunks": 2
+    },
+    {
+      "id": "contacts-and-guardians-01",
+      "file": "chunks/contacts-and-guardians-01.json",
+      "url": "https://dev.clever.com/docs/student-contacts",
+      "path": "/docs/student-contacts",
+      "section": "District Rostering (Secure Sync)",
+      "title": "Contacts and Guardians",
+      "heading": "Contacts and Guardians",
+      "parentHeadings": [
+        "Contacts and Guardians"
+      ],
+      "tokenEstimate": 290,
+      "chunkIndex": 1,
+      "totalChunks": 2
+    },
+    {
+      "id": "data-changes-and-rollover-00",
+      "file": "chunks/data-changes-and-rollover-00.json",
+      "url": "https://dev.clever.com/docs/data-changes",
+      "path": "/docs/data-changes",
+      "section": "District Rostering (Secure Sync)",
+      "title": "Data Changes and Rollover",
+      "heading": "Data Changes and Rollover",
+      "parentHeadings": [
+        "Data Changes and Rollover"
+      ],
+      "tokenEstimate": 1007,
+      "chunkIndex": 0,
+      "totalChunks": 1
+    },
+    {
       "id": "clever-secure-sync-overview-00",
       "file": "chunks/clever-secure-sync-overview-00.json",
       "url": "https://dev.clever.com/docs/onboarding",
@@ -915,96 +960,6 @@
       "totalChunks": 3
     },
     {
-      "id": "initializing-and-syncing-data-00",
-      "file": "chunks/initializing-and-syncing-data-00.json",
-      "url": "https://dev.clever.com/docs/ss-design",
-      "path": "/docs/ss-design",
-      "section": "District Rostering (Secure Sync)",
-      "title": "Initializing and Syncing Data",
-      "heading": "Initializing and Syncing Data",
-      "parentHeadings": [
-        "Initializing and Syncing Data"
-      ],
-      "tokenEstimate": 1494,
-      "chunkIndex": 0,
-      "totalChunks": 5
-    },
-    {
-      "id": "initializing-and-syncing-data-01",
-      "file": "chunks/initializing-and-syncing-data-01.json",
-      "url": "https://dev.clever.com/docs/ss-design",
-      "path": "/docs/ss-design",
-      "section": "District Rostering (Secure Sync)",
-      "title": "Initializing and Syncing Data",
-      "heading": "Initializing and Syncing Data",
-      "parentHeadings": [
-        "Initializing and Syncing Data"
-      ],
-      "tokenEstimate": 1500,
-      "chunkIndex": 1,
-      "totalChunks": 5
-    },
-    {
-      "id": "initializing-and-syncing-data-02",
-      "file": "chunks/initializing-and-syncing-data-02.json",
-      "url": "https://dev.clever.com/docs/ss-design",
-      "path": "/docs/ss-design",
-      "section": "District Rostering (Secure Sync)",
-      "title": "Initializing and Syncing Data",
-      "heading": "Initializing and Syncing Data",
-      "parentHeadings": [
-        "Initializing and Syncing Data"
-      ],
-      "tokenEstimate": 1483,
-      "chunkIndex": 2,
-      "totalChunks": 5
-    },
-    {
-      "id": "initializing-and-syncing-data-03",
-      "file": "chunks/initializing-and-syncing-data-03.json",
-      "url": "https://dev.clever.com/docs/ss-design",
-      "path": "/docs/ss-design",
-      "section": "District Rostering (Secure Sync)",
-      "title": "Initializing and Syncing Data",
-      "heading": "Initializing and Syncing Data",
-      "parentHeadings": [
-        "Initializing and Syncing Data"
-      ],
-      "tokenEstimate": 1468,
-      "chunkIndex": 3,
-      "totalChunks": 5
-    },
-    {
-      "id": "initializing-and-syncing-data-04",
-      "file": "chunks/initializing-and-syncing-data-04.json",
-      "url": "https://dev.clever.com/docs/ss-design",
-      "path": "/docs/ss-design",
-      "section": "District Rostering (Secure Sync)",
-      "title": "Initializing and Syncing Data",
-      "heading": "Initializing and Syncing Data",
-      "parentHeadings": [
-        "Initializing and Syncing Data"
-      ],
-      "tokenEstimate": 1500,
-      "chunkIndex": 4,
-      "totalChunks": 5
-    },
-    {
-      "id": "data-changes-and-rollover-00",
-      "file": "chunks/data-changes-and-rollover-00.json",
-      "url": "https://dev.clever.com/docs/data-changes",
-      "path": "/docs/data-changes",
-      "section": "District Rostering (Secure Sync)",
-      "title": "Data Changes and Rollover",
-      "heading": "Data Changes and Rollover",
-      "parentHeadings": [
-        "Data Changes and Rollover"
-      ],
-      "tokenEstimate": 1007,
-      "chunkIndex": 0,
-      "totalChunks": 1
-    },
-    {
       "id": "edge-cases-00",
       "file": "chunks/edge-cases-00.json",
       "url": "https://dev.clever.com/docs/data-model-quirks-and-supported-features-district-integrations",
@@ -1020,34 +975,94 @@
       "totalChunks": 1
     },
     {
-      "id": "contacts-and-guardians-00",
-      "file": "chunks/contacts-and-guardians-00.json",
-      "url": "https://dev.clever.com/docs/student-contacts",
-      "path": "/docs/student-contacts",
+      "id": "initializing-and-syncing-data-00",
+      "file": "chunks/initializing-and-syncing-data-00.json",
+      "url": "https://dev.clever.com/docs/ss-design",
+      "path": "/docs/ss-design",
       "section": "District Rostering (Secure Sync)",
-      "title": "Contacts and Guardians",
-      "heading": "Contacts and Guardians",
+      "title": "Initializing and Syncing Data",
+      "heading": "Initializing and Syncing Data",
       "parentHeadings": [
-        "Contacts and Guardians"
+        "Initializing and Syncing Data"
       ],
-      "tokenEstimate": 1460,
+      "tokenEstimate": 1494,
       "chunkIndex": 0,
-      "totalChunks": 2
+      "totalChunks": 6
     },
     {
-      "id": "contacts-and-guardians-01",
-      "file": "chunks/contacts-and-guardians-01.json",
-      "url": "https://dev.clever.com/docs/student-contacts",
-      "path": "/docs/student-contacts",
+      "id": "initializing-and-syncing-data-01",
+      "file": "chunks/initializing-and-syncing-data-01.json",
+      "url": "https://dev.clever.com/docs/ss-design",
+      "path": "/docs/ss-design",
       "section": "District Rostering (Secure Sync)",
-      "title": "Contacts and Guardians",
-      "heading": "Contacts and Guardians",
+      "title": "Initializing and Syncing Data",
+      "heading": "Initializing and Syncing Data",
       "parentHeadings": [
-        "Contacts and Guardians"
+        "Initializing and Syncing Data"
       ],
-      "tokenEstimate": 290,
+      "tokenEstimate": 1494,
       "chunkIndex": 1,
-      "totalChunks": 2
+      "totalChunks": 6
+    },
+    {
+      "id": "initializing-and-syncing-data-02",
+      "file": "chunks/initializing-and-syncing-data-02.json",
+      "url": "https://dev.clever.com/docs/ss-design",
+      "path": "/docs/ss-design",
+      "section": "District Rostering (Secure Sync)",
+      "title": "Initializing and Syncing Data",
+      "heading": "Initializing and Syncing Data",
+      "parentHeadings": [
+        "Initializing and Syncing Data"
+      ],
+      "tokenEstimate": 1442,
+      "chunkIndex": 2,
+      "totalChunks": 6
+    },
+    {
+      "id": "initializing-and-syncing-data-03",
+      "file": "chunks/initializing-and-syncing-data-03.json",
+      "url": "https://dev.clever.com/docs/ss-design",
+      "path": "/docs/ss-design",
+      "section": "District Rostering (Secure Sync)",
+      "title": "Initializing and Syncing Data",
+      "heading": "Initializing and Syncing Data",
+      "parentHeadings": [
+        "Initializing and Syncing Data"
+      ],
+      "tokenEstimate": 1470,
+      "chunkIndex": 3,
+      "totalChunks": 6
+    },
+    {
+      "id": "initializing-and-syncing-data-04",
+      "file": "chunks/initializing-and-syncing-data-04.json",
+      "url": "https://dev.clever.com/docs/ss-design",
+      "path": "/docs/ss-design",
+      "section": "District Rostering (Secure Sync)",
+      "title": "Initializing and Syncing Data",
+      "heading": "Initializing and Syncing Data",
+      "parentHeadings": [
+        "Initializing and Syncing Data"
+      ],
+      "tokenEstimate": 1427,
+      "chunkIndex": 4,
+      "totalChunks": 6
+    },
+    {
+      "id": "initializing-and-syncing-data-05",
+      "file": "chunks/initializing-and-syncing-data-05.json",
+      "url": "https://dev.clever.com/docs/ss-design",
+      "path": "/docs/ss-design",
+      "section": "District Rostering (Secure Sync)",
+      "title": "Initializing and Syncing Data",
+      "heading": "Initializing and Syncing Data",
+      "parentHeadings": [
+        "Initializing and Syncing Data"
+      ],
+      "tokenEstimate": 210,
+      "chunkIndex": 5,
+      "totalChunks": 6
     },
     {
       "id": "testing-your-secure-sync-integration-00",
@@ -1060,7 +1075,7 @@
       "parentHeadings": [
         "Testing Your Secure Sync Integration"
       ],
-      "tokenEstimate": 1123,
+      "tokenEstimate": 1141,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -1140,6 +1155,36 @@
       "totalChunks": 1
     },
     {
+      "id": "clever-single-sign-on-overview-00",
+      "file": "chunks/clever-single-sign-on-overview-00.json",
+      "url": "https://dev.clever.com/docs/getting-started-with-clever-sso",
+      "path": "/docs/getting-started-with-clever-sso",
+      "section": "Clever SSO",
+      "title": "Clever Single Sign-On - Overview",
+      "heading": "Clever Single Sign-On - Overview",
+      "parentHeadings": [
+        "Clever Single Sign-On - Overview"
+      ],
+      "tokenEstimate": 1470,
+      "chunkIndex": 0,
+      "totalChunks": 2
+    },
+    {
+      "id": "clever-single-sign-on-overview-01",
+      "file": "chunks/clever-single-sign-on-overview-01.json",
+      "url": "https://dev.clever.com/docs/getting-started-with-clever-sso",
+      "path": "/docs/getting-started-with-clever-sso",
+      "section": "Clever SSO",
+      "title": "Clever Single Sign-On - Overview",
+      "heading": "Clever Single Sign-On - Overview",
+      "parentHeadings": [
+        "Clever Single Sign-On - Overview"
+      ],
+      "tokenEstimate": 500,
+      "chunkIndex": 1,
+      "totalChunks": 2
+    },
+    {
       "id": "attendance-data-api-overview-00",
       "file": "chunks/attendance-data-api-overview-00.json",
       "url": "https://dev.clever.com/docs/attendance-data-overview",
@@ -1166,6 +1211,36 @@
         "Attendance Data API Overview"
       ],
       "tokenEstimate": 1619,
+      "chunkIndex": 1,
+      "totalChunks": 2
+    },
+    {
+      "id": "clever-single-sign-on-overview-00",
+      "file": "chunks/clever-single-sign-on-overview-00.json",
+      "url": "https://dev.clever.com/docs/sso-overview",
+      "path": "/docs/sso-overview",
+      "section": "Clever SSO",
+      "title": "Clever Single Sign-On Overview",
+      "heading": "Clever Single Sign-On Overview",
+      "parentHeadings": [
+        "Clever Single Sign-On Overview"
+      ],
+      "tokenEstimate": 1382,
+      "chunkIndex": 0,
+      "totalChunks": 2
+    },
+    {
+      "id": "clever-single-sign-on-overview-01",
+      "file": "chunks/clever-single-sign-on-overview-01.json",
+      "url": "https://dev.clever.com/docs/sso-overview",
+      "path": "/docs/sso-overview",
+      "section": "Clever SSO",
+      "title": "Clever Single Sign-On Overview",
+      "heading": "Clever Single Sign-On Overview",
+      "parentHeadings": [
+        "Clever Single Sign-On Overview"
+      ],
+      "tokenEstimate": 856,
       "chunkIndex": 1,
       "totalChunks": 2
     },
@@ -1200,96 +1275,6 @@
       "totalChunks": 1
     },
     {
-      "id": "clever-single-sign-on-overview-00",
-      "file": "chunks/clever-single-sign-on-overview-00.json",
-      "url": "https://dev.clever.com/docs/sso-overview",
-      "path": "/docs/sso-overview",
-      "section": "Clever SSO",
-      "title": "Clever Single Sign-On Overview",
-      "heading": "Clever Single Sign-On Overview",
-      "parentHeadings": [
-        "Clever Single Sign-On Overview"
-      ],
-      "tokenEstimate": 1382,
-      "chunkIndex": 0,
-      "totalChunks": 2
-    },
-    {
-      "id": "clever-single-sign-on-overview-01",
-      "file": "chunks/clever-single-sign-on-overview-01.json",
-      "url": "https://dev.clever.com/docs/sso-overview",
-      "path": "/docs/sso-overview",
-      "section": "Clever SSO",
-      "title": "Clever Single Sign-On Overview",
-      "heading": "Clever Single Sign-On Overview",
-      "parentHeadings": [
-        "Clever Single Sign-On Overview"
-      ],
-      "tokenEstimate": 856,
-      "chunkIndex": 1,
-      "totalChunks": 2
-    },
-    {
-      "id": "clever-single-sign-on-overview-00",
-      "file": "chunks/clever-single-sign-on-overview-00.json",
-      "url": "https://dev.clever.com/docs/getting-started-with-clever-sso",
-      "path": "/docs/getting-started-with-clever-sso",
-      "section": "Clever SSO",
-      "title": "Clever Single Sign-On - Overview",
-      "heading": "Clever Single Sign-On - Overview",
-      "parentHeadings": [
-        "Clever Single Sign-On - Overview"
-      ],
-      "tokenEstimate": 1470,
-      "chunkIndex": 0,
-      "totalChunks": 2
-    },
-    {
-      "id": "clever-single-sign-on-overview-01",
-      "file": "chunks/clever-single-sign-on-overview-01.json",
-      "url": "https://dev.clever.com/docs/getting-started-with-clever-sso",
-      "path": "/docs/getting-started-with-clever-sso",
-      "section": "Clever SSO",
-      "title": "Clever Single Sign-On - Overview",
-      "heading": "Clever Single Sign-On - Overview",
-      "parentHeadings": [
-        "Clever Single Sign-On - Overview"
-      ],
-      "tokenEstimate": 500,
-      "chunkIndex": 1,
-      "totalChunks": 2
-    },
-    {
-      "id": "setting-up-clever-single-sign-on-00",
-      "file": "chunks/setting-up-clever-single-sign-on-00.json",
-      "url": "https://dev.clever.com/docs/setting-up-district-sso",
-      "path": "/docs/setting-up-district-sso",
-      "section": "Clever SSO",
-      "title": "Setting up Clever Single Sign-On",
-      "heading": "Setting up Clever Single Sign-On",
-      "parentHeadings": [
-        "Setting up Clever Single Sign-On"
-      ],
-      "tokenEstimate": 1448,
-      "chunkIndex": 0,
-      "totalChunks": 2
-    },
-    {
-      "id": "setting-up-clever-single-sign-on-01",
-      "file": "chunks/setting-up-clever-single-sign-on-01.json",
-      "url": "https://dev.clever.com/docs/setting-up-district-sso",
-      "path": "/docs/setting-up-district-sso",
-      "section": "Clever SSO",
-      "title": "Setting up Clever Single Sign-On",
-      "heading": "Setting up Clever Single Sign-On",
-      "parentHeadings": [
-        "Setting up Clever Single Sign-On"
-      ],
-      "tokenEstimate": 167,
-      "chunkIndex": 1,
-      "totalChunks": 2
-    },
-    {
       "id": "clever-single-sign-on-best-practices-edge-cases-00",
       "file": "chunks/clever-single-sign-on-best-practices-edge-cases-00.json",
       "url": "https://dev.clever.com/docs/best-practices-edge-cases",
@@ -1320,62 +1305,32 @@
       "totalChunks": 2
     },
     {
-      "id": "keeping-sso-secure-00",
-      "file": "chunks/keeping-sso-secure-00.json",
-      "url": "https://dev.clever.com/docs/il-security",
-      "path": "/docs/il-security",
+      "id": "setting-up-clever-single-sign-on-00",
+      "file": "chunks/setting-up-clever-single-sign-on-00.json",
+      "url": "https://dev.clever.com/docs/setting-up-district-sso",
+      "path": "/docs/setting-up-district-sso",
       "section": "Clever SSO",
-      "title": "Keeping SSO Secure",
-      "heading": "Keeping SSO Secure",
+      "title": "Setting up Clever Single Sign-On",
+      "heading": "Setting up Clever Single Sign-On",
       "parentHeadings": [
-        "Keeping SSO Secure"
+        "Setting up Clever Single Sign-On"
       ],
-      "tokenEstimate": 1472,
+      "tokenEstimate": 1448,
       "chunkIndex": 0,
       "totalChunks": 2
     },
     {
-      "id": "keeping-sso-secure-01",
-      "file": "chunks/keeping-sso-secure-01.json",
-      "url": "https://dev.clever.com/docs/il-security",
-      "path": "/docs/il-security",
+      "id": "setting-up-clever-single-sign-on-01",
+      "file": "chunks/setting-up-clever-single-sign-on-01.json",
+      "url": "https://dev.clever.com/docs/setting-up-district-sso",
+      "path": "/docs/setting-up-district-sso",
       "section": "Clever SSO",
-      "title": "Keeping SSO Secure",
-      "heading": "Keeping SSO Secure",
+      "title": "Setting up Clever Single Sign-On",
+      "heading": "Setting up Clever Single Sign-On",
       "parentHeadings": [
-        "Keeping SSO Secure"
+        "Setting up Clever Single Sign-On"
       ],
-      "tokenEstimate": 973,
-      "chunkIndex": 1,
-      "totalChunks": 2
-    },
-    {
-      "id": "multi-role-users-in-clever-00",
-      "file": "chunks/multi-role-users-in-clever-00.json",
-      "url": "https://dev.clever.com/docs/multi-role-users-in-clever",
-      "path": "/docs/multi-role-users-in-clever",
-      "section": "Clever SSO",
-      "title": "Multi-Role Users in Clever",
-      "heading": "Multi-Role Users in Clever",
-      "parentHeadings": [
-        "Multi-Role Users in Clever"
-      ],
-      "tokenEstimate": 1506,
-      "chunkIndex": 0,
-      "totalChunks": 2
-    },
-    {
-      "id": "multi-role-users-in-clever-01",
-      "file": "chunks/multi-role-users-in-clever-01.json",
-      "url": "https://dev.clever.com/docs/multi-role-users-in-clever",
-      "path": "/docs/multi-role-users-in-clever",
-      "section": "Clever SSO",
-      "title": "Multi-Role Users in Clever",
-      "heading": "Multi-Role Users in Clever",
-      "parentHeadings": [
-        "Multi-Role Users in Clever"
-      ],
-      "tokenEstimate": 270,
+      "tokenEstimate": 167,
       "chunkIndex": 1,
       "totalChunks": 2
     },
@@ -1500,36 +1455,6 @@
       "totalChunks": 2
     },
     {
-      "id": "testing-your-sso-integration-00",
-      "file": "chunks/testing-your-sso-integration-00.json",
-      "url": "https://dev.clever.com/docs/testing-your-sso-integration",
-      "path": "/docs/testing-your-sso-integration",
-      "section": "Clever SSO",
-      "title": "Testing Your SSO Integration",
-      "heading": "Testing Your SSO Integration",
-      "parentHeadings": [
-        "Testing Your SSO Integration"
-      ],
-      "tokenEstimate": 1500,
-      "chunkIndex": 0,
-      "totalChunks": 2
-    },
-    {
-      "id": "testing-your-sso-integration-01",
-      "file": "chunks/testing-your-sso-integration-01.json",
-      "url": "https://dev.clever.com/docs/testing-your-sso-integration",
-      "path": "/docs/testing-your-sso-integration",
-      "section": "Clever SSO",
-      "title": "Testing Your SSO Integration",
-      "heading": "Testing Your SSO Integration",
-      "parentHeadings": [
-        "Testing Your SSO Integration"
-      ],
-      "tokenEstimate": 600,
-      "chunkIndex": 1,
-      "totalChunks": 2
-    },
-    {
       "id": "testing-clever-single-sign-on-00",
       "file": "chunks/testing-clever-single-sign-on-00.json",
       "url": "https://dev.clever.com/docs/testing-district-sso",
@@ -1560,6 +1485,96 @@
       "totalChunks": 2
     },
     {
+      "id": "multi-role-users-in-clever-00",
+      "file": "chunks/multi-role-users-in-clever-00.json",
+      "url": "https://dev.clever.com/docs/multi-role-users-in-clever",
+      "path": "/docs/multi-role-users-in-clever",
+      "section": "Clever SSO",
+      "title": "Multi-Role Users in Clever",
+      "heading": "Multi-Role Users in Clever",
+      "parentHeadings": [
+        "Multi-Role Users in Clever"
+      ],
+      "tokenEstimate": 1506,
+      "chunkIndex": 0,
+      "totalChunks": 2
+    },
+    {
+      "id": "multi-role-users-in-clever-01",
+      "file": "chunks/multi-role-users-in-clever-01.json",
+      "url": "https://dev.clever.com/docs/multi-role-users-in-clever",
+      "path": "/docs/multi-role-users-in-clever",
+      "section": "Clever SSO",
+      "title": "Multi-Role Users in Clever",
+      "heading": "Multi-Role Users in Clever",
+      "parentHeadings": [
+        "Multi-Role Users in Clever"
+      ],
+      "tokenEstimate": 270,
+      "chunkIndex": 1,
+      "totalChunks": 2
+    },
+    {
+      "id": "testing-your-sso-integration-00",
+      "file": "chunks/testing-your-sso-integration-00.json",
+      "url": "https://dev.clever.com/docs/testing-your-sso-integration",
+      "path": "/docs/testing-your-sso-integration",
+      "section": "Clever SSO",
+      "title": "Testing Your SSO Integration",
+      "heading": "Testing Your SSO Integration",
+      "parentHeadings": [
+        "Testing Your SSO Integration"
+      ],
+      "tokenEstimate": 1500,
+      "chunkIndex": 0,
+      "totalChunks": 2
+    },
+    {
+      "id": "testing-your-sso-integration-01",
+      "file": "chunks/testing-your-sso-integration-01.json",
+      "url": "https://dev.clever.com/docs/testing-your-sso-integration",
+      "path": "/docs/testing-your-sso-integration",
+      "section": "Clever SSO",
+      "title": "Testing Your SSO Integration",
+      "heading": "Testing Your SSO Integration",
+      "parentHeadings": [
+        "Testing Your SSO Integration"
+      ],
+      "tokenEstimate": 600,
+      "chunkIndex": 1,
+      "totalChunks": 2
+    },
+    {
+      "id": "keeping-sso-secure-00",
+      "file": "chunks/keeping-sso-secure-00.json",
+      "url": "https://dev.clever.com/docs/il-security",
+      "path": "/docs/il-security",
+      "section": "Clever SSO",
+      "title": "Keeping SSO Secure",
+      "heading": "Keeping SSO Secure",
+      "parentHeadings": [
+        "Keeping SSO Secure"
+      ],
+      "tokenEstimate": 1472,
+      "chunkIndex": 0,
+      "totalChunks": 2
+    },
+    {
+      "id": "keeping-sso-secure-01",
+      "file": "chunks/keeping-sso-secure-01.json",
+      "url": "https://dev.clever.com/docs/il-security",
+      "path": "/docs/il-security",
+      "section": "Clever SSO",
+      "title": "Keeping SSO Secure",
+      "heading": "Keeping SSO Secure",
+      "parentHeadings": [
+        "Keeping SSO Secure"
+      ],
+      "tokenEstimate": 973,
+      "chunkIndex": 1,
+      "totalChunks": 2
+    },
+    {
       "id": "testing-clever-library-sso-00",
       "file": "chunks/testing-clever-library-sso-00.json",
       "url": "https://dev.clever.com/docs/testing-library",
@@ -1570,7 +1585,7 @@
       "parentHeadings": [
         "Testing - Clever Library SSO"
       ],
-      "tokenEstimate": 540,
+      "tokenEstimate": 562,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -1665,21 +1680,6 @@
       "totalChunks": 1
     },
     {
-      "id": "clever-library-certification-guide-00",
-      "file": "chunks/clever-library-certification-guide-00.json",
-      "url": "https://dev.clever.com/docs/library-certification-guide",
-      "path": "/docs/library-certification-guide",
-      "section": "Certifications",
-      "title": "Clever Library Certification Guide",
-      "heading": "Clever Library Certification Guide",
-      "parentHeadings": [
-        "Clever Library Certification Guide"
-      ],
-      "tokenEstimate": 1385,
-      "chunkIndex": 0,
-      "totalChunks": 1
-    },
-    {
       "id": "submit-for-certification-00",
       "file": "chunks/submit-for-certification-00.json",
       "url": "https://dev.clever.com/docs/submit-for-certification",
@@ -1691,6 +1691,21 @@
         "Submit for Certification"
       ],
       "tokenEstimate": 322,
+      "chunkIndex": 0,
+      "totalChunks": 1
+    },
+    {
+      "id": "clever-library-certification-guide-00",
+      "file": "chunks/clever-library-certification-guide-00.json",
+      "url": "https://dev.clever.com/docs/library-certification-guide",
+      "path": "/docs/library-certification-guide",
+      "section": "Certifications",
+      "title": "Clever Library Certification Guide",
+      "heading": "Clever Library Certification Guide",
+      "parentHeadings": [
+        "Clever Library Certification Guide"
+      ],
+      "tokenEstimate": 1385,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -1890,36 +1905,6 @@
       "totalChunks": 1
     },
     {
-      "id": "building-a-saml-app-00",
-      "file": "chunks/building-a-saml-app-00.json",
-      "url": "https://dev.clever.com/docs/saml-getting-started",
-      "path": "/docs/saml-getting-started",
-      "section": "SAML",
-      "title": "Building a SAML App",
-      "heading": "Building a SAML App",
-      "parentHeadings": [
-        "Building a SAML App"
-      ],
-      "tokenEstimate": 1472,
-      "chunkIndex": 0,
-      "totalChunks": 2
-    },
-    {
-      "id": "building-a-saml-app-01",
-      "file": "chunks/building-a-saml-app-01.json",
-      "url": "https://dev.clever.com/docs/saml-getting-started",
-      "path": "/docs/saml-getting-started",
-      "section": "SAML",
-      "title": "Building a SAML App",
-      "heading": "Building a SAML App",
-      "parentHeadings": [
-        "Building a SAML App"
-      ],
-      "tokenEstimate": 191,
-      "chunkIndex": 1,
-      "totalChunks": 2
-    },
-    {
       "id": "moodle-sso-integration-guide-00",
       "file": "chunks/moodle-sso-integration-guide-00.json",
       "url": "https://dev.clever.com/docs/moodle-sso-integration-guide",
@@ -1961,21 +1946,6 @@
         "SSO on iOS/iPadOS"
       ],
       "tokenEstimate": 673,
-      "chunkIndex": 0,
-      "totalChunks": 1
-    },
-    {
-      "id": "clever-secure-sync-quickstart-guide-00",
-      "file": "chunks/clever-secure-sync-quickstart-guide-00.json",
-      "url": "https://dev.clever.com/docs/secure-sync-rostering",
-      "path": "/docs/secure-sync-rostering",
-      "section": "Discovered",
-      "title": "Clever Secure Sync Quickstart Guide",
-      "heading": "Clever Secure Sync Quickstart Guide",
-      "parentHeadings": [
-        "Clever Secure Sync Quickstart Guide"
-      ],
-      "tokenEstimate": 1422,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -2023,6 +1993,51 @@
       "tokenEstimate": 788,
       "chunkIndex": 0,
       "totalChunks": 1
+    },
+    {
+      "id": "clever-secure-sync-quickstart-guide-00",
+      "file": "chunks/clever-secure-sync-quickstart-guide-00.json",
+      "url": "https://dev.clever.com/docs/secure-sync-rostering",
+      "path": "/docs/secure-sync-rostering",
+      "section": "Discovered",
+      "title": "Clever Secure Sync Quickstart Guide",
+      "heading": "Clever Secure Sync Quickstart Guide",
+      "parentHeadings": [
+        "Clever Secure Sync Quickstart Guide"
+      ],
+      "tokenEstimate": 1422,
+      "chunkIndex": 0,
+      "totalChunks": 1
+    },
+    {
+      "id": "building-a-saml-app-00",
+      "file": "chunks/building-a-saml-app-00.json",
+      "url": "https://dev.clever.com/docs/saml-getting-started",
+      "path": "/docs/saml-getting-started",
+      "section": "SAML",
+      "title": "Building a SAML App",
+      "heading": "Building a SAML App",
+      "parentHeadings": [
+        "Building a SAML App"
+      ],
+      "tokenEstimate": 1472,
+      "chunkIndex": 0,
+      "totalChunks": 2
+    },
+    {
+      "id": "building-a-saml-app-01",
+      "file": "chunks/building-a-saml-app-01.json",
+      "url": "https://dev.clever.com/docs/saml-getting-started",
+      "path": "/docs/saml-getting-started",
+      "section": "SAML",
+      "title": "Building a SAML App",
+      "heading": "Building a SAML App",
+      "parentHeadings": [
+        "Building a SAML App"
+      ],
+      "tokenEstimate": 191,
+      "chunkIndex": 1,
+      "totalChunks": 2
     },
     {
       "id": "clever-anyschool-quickstart-guide-00",
@@ -2085,21 +2100,6 @@
       "totalChunks": 2
     },
     {
-      "id": "saml-integration-quickstart-guide-00",
-      "file": "chunks/saml-integration-quickstart-guide-00.json",
-      "url": "https://dev.clever.com/docs/saml",
-      "path": "/docs/saml",
-      "section": "Discovered",
-      "title": "SAML Integration Quickstart Guide",
-      "heading": "SAML Integration Quickstart Guide",
-      "parentHeadings": [
-        "SAML Integration Quickstart Guide"
-      ],
-      "tokenEstimate": 616,
-      "chunkIndex": 0,
-      "totalChunks": 1
-    },
-    {
       "id": "clever-single-sign-on-quickstart-guide-00",
       "file": "chunks/clever-single-sign-on-quickstart-guide-00.json",
       "url": "https://dev.clever.com/docs/district-sso-1",
@@ -2110,7 +2110,7 @@
       "parentHeadings": [
         "Clever Single Sign-On Quickstart Guide"
       ],
-      "tokenEstimate": 1495,
+      "tokenEstimate": 1491,
       "chunkIndex": 0,
       "totalChunks": 2
     },
@@ -2125,7 +2125,7 @@
       "parentHeadings": [
         "Clever Single Sign-On Quickstart Guide"
       ],
-      "tokenEstimate": 313,
+      "tokenEstimate": 529,
       "chunkIndex": 1,
       "totalChunks": 2
     },
@@ -2145,6 +2145,21 @@
       "totalChunks": 1
     },
     {
+      "id": "saml-integration-quickstart-guide-00",
+      "file": "chunks/saml-integration-quickstart-guide-00.json",
+      "url": "https://dev.clever.com/docs/saml",
+      "path": "/docs/saml",
+      "section": "Discovered",
+      "title": "SAML Integration Quickstart Guide",
+      "heading": "SAML Integration Quickstart Guide",
+      "parentHeadings": [
+        "SAML Integration Quickstart Guide"
+      ],
+      "tokenEstimate": 616,
+      "chunkIndex": 0,
+      "totalChunks": 1
+    },
+    {
       "id": "what-s-new-in-api-v3-1-00",
       "file": "chunks/what-s-new-in-api-v3-1-00.json",
       "url": "https://dev.clever.com/docs/whats-new-in-api-v31",
@@ -2155,7 +2170,7 @@
       "parentHeadings": [
         "What's New in API v3.1"
       ],
-      "tokenEstimate": 1022,
+      "tokenEstimate": 1114,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -2205,49 +2220,49 @@
       "totalChunks": 1
     },
     {
-      "id": "clever-api-v3-1-data-schema-00",
-      "file": "chunks/clever-api-v3-1-data-schema-00.json",
-      "url": "https://dev.clever.com/docs/anyschool-api-schema",
-      "path": "/docs/anyschool-api-schema",
+      "id": "clever-single-sign-on-vs-clever-library-sso-00",
+      "file": "chunks/clever-single-sign-on-vs-clever-library-sso-00.json",
+      "url": "https://dev.clever.com/docs/clever-single-sign-on-vs-clever-library-sso-copy",
+      "path": "/docs/clever-single-sign-on-vs-clever-library-sso-copy",
       "section": "Discovered",
-      "title": "Clever API v3.1 Data Schema",
-      "heading": "Clever API v3.1 Data Schema",
+      "title": "Clever Single Sign-On vs Clever Library SSO",
+      "heading": "Clever Single Sign-On vs Clever Library SSO",
       "parentHeadings": [
-        "Clever API v3.1 Data Schema"
+        "Clever Single Sign-On vs Clever Library SSO"
       ],
-      "tokenEstimate": 33,
-      "chunkIndex": 0,
-      "totalChunks": 1
-    },
-    {
-      "id": "contacts-guardians-00",
-      "file": "chunks/contacts-guardians-00.json",
-      "url": "https://dev.clever.com/docs/contacts-guardians",
-      "path": "/docs/contacts-guardians",
-      "section": "Discovered",
-      "title": "Contacts (Guardians)",
-      "heading": "Contacts (Guardians)",
-      "parentHeadings": [
-        "Contacts (Guardians)"
-      ],
-      "tokenEstimate": 1445,
+      "tokenEstimate": 1499,
       "chunkIndex": 0,
       "totalChunks": 2
     },
     {
-      "id": "contacts-guardians-01",
-      "file": "chunks/contacts-guardians-01.json",
-      "url": "https://dev.clever.com/docs/contacts-guardians",
-      "path": "/docs/contacts-guardians",
+      "id": "clever-single-sign-on-vs-clever-library-sso-01",
+      "file": "chunks/clever-single-sign-on-vs-clever-library-sso-01.json",
+      "url": "https://dev.clever.com/docs/clever-single-sign-on-vs-clever-library-sso-copy",
+      "path": "/docs/clever-single-sign-on-vs-clever-library-sso-copy",
       "section": "Discovered",
-      "title": "Contacts (Guardians)",
-      "heading": "Contacts (Guardians)",
+      "title": "Clever Single Sign-On vs Clever Library SSO",
+      "heading": "Clever Single Sign-On vs Clever Library SSO",
       "parentHeadings": [
-        "Contacts (Guardians)"
+        "Clever Single Sign-On vs Clever Library SSO"
       ],
-      "tokenEstimate": 593,
+      "tokenEstimate": 790,
       "chunkIndex": 1,
       "totalChunks": 2
+    },
+    {
+      "id": "api-v3-x-faqs-00",
+      "file": "chunks/api-v3-x-faqs-00.json",
+      "url": "https://dev.clever.com/docs/api-v3-faqs",
+      "path": "/docs/api-v3-faqs",
+      "section": "Discovered",
+      "title": "API v3.x FAQs",
+      "heading": "API v3.x FAQs",
+      "parentHeadings": [
+        "API v3.x FAQs"
+      ],
+      "tokenEstimate": 630,
+      "chunkIndex": 0,
+      "totalChunks": 1
     },
     {
       "id": "api-v3-x-upgrade-guide-00",
@@ -2310,19 +2325,49 @@
       "totalChunks": 4
     },
     {
-      "id": "api-v3-x-faqs-00",
-      "file": "chunks/api-v3-x-faqs-00.json",
-      "url": "https://dev.clever.com/docs/api-v3-faqs",
-      "path": "/docs/api-v3-faqs",
+      "id": "clever-api-v3-1-data-schema-00",
+      "file": "chunks/clever-api-v3-1-data-schema-00.json",
+      "url": "https://dev.clever.com/docs/clever-api-v31-data-schema",
+      "path": "/docs/clever-api-v31-data-schema",
       "section": "Discovered",
-      "title": "API v3.x FAQs",
-      "heading": "API v3.x FAQs",
+      "title": "Clever API v3.1 Data Schema",
+      "heading": "Clever API v3.1 Data Schema",
       "parentHeadings": [
-        "API v3.x FAQs"
+        "Clever API v3.1 Data Schema"
       ],
-      "tokenEstimate": 630,
+      "tokenEstimate": 222,
       "chunkIndex": 0,
       "totalChunks": 1
+    },
+    {
+      "id": "contacts-guardians-00",
+      "file": "chunks/contacts-guardians-00.json",
+      "url": "https://dev.clever.com/docs/contacts-guardians",
+      "path": "/docs/contacts-guardians",
+      "section": "Discovered",
+      "title": "Contacts (Guardians)",
+      "heading": "Contacts (Guardians)",
+      "parentHeadings": [
+        "Contacts (Guardians)"
+      ],
+      "tokenEstimate": 1445,
+      "chunkIndex": 0,
+      "totalChunks": 2
+    },
+    {
+      "id": "contacts-guardians-01",
+      "file": "chunks/contacts-guardians-01.json",
+      "url": "https://dev.clever.com/docs/contacts-guardians",
+      "path": "/docs/contacts-guardians",
+      "section": "Discovered",
+      "title": "Contacts (Guardians)",
+      "heading": "Contacts (Guardians)",
+      "parentHeadings": [
+        "Contacts (Guardians)"
+      ],
+      "tokenEstimate": 593,
+      "chunkIndex": 1,
+      "totalChunks": 2
     },
     {
       "id": "concept-guide-00",
@@ -2357,15 +2402,15 @@
     {
       "id": "clever-api-v3-1-data-schema-00",
       "file": "chunks/clever-api-v3-1-data-schema-00.json",
-      "url": "https://dev.clever.com/docs/clever-api-v31-data-schema",
-      "path": "/docs/clever-api-v31-data-schema",
+      "url": "https://dev.clever.com/docs/clever-api-v31-data-schema-copy",
+      "path": "/docs/clever-api-v31-data-schema-copy",
       "section": "Discovered",
       "title": "Clever API v3.1 Data Schema",
       "heading": "Clever API v3.1 Data Schema",
       "parentHeadings": [
         "Clever API v3.1 Data Schema"
       ],
-      "tokenEstimate": 103,
+      "tokenEstimate": 222,
       "chunkIndex": 0,
       "totalChunks": 1
     },
@@ -2385,36 +2430,6 @@
       "totalChunks": 1
     },
     {
-      "id": "clever-single-sign-on-vs-clever-library-sso-00",
-      "file": "chunks/clever-single-sign-on-vs-clever-library-sso-00.json",
-      "url": "https://dev.clever.com/docs/clever-single-sign-on-vs-clever-library-sso-copy",
-      "path": "/docs/clever-single-sign-on-vs-clever-library-sso-copy",
-      "section": "Discovered",
-      "title": "Clever Single Sign-On vs Clever Library SSO",
-      "heading": "Clever Single Sign-On vs Clever Library SSO",
-      "parentHeadings": [
-        "Clever Single Sign-On vs Clever Library SSO"
-      ],
-      "tokenEstimate": 43,
-      "chunkIndex": 0,
-      "totalChunks": 1
-    },
-    {
-      "id": "clever-api-v3-1-data-schema-00",
-      "file": "chunks/clever-api-v3-1-data-schema-00.json",
-      "url": "https://dev.clever.com/docs/clever-api-v31-data-schema-copy",
-      "path": "/docs/clever-api-v31-data-schema-copy",
-      "section": "Discovered",
-      "title": "Clever API v3.1 Data Schema",
-      "heading": "Clever API v3.1 Data Schema",
-      "parentHeadings": [
-        "Clever API v3.1 Data Schema"
-      ],
-      "tokenEstimate": 103,
-      "chunkIndex": 0,
-      "totalChunks": 1
-    },
-    {
       "id": "district-sso-overview-00",
       "file": "chunks/district-sso-overview-00.json",
       "url": "https://dev.clever.com/docs/identity-api",
@@ -2425,7 +2440,7 @@
       "parentHeadings": [
         "District SSO Overview"
       ],
-      "tokenEstimate": 1408,
+      "tokenEstimate": 1457,
       "chunkIndex": 0,
       "totalChunks": 4
     },
@@ -2440,7 +2455,7 @@
       "parentHeadings": [
         "District SSO Overview"
       ],
-      "tokenEstimate": 1482,
+      "tokenEstimate": 1491,
       "chunkIndex": 1,
       "totalChunks": 4
     },
@@ -2470,84 +2485,9 @@
       "parentHeadings": [
         "District SSO Overview"
       ],
-      "tokenEstimate": 497,
+      "tokenEstimate": 507,
       "chunkIndex": 3,
       "totalChunks": 4
-    },
-    {
-      "id": "sso-using-an-implicit-grant-00",
-      "file": "chunks/sso-using-an-implicit-grant-00.json",
-      "url": "https://dev.clever.com/docs/il-implicit-grant",
-      "path": "/docs/il-implicit-grant",
-      "section": "Discovered",
-      "title": "SSO using an Implicit Grant",
-      "heading": "SSO using an Implicit Grant",
-      "parentHeadings": [
-        "SSO using an Implicit Grant"
-      ],
-      "tokenEstimate": 1483,
-      "chunkIndex": 0,
-      "totalChunks": 3
-    },
-    {
-      "id": "sso-using-an-implicit-grant-01",
-      "file": "chunks/sso-using-an-implicit-grant-01.json",
-      "url": "https://dev.clever.com/docs/il-implicit-grant",
-      "path": "/docs/il-implicit-grant",
-      "section": "Discovered",
-      "title": "SSO using an Implicit Grant",
-      "heading": "SSO using an Implicit Grant",
-      "parentHeadings": [
-        "SSO using an Implicit Grant"
-      ],
-      "tokenEstimate": 1454,
-      "chunkIndex": 1,
-      "totalChunks": 3
-    },
-    {
-      "id": "sso-using-an-implicit-grant-02",
-      "file": "chunks/sso-using-an-implicit-grant-02.json",
-      "url": "https://dev.clever.com/docs/il-implicit-grant",
-      "path": "/docs/il-implicit-grant",
-      "section": "Discovered",
-      "title": "SSO using an Implicit Grant",
-      "heading": "SSO using an Implicit Grant",
-      "parentHeadings": [
-        "SSO using an Implicit Grant"
-      ],
-      "tokenEstimate": 222,
-      "chunkIndex": 2,
-      "totalChunks": 3
-    },
-    {
-      "id": "custom-sandbox-districts-00",
-      "file": "chunks/custom-sandbox-districts-00.json",
-      "url": "https://dev.clever.com/docs/custom-sandbox-districts",
-      "path": "/docs/custom-sandbox-districts",
-      "section": "Discovered",
-      "title": "Custom Sandbox Districts",
-      "heading": "Custom Sandbox Districts",
-      "parentHeadings": [
-        "Custom Sandbox Districts"
-      ],
-      "tokenEstimate": 1505,
-      "chunkIndex": 0,
-      "totalChunks": 2
-    },
-    {
-      "id": "custom-sandbox-districts-01",
-      "file": "chunks/custom-sandbox-districts-01.json",
-      "url": "https://dev.clever.com/docs/custom-sandbox-districts",
-      "path": "/docs/custom-sandbox-districts",
-      "section": "Discovered",
-      "title": "Custom Sandbox Districts",
-      "heading": "Custom Sandbox Districts",
-      "parentHeadings": [
-        "Custom Sandbox Districts"
-      ],
-      "tokenEstimate": 719,
-      "chunkIndex": 1,
-      "totalChunks": 2
     },
     {
       "id": "designing-district-sso-integrations-00",
@@ -2606,6 +2546,21 @@
         "Example SSO Application"
       ],
       "tokenEstimate": 1019,
+      "chunkIndex": 0,
+      "totalChunks": 1
+    },
+    {
+      "id": "clever-api-v3-1-data-schema-00",
+      "file": "chunks/clever-api-v3-1-data-schema-00.json",
+      "url": "https://dev.clever.com/docs/anyschool-api-schema",
+      "path": "/docs/anyschool-api-schema",
+      "section": "Discovered",
+      "title": "Clever API v3.1 Data Schema",
+      "heading": "Clever API v3.1 Data Schema",
+      "parentHeadings": [
+        "Clever API v3.1 Data Schema"
+      ],
+      "tokenEstimate": 152,
       "chunkIndex": 0,
       "totalChunks": 1
     }

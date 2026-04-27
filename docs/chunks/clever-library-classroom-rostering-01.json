@@ -11,7 +11,7 @@
   ],
   "content": "[](#plan-for-transitioning-to-secure-sync)\n\nOftentimes, applications that choose to build a Library integration go on to build a district-level Secure Sync integration as well. It's advisable to prepare for this eventual transition. You may want to implement some of the following:\n\n-   Include logic to differentiate between `\"authorized_by\" = \"teacher\"` and `\"authorized_by\" = \"district\"` responses at the `/me` endpoint.\n-   Design your data schema to easily add in additional fields that are available with Secure Sync.",
   "tokenEstimate": 131,
-  "crawledAt": "2026-04-20T06:43:23.662Z",
+  "crawledAt": "2026-04-27T06:52:04.704Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

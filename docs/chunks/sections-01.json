@@ -11,7 +11,7 @@
   ],
   "content": "You'll notice that the section has a `teacher` field as well as a list of `teachers`. If a section has more than one teacher, additional teachers are listed in the `teachers` array. We recommend importing all teachers, not just the primary teacher.\n\n-   /sections/{id}/course\n-   /sections/{id}/term\n-   /sections/{id}/students\n-   /sections/{id}/teachers",
   "tokenEstimate": 89,
-  "crawledAt": "2026-04-20T06:43:18.068Z",
+  "crawledAt": "2026-04-27T06:51:57.990Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

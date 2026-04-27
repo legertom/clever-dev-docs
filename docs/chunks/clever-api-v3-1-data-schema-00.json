@@ -1,7 +1,7 @@
 {
   "id": "clever-api-v3-1-data-schema-00",
-  "url": "https://dev.clever.com/docs/clever-api-v31-data-schema-copy",
-  "path": "/docs/clever-api-v31-data-schema-copy",
+  "url": "https://dev.clever.com/docs/anyschool-api-schema",
+  "path": "/docs/anyschool-api-schema",
   "section": "Discovered",
   "title": "Clever API v3.1 Data Schema",
   "heading": "Clever API v3.1 Data Schema",
@@ -9,9 +9,9 @@
   "parentHeadings": [
     "Clever API v3.1 Data Schema"
   ],
-  "content": "/\\*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com \\*/ @layer theme, base, components, utilities; @layer utilities;\n\n> ❗️\n> \n> ### \n> \n> Clever Complete Agreement Required\n> \n> [](#clever-complete-agreement-required)\n> \n> This feature is included with a Clever Complete subscription. Sign up [here](https://www.clever.com/developer-signup) or email your Application Success Manager to learn more.",
-  "tokenEstimate": 103,
-  "crawledAt": "2026-04-20T06:43:39.457Z",
+  "content": "/\\*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com \\*/ @layer theme, base, components, utilities; @layer utilities;\n\n[Use this page to review the full Clever API v3.1 schema, including the added student demographic fields.](#)\n\nAPI v3.1 adds these student demographic updates:\n\n-   `roles.student.gifted_status`\n-   `roles.student.section_504_status`\n-   `roles.student.disability.disability_status`\n-   `roles.student.disability.disability_type`\n-   `roles.student.disability.disability_code`\n-   `roles.student.home_language_code`\n-   `roles.student.frl_status` now also supports `\"Other\"`",
+  "tokenEstimate": 152,
+  "crawledAt": "2026-04-27T06:52:11.767Z",
   "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1
