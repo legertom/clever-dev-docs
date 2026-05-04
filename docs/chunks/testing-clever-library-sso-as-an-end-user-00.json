@@ -1,0 +1,18 @@
+{
+  "id": "testing-clever-library-sso-as-an-end-user-00",
+  "url": "https://dev.clever.com/docs/testing-library",
+  "path": "/docs/testing-library",
+  "section": "Clever SSO",
+  "title": "Testing Clever Library SSO as an End User",
+  "heading": "Testing Clever Library SSO as an End User",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Testing Clever Library SSO as an End User"
+  ],
+  "content": "/\\*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com \\*/ @layer theme, base, components, utilities; @layer utilities;\n\nUse this page to test your Clever Library SSO integration and confirm the Library-specific user flows work as expected.\n\n## \n\nBefore you start\n\n[](#before-you-start)\n\nRead [Testing Your SSO Integration](https://dev.clever.com/docs/testing-your-sso-integration) first.\n\n## \n\nWhat to verify\n\n[](#what-to-verify)\n\nAs you test your Clever Library integration, confirm the following:\n\n-   the user’s name and email, when available, appear correctly in your UI\n-   a new authentication request from Clever overrides any existing session in your application\n-   your application includes a logout button\n-   if you support a student experience, teachers have a way to sync students\n-   student SSO works after a teacher authorizes the connection\n\n## \n\nWays to test\n\n[](#ways-to-test)\n\n### \n\nDashboard integration guide\n\n[](#dashboard-integration-guide)\n\nYour developer dashboard includes an integration guide specifically for Clever Library testing.\n\nYou can find it at:\n\n`apps.clever.com/{app_short_name}/library/integration_guide`\n\nReplace `{app_short_name}` with your app’s short name.\n\nThis is the recommended place to start because it walks through the expected Clever Library flow step by step.\n\n### \n\nSSO Test Plan\n\n[](#sso-test-plan)\n\nUse the [SSO Test Plan](https://docs.google.com/spreadsheets/d/1VTFeG9J9zvYNgyukEEW7iuNC_sv65pLoyxHa34DQgks/edit?gid=167761082#gid=167761082) for a Library-specific testing checklist.\n\n### \n\nTest with a direct authorization link\n\n[](#test-with-a-direct-authorization-link)\n\nYou can also test with a direct authorization link:\n\n```\nhttps://clever.com/oauth/instant-login?client_id={YOUR_CLIENT_ID}&district_id=5b2ad81a709e300001e2cd7a\n```\n\nTest credentials:\n\n-   Teacher\n    -   Username: `teacher1`\n    -   Password: `clever`\n-   Student\n    -   Username: `student1-1`\n    -   Password: `clever`\n\n### \n\nTest native iOS callback handling\n\n[](#test-native-ios-callback-handling)\n\nIf you support a native iOS app for Clever Library, test the Safari-to-app handoff on iPadOS and iOS.\n\n1.  Test with your native app installed.\n2.  Test again without your native app installed.\n3.  Confirm the installed-app case opens your native app already authenticated.\n4.  Check your backend logs for duplicate exchanges of the same authorization code.\n\nIf you see the same code processed twice and the second attempt returns `invalid_grant`, both Safari and the native app may be handling the same callback URL. Make your callback handling duplicate-safe before certification.\n\n## \n\nSandbox districts\n\n[](#sandbox-districts)\n\nOnly test Clever Library against the Clever-managed sandbox district used for Library testing.\n\nThe test options above already use the correct sandbox context. Do not test your Clever Library integration against other sandbox districts.",
+  "tokenEstimate": 729,
+  "crawledAt": "2026-05-04T07:01:54.043Z",
+  "fetchMethod": "static",
+  "chunkIndex": 0,
+  "totalChunks": 1
+}

@@ -11,7 +11,7 @@
   ],
   "content": "You can test the connection from your Service Provider dashboard if you have one. Otherwise, please refer to [Testing Logins](doc:il-testing) for more information on testing.\n\n* * *\n\n# \n\nLaunching your Connection\n\n[](#launching-your-connection)\n\nOnce testing is complete, our Partner Engineering team will work with you to move your SAML connector to the production environment in Clever so that you can get started connecting with districts and end users!\n\n> 🚧\n> \n> ### \n> \n> OAuth Integrations and SAML\n> \n> [](#oauth-integrations-and-saml)\n> \n> If you are building an OAuth integration, you cannot use the same developer dashboard to manage your SAML connector. Be sure to ask for an additional developer account if you plan on starting an OAuth integration.",
   "tokenEstimate": 191,
-  "crawledAt": "2026-04-27T06:52:10.204Z",
+  "crawledAt": "2026-05-04T07:01:57.208Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

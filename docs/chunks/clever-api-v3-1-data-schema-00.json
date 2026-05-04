@@ -11,7 +11,7 @@
   ],
   "content": "/\\*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com \\*/ @layer theme, base, components, utilities; @layer utilities;\n\n[Use this page to review the full Clever API v3.1 schema, including the added student demographic fields.](#)\n\nAPI v3.1 adds these student demographic updates:\n\n-   `roles.student.gifted_status`\n-   `roles.student.section_504_status`\n-   `roles.student.disability.disability_status`\n-   `roles.student.disability.disability_type`\n-   `roles.student.disability.disability_code`\n-   `roles.student.home_language_code`\n-   `roles.student.frl_status` now also supports `\"Other\"`",
   "tokenEstimate": 152,
-  "crawledAt": "2026-04-27T06:52:11.767Z",
+  "crawledAt": "2026-05-04T07:01:59.770Z",
   "fetchMethod": "static",
   "chunkIndex": 0,
   "totalChunks": 1

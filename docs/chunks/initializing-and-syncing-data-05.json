@@ -11,7 +11,7 @@
   ],
   "content": "Sections represent an abstraction to connect students and teachers. It may be tempting to associate certain other data, such as coursework or assignments, to a section in your application. However, while a section may have the same name throughout the year, the students and teachers in that section will come and go. It's therefore important to associate data with less transient elements - coursework or longitudinal data should be associated (by Clever's `id`) with students, not sections.\n\n* * *\n\n# \n\nWhat if I want to process data for an account that is not on Clever?\n\n[](#what-if-i-want-to-process-data-for-an-account-that-is-not-on-clever)\n\nClever's AnySchool solution can help! You can read more about AnySchool here: [Clever AnySchool Quickstart Guide](https://dev.clever.com/docs/anyschool-rostering#clever-anyschool-rostering)",
   "tokenEstimate": 210,
-  "crawledAt": "2026-04-27T06:51:59.488Z",
+  "crawledAt": "2026-05-04T07:01:49.203Z",
   "fetchMethod": "static",
   "chunkIndex": 5,
   "totalChunks": 6

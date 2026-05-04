@@ -9,9 +9,9 @@
   "parentHeadings": [
     "API v3.1 Updates"
   ],
-  "content": "With API v3.1 of the Clever API, we introduce the LMS Connect integration. This integration extends our existing rostering capabilities and supports assignment and grade passback from your application, through Clever and into a district LMS. Currently, the LMSs supported are Canvas, Schoology, and Google Classroom. However, we are always looking to expand our offerings! If you have any requests for support of a specific LMS that's not listed above, please reach out to your success manager or [\\[email protected\\].](/cdn-cgi/l/email-protection#b8d9c8c8d4d1dbd9ccd1d7d695d1d6ccddcaddcbccf8dbd4ddceddca96dbd7d596) .  \nMore on LMS Connect can be found [here](https://dev.clever.com/docs/lms-connect-overview)\n\n* * *\n\n# \n\nAPI v3.1 Access\n\n[](#api-v31-access)\n\nIf you are interested in v3.1 access, please contact your application success manager or contact the Clever Partner Engineering Team at [\\[email protected\\].](/cdn-cgi/l/email-protection#2a43445e4f4d584b5e434544596a49464f5c4f580449454704)",
+  "content": "With API v3.1 of the Clever API, we introduce the LMS Connect integration. This integration extends our existing rostering capabilities and supports assignment and grade passback from your application, through Clever and into a district LMS. Currently, the LMSs supported are Canvas, Schoology, and Google Classroom. However, we are always looking to expand our offerings! If you have any requests for support of a specific LMS that's not listed above, please reach out to your success manager or [\\[email protected\\].](/cdn-cgi/l/email-protection#2d4c5d5d41444e4c5944424300444359485f485e596d4e41485b485f034e424003) .  \nMore on LMS Connect can be found [here](https://dev.clever.com/docs/lms-connect-overview)\n\n* * *\n\n# \n\nAPI v3.1 Access\n\n[](#api-v31-access)\n\nIf you are interested in v3.1 access, please contact your application success manager or contact the Clever Partner Engineering Team at [\\[email protected\\].](/cdn-cgi/l/email-protection#2940475d4c4e5b485d4046475a694a454c5f4c5b074a464407)",
   "tokenEstimate": 250,
-  "crawledAt": "2026-04-27T06:51:52.070Z",
+  "crawledAt": "2026-05-04T07:01:41.032Z",
   "fetchMethod": "static",
   "chunkIndex": 1,
   "totalChunks": 2

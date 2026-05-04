@@ -1,0 +1,18 @@
+{
+  "id": "testing-your-lms-connect-integration-01",
+  "url": "https://dev.clever.com/docs/testing-your-lms-connect-integration",
+  "path": "/docs/testing-your-lms-connect-integration",
+  "section": "Discovered",
+  "title": "Testing Your LMS Connect Integration",
+  "heading": "Testing Your LMS Connect Integration",
+  "headingLevel": 0,
+  "parentHeadings": [
+    "Testing Your LMS Connect Integration"
+  ],
+  "content": "Use the API reference for the full list of supported and unsupported fields. These are the most common issues to verify while testing.\n\n### \n\nCanvas\n\n[](#canvas)\n\n-   `state` is ignored on assignment create and update.\n-   `submission_types` should be set when creating assignments so the Canvas UI does not appear blank for submissions.\n-   Submission `state` cannot be updated directly.\n-   You cannot update submissions when the assignment is in `draft` state.\n\n### \n\nGoogle Classroom\n\n[](#google-classroom)\n\n-   `due_date` is not required.\n-   Updating submission state from `created` requires an explicit `state` value.\n-   Updating submissions requires the GCRI integration.\n-   Updating assignment attachments is ignored.\n\n### \n\nSchoology\n\n[](#schoology)\n\n-   Assignment writes require `term_id`.\n-   Submission testing requires LTI 1.3 SSO and a successful LTI session.\n-   For writes, attachments must use `type: \"text\"` with a `text` field.\n-   Submissions can fail to appear in Schoology if the assignment does not have a `grading_category` set by the teacher in the UI.\n\n## \n\nRelated resources\n\n[](#related-resources)\n\n-   [Clever LMS Connect - Overview](https://dev.clever.com/docs/lms-connect-overview)\n-   [Clever LMS Connect - API Reference](https://dev.clever.com/docs/api-reference)\n-   [Clever LMS Connect - Gradebook Sync Beginner's Guide](https://dev.clever.com/docs/lms-connect-beginners-guide)\n-   [LTI 1.3 SSO - Testing and End-User Behavior](https://dev.clever.com/docs/lti-13-sso-setup-and-end-user-behavior)\n-   [Clever LMS Connect Certification Guide](https://dev.clever.com/docs/clever-secure-sync-certification-guide-copy)",
+  "tokenEstimate": 413,
+  "crawledAt": "2026-05-04T07:02:00.152Z",
+  "fetchMethod": "static",
+  "chunkIndex": 1,
+  "totalChunks": 2
+}
