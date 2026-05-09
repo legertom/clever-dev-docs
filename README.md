@@ -69,6 +69,13 @@ Developer query
 
 **4. Live eval, not just CI eval.** A `/eval` page that interviewers can click during the demo is more compelling than a CLI eval that ran "trust me, last week." It also matches how a real customer team would think about continuous evaluation.
 
+**4b. Feedback signal as a first-class feature.** A `/feedback` admin page surfaces two doc-gap signals in one queue:
+
+1. **Low-confidence retrievals** — every chat query whose top similarity falls below `CONFIDENCE_THRESHOLD` (0.6) is logged automatically by the chat route, with the query text, retrieved URLs, and the actual top similarity. These are the questions developers are asking that we can't answer well today — the strongest signal of where the docs need work.
+2. **User reports** — every assistant message has a "🚩 Flag for review" button. One tap opens an inline form with an optional note; submission posts to `/api/feedback`. These are the strongest signal that a specific answer was unhelpful even when retrieval *did* work.
+
+Both write to the same `feedback` table and render in the same admin view (filter chips for All / Low-confidence / User reports). In production this page would sit behind admin auth; for the take-home it's open since the data is doc-gap signal rather than user PII.
+
 **5. Cost transparency, not "trust me it's cheap."** The eval page surfaces real USD cost per query and aggregate cost per model, computed from token counts returned by the AI Gateway against published per-token prices. This makes the cost/quality trade-off concrete: on a sample reasoning question, `gpt-4o-mini` costs ~$0.00028 and answered incorrectly, while `gpt-5.4` costs ~$0.00817 (29x more) and answered correctly. That's the kind of finding that should drive a routing strategy — escalate hard questions, default to cheap on easy ones — rather than paying flagship prices on every query as insurance.
 
 ## Security: secret-handling posture
@@ -109,7 +116,6 @@ The throughline: every one of these is "make the model and the prompt smarter" r
 - **Observability:** structured logging on every chat request (query, retrieved similarities, answer length, model latency) into a sink like Vercel Logs / Datadog. Critical to spot retrieval drift.
 - **Re-ingestion strategy:** content-hash each chunk, only re-embed changed chunks on doc updates. A daily Vercel Cron polling the dev.clever.com sitemap for changes.
 - **Rate limiting:** Upstash + middleware on `/api/chat` to prevent abuse. The assessment scope skipped this.
-- **Low-confidence response logging:** stream every "I couldn't find an answer" response into a queue. These are the biggest signal of doc gaps — the support team should see them.
 - **Eval in CI:** the CLI script (`pnpm eval`) is set up to run against a deployed environment; gating PRs on eval pass-rate prevents silent regressions when changing prompts, models, or chunking.
 - **A model fallback chain via the AI Gateway:** if the primary model returns an error, automatically retry against a secondary. Vercel AI Gateway supports this natively.
 

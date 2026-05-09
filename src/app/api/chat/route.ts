@@ -3,7 +3,9 @@ import {
   retrieveRelevantChunks,
   buildSystemPrompt,
   DEFAULT_CHAT_MODEL,
+  CONFIDENCE_THRESHOLD,
 } from "@/lib/rag";
+import { logFeedbackAsync } from "@/lib/feedback";
 
 // Vercel Function timeout. Generous enough for a long answer, low
 // enough that a stuck request doesn't burn budget. In production you'd
@@ -30,6 +32,20 @@ export async function POST(req: Request) {
 
   const chunks = await retrieveRelevantChunks(queryText);
   const systemPrompt = buildSystemPrompt(chunks);
+
+  // Doc-gap signal: if retrieval falls below the confidence threshold,
+  // record the query so the docs/support team can see what developers
+  // are asking that we can't answer well today. Fire-and-forget so the
+  // user's response is never delayed by the log write.
+  const topSimilarity = chunks[0]?.similarity ?? 0;
+  if (topSimilarity <= CONFIDENCE_THRESHOLD && queryText) {
+    logFeedbackAsync({
+      kind: "low_confidence",
+      query: queryText,
+      retrieved_urls: chunks.map((c) => c.url),
+      top_similarity: topSimilarity,
+    });
+  }
 
   // Model is passed as a string — AI SDK v6 routes string models through
   // the Vercel AI Gateway by default. On deployed Vercel functions this
