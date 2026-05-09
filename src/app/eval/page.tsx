@@ -70,15 +70,21 @@ interface QuestionResult {
 // "model:dimension" format lets us key per-model failures (e.g.
 // "openai/gpt-4o-mini:correct" = questions where this model failed
 // the correctness check).
+type Dimension = "correct" | "complete" | "cites_source" | "no_hallucination";
+
+const DIMENSION_LABELS: Record<Dimension, string> = {
+  correct: "Incorrect",
+  complete: "Incomplete",
+  cites_source: "Missing cites",
+  no_hallucination: "Hallucinated",
+};
+
 type Filter =
   | { kind: "all" }
   | { kind: "any-failure" }
   | { kind: "disagreement" }
-  | {
-      kind: "model-fail";
-      model: Model;
-      dimension: "correct" | "complete" | "cites_source" | "no_hallucination";
-    };
+  | { kind: "dimension-fail"; dimension: Dimension }
+  | { kind: "model-fail"; model: Model; dimension: Dimension };
 
 export default function EvalPage() {
   const [results, setResults] = useState<QuestionResult[]>([]);
@@ -190,6 +196,8 @@ export default function EvalPage() {
         );
         return correctnessSet.size > 1;
       }
+      case "dimension-fail":
+        return qr.results.some((r) => !r.scores[f.dimension]);
       case "model-fail":
         return qr.results.some(
           (r) => r.model === f.model && !r.scores[f.dimension]
@@ -202,6 +210,10 @@ export default function EvalPage() {
   const filterCounts = {
     all: results.length,
     "any-failure": results.filter((r) => matchesFilter(r, { kind: "any-failure" })).length,
+    correct: results.filter((r) => matchesFilter(r, { kind: "dimension-fail", dimension: "correct" })).length,
+    complete: results.filter((r) => matchesFilter(r, { kind: "dimension-fail", dimension: "complete" })).length,
+    cites_source: results.filter((r) => matchesFilter(r, { kind: "dimension-fail", dimension: "cites_source" })).length,
+    no_hallucination: results.filter((r) => matchesFilter(r, { kind: "dimension-fail", dimension: "no_hallucination" })).length,
     disagreement: results.filter((r) => matchesFilter(r, { kind: "disagreement" })).length,
   };
 
@@ -551,7 +563,7 @@ export default function EvalPage() {
 
         {/* Filter chips */}
         {results.length > 0 && (
-          <div className="flex items-center flex-wrap gap-2">
+          <div className="flex items-center flex-wrap gap-x-2 gap-y-2">
             <span className="text-xs text-zinc-500 mr-1">Filter:</span>
             <FilterChip
               label="All"
@@ -566,6 +578,25 @@ export default function EvalPage() {
               onClick={() => setFilter({ kind: "any-failure" })}
               disabled={filterCounts["any-failure"] === 0}
             />
+            <div className="w-px h-4 bg-zinc-200 dark:bg-zinc-700 mx-1" />
+            {(
+              ["correct", "complete", "cites_source", "no_hallucination"] as const
+            ).map((dim) => (
+              <FilterChip
+                key={dim}
+                label={DIMENSION_LABELS[dim]}
+                count={filterCounts[dim]}
+                active={
+                  filter.kind === "dimension-fail" &&
+                  filter.dimension === dim
+                }
+                onClick={() =>
+                  setFilter({ kind: "dimension-fail", dimension: dim })
+                }
+                disabled={filterCounts[dim] === 0}
+              />
+            ))}
+            <div className="w-px h-4 bg-zinc-200 dark:bg-zinc-700 mx-1" />
             <FilterChip
               label="Models disagreed"
               count={filterCounts.disagreement}
@@ -574,8 +605,6 @@ export default function EvalPage() {
               disabled={filterCounts.disagreement === 0}
             />
             {filter.kind === "model-fail" && (
-              // Show the active model-fail filter as a removable chip
-              // since it's not part of the static chip set.
               <FilterChip
                 label={`${filter.model.split("/")[1]} failed ${filter.dimension.replace("_", " ")}`}
                 count={visibleResults.length}
