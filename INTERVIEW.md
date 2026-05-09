@@ -1,0 +1,172 @@
+# Interview Demo Script & Talking Points
+
+A 15–20 minute Solutions Architect-style demo for Vercel.
+
+The structure follows the rubric explicitly: **Problem Framing → Architecture → Live Demo → Production Thinking → Vercel Platform Value**, ending in Q&A.
+
+---
+
+## Opening (90 seconds) — Problem Framing
+
+> "I work in support at Clever. Clever connects 75% of US K-12 districts to thousands of edtech apps via SSO, rostering, and APIs. We see hundreds of developer support tickets every quarter — and a meaningful fraction of them are from indie developers integrating with Clever Library, asking questions that are already answered in our public documentation at dev.clever.com.
+>
+> The audience here is what we'd call 'vibe coders' — indie developers building a small classroom app, doing a Library integration, going through certification. They're not enterprise customers with an Application Success Manager. When they get stuck at 11pm, the existing support widget routes them through a decision tree to a human agent who isn't online. The existing search returns articles, not answers. So they either wait, file a ticket, or give up.
+>
+> What I built is a RAG-powered assistant that answers natural-language questions about Clever Library, SSO, certification, and the Clever API — grounded in the official docs, with citations. Let me show you."
+
+**Key framing for the rubric:**
+- Clear "why" (real support load, real audience pain)
+- Defined audience (indie/vibe-coder devs, not enterprise)
+- Picture of success (deflect tickets, unblock devs, faster certification)
+
+---
+
+## Live Chat Demo (3 minutes)
+
+Open https://clever-dev-docs.vercel.app
+
+**Question 1 — happy path with citation:**
+> "Is Clever Library free to build on?"
+
+Watch streaming response. Point out: "Notice the citation — it links back to the source doc. This is critical for trust. A developer can verify the answer or dig deeper."
+
+**Question 2 — multi-turn context:**
+> "What about student email?"
+
+Notice it understood "what about" referred to data fields available in Library (from prior context). "Multi-turn matters because devs ask follow-ups — they're not running isolated queries."
+
+**Question 3 — out-of-scope fallback (the most important demo):**
+> "How do I set up Secure Sync?"
+
+The assistant declines, says it's outside its scope, suggests Clever support.
+
+> "This is the most important behavior. Hallucinated answers about certification or compliance could waste a developer weeks on a bad submission. So I built a confidence threshold: when retrieval similarity drops below 0.6, the system prompt switches modes and explicitly tells the model not to improvise. The cost of a wrong answer here is much higher than the cost of saying 'I don't know.'"
+
+---
+
+## Architecture Walkthrough (4 minutes)
+
+Open the GitHub repo, walk through the README architecture diagram.
+
+**Stack at a glance:**
+- Next.js 16 App Router → Server Components for shell, Route Handlers for streaming
+- Vercel AI SDK v6 → `streamText`, `useChat`, `convertToModelMessages`
+- **Vercel AI Gateway** as the model router — single API for OpenAI, Anthropic, Google, hundreds more
+- `openai/gpt-4o-mini` for chat — chosen deliberately, not by default
+- `openai/text-embedding-3-small` for embeddings — 1536 dim, $0.02/1M tokens
+- Supabase + pgvector via **Vercel Marketplace** — HNSW index for ANN search
+- Deployed on Vercel with Fluid Compute
+
+**Four architectural decisions worth highlighting:**
+
+### 1. Scoped corpus, not "all the docs"
+
+> "I deliberately excluded Secure Sync, LMS Connect, and Attendance Data from the corpus. Those are enterprise integration paths that require an Application Success Manager — they're not what an indie developer is doing. A focused corpus means higher retrieval precision and fewer vectors that could drag in irrelevant context. The smallest defensible scope wins."
+
+### 2. AI Gateway over provider SDKs
+
+> "Going through `@ai-sdk/gateway` instead of `@ai-sdk/openai` means I have one auth mechanism, one observability surface, and zero code changes to swap providers. I'll show you the actual proof on the eval page in a minute. In production this also means OIDC tokens — no API keys live in Vercel env vars at all."
+
+### 3. Confidence-based fallback
+
+> "There's a similarity threshold check before the model generates. Below 0.6 similarity on the top retrieval result, the system prompt switches to a fallback that says 'tell the developer you couldn't find it in the docs and direct them to support.' This is what protects us from hallucinated certification requirements. Saying 'I don't know' is a feature, not a bug."
+
+### 4. Live eval is part of the product, not just a CI script
+
+> "There's also a CLI eval at `pnpm eval` for CI gating. But putting an eval *page* in the deployed app means I can show you, right now, what the system is actually doing — not 'trust me, this passed last week.'"
+
+---
+
+## /eval Page Demo (3 minutes) — The Killer Feature
+
+Navigate to https://clever-dev-docs.vercel.app/eval
+
+> "This page runs the same 15-question test set against three different models in parallel: gpt-4o-mini, gpt-5.4, and Claude Haiku 4.5 — all routed through the AI Gateway. Each answer is scored by an LLM-as-judge on three rubric dimensions: correctness, citation, and hallucination resistance.
+>
+> Click Run."
+
+While running:
+
+> "Two things to notice. One: the cross-provider comparison — OpenAI versus Anthropic — is a string change in the allowlist. There's no Anthropic SDK installed. No code refactor. The Gateway abstracts the provider. Two: I'm intentionally comparing a cheap model — gpt-4o-mini — against a flagship — gpt-5.4. For RAG, retrieval quality matters more than model size. The grounded context does most of the work. So if the cheap model gets within a few points on this rubric, that's the right production choice."
+
+When the eval finishes:
+
+> "If you were on a customer team, this is the page you'd watch when you change a chunk size, swap a prompt, or update the corpus. Continuous evaluation is what keeps RAG honest as the system evolves."
+
+---
+
+## Production Thinking (2 minutes)
+
+Talk through the "Production thinking" section of the README:
+
+- **Observability:** structured logging on every request — query, retrieved similarities, latency, model — into Vercel Logs / Datadog. Without this you can't tell if retrieval is degrading.
+- **Re-ingestion:** content-hash chunks, only re-embed what changed. Daily Vercel Cron polls the dev.clever.com sitemap for diffs.
+- **Rate limiting:** Upstash + middleware on `/api/chat`. Public endpoints with LLM calls behind them get expensive fast under abuse.
+- **Low-confidence response queue:** every "I couldn't find it" gets logged. These are the strongest signal of doc gaps — the support team should see them.
+- **Eval in CI:** the `pnpm eval` script gates PRs on pass-rate. Prevents silent regressions when prompts/models/chunking change.
+
+Optional but high-value mention: **Security posture** (from the README's Security section) — sensitive env vars, RLS-by-default, OIDC for AI Gateway, scoped credential surface.
+
+---
+
+## Vercel Platform Value (anchored to specific decisions)
+
+This is what makes it a Vercel SA demo, not just an AI demo. Hit these explicitly:
+
+| Decision | Vercel feature it leverages |
+|---|---|
+| One env var (or zero) for all model providers | **AI Gateway** — unified API, OIDC auth on deploy |
+| One-click Supabase + auto-injected env vars | **Vercel Marketplace** native integration |
+| Service-role key marked Sensitive, never readable from dashboard | **Vercel env var Sensitive flag** |
+| Push-to-deploy, preview URL per PR | **Git integration** + preview deployments |
+| Cross-provider eval is a string change | **AI Gateway model routing** (no SDK install) |
+| Ingestion script is configurable but the deploy doesn't need to redo it | Static doc corpus + dynamic Vercel Functions |
+| `streamText` returning `toUIMessageStreamResponse()` | **Fluid Compute** (Node.js streaming, generous timeouts) |
+
+> "The thing I want to emphasize is that none of these decisions were Vercel-for-Vercel's-sake. Each one is solving an actual problem the architecture needed to solve — and Vercel happens to make those problems easier than the alternatives. The Marketplace gave me the database in three clicks. The AI Gateway gave me cross-provider routing without a refactor. The Sensitive env var flag gave me a defensible secret-handling story. These compound. By the time I was ready to ship, I was 80% of the way to the answer that a Vercel customer team would have built."
+
+---
+
+## Anticipated Q&A
+
+### Why pgvector instead of a dedicated vector DB (Pinecone, Weaviate, Qdrant)?
+
+> "For this corpus size — about 200 chunks — pgvector is cheaper, operationally simpler, and one less service to monitor. HNSW search is sub-100ms even on a free tier instance. I'd migrate to a dedicated vector DB at the point retrieval latency becomes a bottleneck, or when I want richer query capabilities like hybrid search or metadata filters at scale. For a corpus that's growing slowly, the migration cost is real and the value is marginal."
+
+### Why gpt-4o-mini over gpt-5.4 for the production default?
+
+> "RAG quality is dominated by retrieval, not by the generation model. The /eval page proves this — gpt-4o-mini scores within a few points of gpt-5.4 on these questions. gpt-4o-mini is roughly 10x cheaper and noticeably faster. The right answer is to start with the cheap model, validate against an eval, and only upgrade if a specific class of questions starts failing. The eval makes that decision data-driven, not vibes-driven."
+
+### What's the cost at scale?
+
+> "Per query: roughly 1 embedding call (~$0.00001), 1 vector search (free), and 1 LLM completion. With gpt-4o-mini at ~600 input + 200 output tokens, each query is about $0.0002. Even at 100k queries/month — way more than Clever Library would generate — that's $20/month in inference plus negligible Supabase + Vercel Functions cost. The cost story is the second-best story for the indie audience, behind the deflection metric."
+
+### How would you handle docs being updated?
+
+> "Two parts. First, content-hash each chunk during ingestion — only re-embed chunks whose content changed. Second, schedule a daily Vercel Cron to fetch the sitemap, diff it against the previous run, and re-ingest only changed pages. This avoids the $50 of re-embedding cost every time someone fixes a typo."
+
+### Why didn't you fine-tune a model on the docs?
+
+> "Fine-tuning works for stable patterns and structured outputs. RAG works for changing facts. Clever's docs are updated frequently — new APIs, deprecated fields, new compliance requirements — and a fine-tuned model would go stale immediately and silently. RAG fails loudly: bad retrieval, no answer. That's a much safer failure mode for a customer-facing tool."
+
+### What about SOC 2, FERPA, COPPA — Clever has strict data requirements?
+
+> "Three things. One, the docs themselves are public — there's no student PII in the corpus, so the highest-risk data classes aren't in scope. Two, Vercel offers SOC 2 compliance and a Business Associate Agreement under their Enterprise plan, plus the AI Gateway has zero data retention by default. Three, for the Library SSO product specifically, Clever already requires partners to meet FERPA and COPPA requirements — this assistant lives upstream of that, helping developers ship a compliant integration faster."
+
+### How do you measure success in production?
+
+> "Three metrics. First, ticket deflection: every conversation that ends without a follow-up support ticket is a win — instrumented by querying ticket volume in Salesforce against assistant conversation IDs. Second, fallback rate: the percentage of conversations that hit the 'I don't know' path, broken down by query topic. High fallback in a topic = doc gap. Third, time-to-first-action on a Library certification — does using the assistant correlate with submitting a complete cert package faster? That's the business metric."
+
+### What would you build next?
+
+> "Three things in priority order. One: instrument the low-confidence queue and feed it to the docs team — turn the assistant into a feedback loop for the documentation itself. Two: integrate the assistant into the developer dashboard at clever.com so it has user context (which app are you working on, where are you in cert?) — context-aware retrieval would dramatically improve precision. Three: agentic actions — let the assistant actually trigger an environment switch, validate a payload, or open a support ticket if it can't help, instead of just talking about it."
+
+---
+
+## Things to NOT do during the demo
+
+- Don't read the README out loud. Show, don't recite.
+- Don't apologize for trade-offs. Own them. ("I picked the cheap model on purpose.")
+- Don't run the eval cold without warming it up first — the first run for each model has a cold-start penalty that confuses the comparison.
+- Don't show the code in detail unless they ask. The story is the architecture and the trade-offs, not the line-by-line.
+- Don't dodge "what would you change?" — have at least one concrete thing you'd refactor (e.g., "I'd extract the query rewriting into a separate step before retrieval — currently the retrieval uses the raw last-user-message, which fails on vague follow-ups").
