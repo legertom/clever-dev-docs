@@ -452,6 +452,81 @@ export default function EvalPage() {
           </section>
         )}
 
+        {/* Loading illustration */}
+        {running && results.length === 0 && (
+          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-16 flex flex-col items-center">
+            <div className="relative w-36 h-36 mb-8">
+              <div
+                className="absolute inset-0 animate-spin"
+                style={{ animationDuration: "3s" }}
+              >
+                <svg viewBox="0 0 144 144" className="w-full h-full">
+                  <circle
+                    cx="72"
+                    cy="72"
+                    r="62"
+                    stroke="#3b82f6"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeDasharray={2 * Math.PI * 62}
+                    strokeDashoffset={2 * Math.PI * 62 * 0.65}
+                    strokeLinecap="round"
+                    opacity="0.75"
+                  />
+                </svg>
+              </div>
+              <div
+                className="absolute inset-0 animate-spin"
+                style={{
+                  animationDuration: "2.5s",
+                  animationDirection: "reverse",
+                }}
+              >
+                <svg viewBox="0 0 144 144" className="w-full h-full">
+                  <circle
+                    cx="72"
+                    cy="72"
+                    r="48"
+                    stroke="#8b5cf6"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeDasharray={2 * Math.PI * 48}
+                    strokeDashoffset={2 * Math.PI * 48 * 0.6}
+                    strokeLinecap="round"
+                    opacity="0.75"
+                  />
+                </svg>
+              </div>
+              <div
+                className="absolute inset-0 animate-spin"
+                style={{ animationDuration: "2s" }}
+              >
+                <svg viewBox="0 0 144 144" className="w-full h-full">
+                  <circle
+                    cx="72"
+                    cy="72"
+                    r="34"
+                    stroke="#f59e0b"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeDasharray={2 * Math.PI * 34}
+                    strokeDashoffset={2 * Math.PI * 34 * 0.55}
+                    strokeLinecap="round"
+                    opacity="0.75"
+                  />
+                </svg>
+              </div>
+            </div>
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+              Evaluating models…
+            </h2>
+            <p className="text-sm text-zinc-400 text-center max-w-md">
+              Retrieving documents, generating answers, and scoring results
+              with Claude Sonnet 4.6 as judge
+            </p>
+          </div>
+        )}
+
         {/* Empty state */}
         {results.length === 0 && !running && (
           <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-12 text-center">
