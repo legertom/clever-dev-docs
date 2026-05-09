@@ -81,7 +81,7 @@ Open the GitHub repo, walk through the README architecture diagram.
 
 Navigate to https://clever-dev-docs.vercel.app/eval
 
-> "This page runs the same 15-question test set against three different models in parallel: gpt-4o-mini, gpt-5.4, and Claude Haiku 4.5 — all routed through the AI Gateway. Each answer is scored by an LLM-as-judge on three rubric dimensions: correctness, citation, and hallucination resistance. And every result shows the actual USD cost it took to produce it.
+> "This page runs the same 15-question test set against three different models in parallel: gpt-4o-mini, gpt-5.4, and Claude Haiku 4.5 — all routed through the AI Gateway. Each answer is scored by an LLM-as-judge on three rubric dimensions: correctness, citation, and hallucination resistance. The judge is Claude Sonnet 4.6 — deliberately a different family than the OpenAI candidates, which eliminates the same-family rating bias you'd get if you used GPT to judge GPT. And every result shows the actual USD cost it took to produce it.
 >
 > Click Run."
 
@@ -144,6 +144,14 @@ This is what makes it a Vercel SA demo, not just an AI demo. Hit these explicitl
 ### Why gpt-4o-mini over gpt-5.4 for the production default?
 
 > "Cost. gpt-4o-mini is roughly 25-30x cheaper per query than gpt-5.4 — about $0.0003 vs $0.008 on a typical RAG question. For most factual lookups in our docs, the cheap model is sufficient because the retrieved context is doing the heavy lifting. The eval shows where it isn't, and those are the questions where you'd want to escalate. The point of starting with the cheap model isn't that it's always best — it's that the eval tells you exactly which questions need the upgrade, instead of paying the flagship price for every query as insurance."
+
+### How does the eval know if an answer is hallucinating?
+
+> "Honest answer: it uses an LLM-as-judge — a second model call that reads the question, the candidate's answer, the expected answer, and the retrieved source URLs, and gives a yes/no on three rubric dimensions including hallucination. The judge is Claude Sonnet 4.6, deliberately a different model family than two of three candidates so we're not getting same-family rating bias.
+>
+> What it catches well: flagrant inventions, confident factual claims that contradict the expected answer.
+>
+> What it doesn't catch: subtle hallucinations where the answer is plausible but unverified — because right now the judge only sees source URLs, not the actual chunk text. To fix that I'd pass the retrieved chunk content into the judge prompt, then ask 'is each claim in this answer supported by this context?' That's the standard claim-level entailment pattern that RAGAS and TruLens implement. It's a 30-minute change. I left it out for the demo to keep judge tokens cheap, but it's the first thing I'd ship next."
 
 ### What's the cost at scale?
 

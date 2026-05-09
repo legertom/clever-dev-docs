@@ -51,10 +51,26 @@ const MODEL_PRICING: Record<
   "anthropic/claude-haiku-4.5": { input: 0.000001, output: 0.000005 },
 };
 
-// Judge model is fixed to keep evaluation comparable across runs.
-// Using the same judge for every contestant means we measure the
-// contestant's quality, not judge variance.
-const JUDGE_MODEL = "openai/gpt-4o-mini";
+// Judge model — Anthropic Claude Sonnet 4.6.
+//
+// Two reasons:
+// 1. CROSS-FAMILY BIAS REDUCTION. Two of our three candidate models are
+//    OpenAI. Using a Claude judge eliminates same-family bias for those
+//    two — there's published evidence that same-family LLM-as-judge
+//    setups systematically over-rate same-family outputs. The third
+//    candidate (Claude Haiku 4.5) gets judged by a stronger Claude,
+//    which biases against rather than for it — also fine, the bias
+//    direction is now consistent and known.
+//
+// 2. CAPABILITY MATCH. A judge should be at least as smart as the
+//    smartest candidate. Sonnet 4.6 sits comfortably above all three.
+//
+// Trade-off: ~25x more expensive per judge call than gpt-4o-mini
+// ($0.003 vs $0.0001), but eval still runs for under $1 per full
+// 15-question × 3-model pass. Eval cost is operational overhead, not
+// per-query production cost — the price displayed on each eval result
+// remains the candidate model cost only.
+const JUDGE_MODEL = "anthropic/claude-sonnet-4.6";
 
 interface EvalRequest {
   question: string;

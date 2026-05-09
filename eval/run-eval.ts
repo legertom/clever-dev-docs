@@ -23,7 +23,10 @@ import {
 } from "../src/lib/rag";
 import questions from "./questions.json";
 
-const JUDGE_MODEL = "openai/gpt-4o-mini";
+// Judge model. See src/app/api/eval/route.ts for the full rationale.
+// Short version: cross-family (Claude judging mostly-OpenAI candidates)
+// reduces same-family rating bias.
+const JUDGE_MODEL = "anthropic/claude-sonnet-4.6";
 
 interface EvalResult {
   id: number;
