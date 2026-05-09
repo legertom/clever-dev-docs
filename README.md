@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Clever Dev Docs RAG Assistant
 
-## Getting Started
+A RAG-powered chat assistant for Clever's developer documentation, built as a Vercel Solutions Architect take-home (Track B: AI Cloud).
 
-First, run the development server:
+**Live demo:** https://clever-dev-docs.vercel.app
+**Eval dashboard:** https://clever-dev-docs.vercel.app/eval
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## The problem
+
+Developers building integrations for the [Clever Library](https://clever.com/library) frequently get stuck during integration and certification, generating support tickets for questions already answered in the public docs at [dev.clever.com](https://dev.clever.com). The existing support widget routes through a decision tree to human agents, and the existing search returns articles, not answers.
+
+This assistant lets developers ask natural-language questions about Library SSO, rostering, certification, and the Clever API, and get cited answers grounded in the official docs.
+
+## What it does
+
+- **Streaming chat** over Clever's developer docs with multi-turn context
+- **Source citations** — every answer references the doc page it came from
+- **Fallback behavior** — when retrieval has low confidence, the assistant tells the developer it doesn't know rather than hallucinating
+- **Live eval dashboard** at `/eval` — run the test set against three models side-by-side
+
+## Architecture
+
+```
+Developer query
+      │
+      ▼
+┌──────────────┐    ┌────────────────────┐
+│ Next.js App  │───▶│  /api/chat (route) │
+│ (useChat UI) │◀───│  streamText        │
+└──────────────┘    └─────────┬──────────┘
+                              │
+                  1. embed query (text-embedding-3-small)
+                              │
+                              ▼
+                  2. cosine search via Supabase pgvector
+                              │
+                              ▼
+                  3. build system prompt with retrieved chunks
+                              │
+                              ▼
+                  4. stream completion via Vercel AI Gateway
+                     ↓
+              [openai/gpt-4o-mini] (default)
+              [openai/gpt-5.4]      (eval comparison)
+              [anthropic/claude-haiku-4.5] (eval comparison)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Layer | Choice | Why |
+|---|---|---|
+| Framework | Next.js 16 (App Router) | Required by assessment. Server Components for the shell, Route Handlers for streaming. |
+| AI SDK | Vercel AI SDK v6 | Required. Provider-agnostic, streaming-first. |
+| Model routing | **Vercel AI Gateway** | One env var (or OIDC on Vercel) for all providers. Cross-provider eval needs zero code changes. |
+| Default LLM | `openai/gpt-4o-mini` | Cheap and fast. For RAG, retrieval quality matters more than model size. |
+| Embeddings | `openai/text-embedding-3-small` | $0.02/1M tokens. Best cost/quality for this corpus size (~70 chunks). |
+| Vector store | **Supabase Postgres + pgvector** | Provisioned via Vercel Marketplace. Production-grade, generous free tier, HNSW index for fast ANN search. |
+| Hosting | Vercel | Required. Fluid Compute functions, OIDC auth for AI Gateway. |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Key architectural decisions
 
-## Learn More
+**1. Scoped corpus.** I deliberately excluded Secure Sync, LMS Connect, and Attendance docs from the ingestion. Those integration paths require an Application Success Manager and aren't accessible to the indie/vibe-coder audience this assistant serves. A focused corpus = higher retrieval precision + fewer hallucination vectors.
 
-To learn more about Next.js, take a look at the following resources:
+**2. AI Gateway over direct provider SDKs.** Going through `@ai-sdk/gateway` (rather than `@ai-sdk/openai`) means: one API key handles all providers, OIDC auth on deployed Vercel functions (no key in env vars), and the `/eval` page can compare OpenAI vs Anthropic with a single string change.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**3. Confidence-based fallback.** When the top retrieval similarity is below 0.6, the system prompt switches to a fallback that explicitly tells the model to admit it doesn't know and direct the developer to support. Hallucinating certification requirements could waste a developer weeks on a bad submission.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**4. Live eval, not just CI eval.** A `/eval` page that interviewers can click during the demo is more compelling than a CLI eval that ran "trust me, last week." It also matches how a real customer team would think about continuous evaluation.
 
-## Deploy on Vercel
+## Production thinking (what I'd add for a real prod deployment)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Observability:** structured logging on every chat request (query, retrieved similarities, answer length, model latency) into a sink like Vercel Logs / Datadog. Critical to spot retrieval drift.
+- **Re-ingestion strategy:** content-hash each chunk, only re-embed changed chunks on doc updates. A daily Vercel Cron polling the dev.clever.com sitemap for changes.
+- **Rate limiting:** Upstash + middleware on `/api/chat` to prevent abuse. The assessment scope skipped this.
+- **Low-confidence response logging:** stream every "I couldn't find an answer" response into a queue. These are the biggest signal of doc gaps — the support team should see them.
+- **Eval in CI:** the CLI script (`pnpm eval`) is set up to run against a deployed environment; gating PRs on eval pass-rate prevents silent regressions when changing prompts, models, or chunking.
+- **A model fallback chain via the AI Gateway:** if the primary model returns an error, automatically retry against a secondary. Vercel AI Gateway supports this natively.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project structure
+
+```
+src/
+  app/
+    api/
+      chat/route.ts       # Streaming chat with RAG + fallback
+      eval/route.ts       # Single-question eval endpoint
+    eval/page.tsx         # Live eval dashboard with side-by-side comparison
+    page.tsx              # Chat UI
+    layout.tsx
+  lib/
+    rag.ts                # Embed, retrieve, build system prompt (shared)
+    supabase.ts           # Lazy Supabase client
+scripts/
+  ingest.ts               # Scrape → chunk → embed → store
+  setup-db.sql            # Schema (also applied via Supabase MCP)
+eval/
+  questions.json          # 15-question test set with criteria
+  run-eval.ts             # CLI eval (for CI / regression testing)
+```
+
+## Local development
+
+### Prerequisites
+- Node 22+, pnpm
+- A Vercel AI Gateway API key (https://vercel.com/[team]/~/ai-gateway/api-keys)
+- A Supabase project with the schema in `scripts/setup-db.sql` applied
+- Optional: `vercel link` followed by `vercel env pull` to pull env vars from your linked Vercel project
+
+### Setup
+```bash
+pnpm install
+cp .env.local.example .env.local
+# Fill in AI_GATEWAY_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+
+# One-time: ingest the docs
+pnpm ingest
+
+# Start the dev server
+pnpm dev
+```
+
+### Run the eval (CLI)
+```bash
+pnpm eval
+# Writes results to eval/results.json
+```
+
+The same eval — but with side-by-side comparison across multiple models — is available at `/eval` in the deployed app.
+
+## Eval test set
+
+15 hand-picked questions covering Library SSO, certification, data fields, multi-role users, error codes, and one out-of-scope question (Secure Sync) to test the fallback boundary. See `eval/questions.json`.
+
+Each answer is scored by an LLM-as-judge (`openai/gpt-4o-mini`) on three rubric dimensions:
+1. **Correct** — does the answer reflect what the docs actually say?
+2. **Cites source** — does the answer reference a source doc?
+3. **No hallucination** — does the answer avoid fabricating information?
+
+Using a fixed judge across all candidate models keeps comparisons fair (we measure model quality, not judge variance).
+
+## License
+
+MIT
