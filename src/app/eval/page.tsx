@@ -25,6 +25,12 @@ type Model = (typeof MODELS)[number];
 // returns once we're bottlenecked by the slowest individual call.
 const CONCURRENCY = 5;
 
+const MODEL_THEMES: Record<Model, string> = {
+  "openai/gpt-4o-mini": "#3b82f6",
+  "openai/gpt-5.4": "#8b5cf6",
+  "anthropic/claude-haiku-4.5": "#f59e0b",
+};
+
 interface Scores {
   correct: boolean;
   complete: boolean;
@@ -234,6 +240,9 @@ export default function EvalPage() {
     };
   });
 
+  const maxDuration = Math.max(...summary.map((s) => s.avgDurationMs), 1);
+  const maxCost = Math.max(...summary.map((s) => s.totalCost), 0.0001);
+
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-6 py-4">
@@ -274,95 +283,151 @@ export default function EvalPage() {
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
               Summary
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {summary.map((s) => (
-                <div
-                  key={s.model}
-                  className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-mono text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                      {s.model}
-                    </h3>
-                    <div className="text-xs text-zinc-500 text-right">
-                      <div>avg {s.avgDurationMs}ms</div>
-                      <div>
-                        total{" "}
-                        <span className="font-mono">
-                          {formatCost(s.totalCost)}
-                        </span>{" "}
-                        · avg{" "}
-                        <span className="font-mono">
-                          {formatCost(s.avgCost)}
-                        </span>
-                        /q
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {summary.map((s) => {
+                const accent = MODEL_THEMES[s.model];
+                const speedPct =
+                  (s.avgDurationMs / maxDuration) * 100;
+                const costPct =
+                  (s.totalCost / maxCost) * 100;
+                return (
+                  <div
+                    key={s.model}
+                    className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden"
+                  >
+                    <div
+                      className="h-1"
+                      style={{ background: accent }}
+                    />
+                    <div className="relative p-5">
+                      <div
+                        className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] pointer-events-none"
+                        style={{
+                          background: `linear-gradient(135deg, ${accent}, transparent)`,
+                        }}
+                      />
+                      <div className="relative">
+                        <div className="flex items-center justify-between mb-5">
+                          <div className="flex items-center gap-2.5">
+                            <div
+                              className="w-2.5 h-2.5 rounded-full shrink-0"
+                              style={{ background: accent }}
+                            />
+                            <h3 className="font-mono text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                              {s.model}
+                            </h3>
+                          </div>
+                          <span className="text-[11px] text-zinc-400 font-mono">
+                            {formatCost(s.avgCost)}/q
+                          </span>
+                        </div>
+
+                        <div className="flex items-start justify-around mb-5">
+                          <RingMetric
+                            label="Correct"
+                            value={s.correct}
+                            total={s.total}
+                            onClickFailures={
+                              s.correct < s.total
+                                ? () =>
+                                    setFilter({
+                                      kind: "model-fail",
+                                      model: s.model,
+                                      dimension: "correct",
+                                    })
+                                : undefined
+                            }
+                          />
+                          <RingMetric
+                            label="Complete"
+                            value={s.complete}
+                            total={s.total}
+                            onClickFailures={
+                              s.complete < s.total
+                                ? () =>
+                                    setFilter({
+                                      kind: "model-fail",
+                                      model: s.model,
+                                      dimension: "complete",
+                                    })
+                                : undefined
+                            }
+                          />
+                          <RingMetric
+                            label="Cites src"
+                            value={s.cites_source}
+                            total={s.total}
+                            onClickFailures={
+                              s.cites_source < s.total
+                                ? () =>
+                                    setFilter({
+                                      kind: "model-fail",
+                                      model: s.model,
+                                      dimension: "cites_source",
+                                    })
+                                : undefined
+                            }
+                          />
+                          <RingMetric
+                            label="No halluc."
+                            value={s.no_hallucination}
+                            total={s.total}
+                            onClickFailures={
+                              s.no_hallucination < s.total
+                                ? () =>
+                                    setFilter({
+                                      kind: "model-fail",
+                                      model: s.model,
+                                      dimension: "no_hallucination",
+                                    })
+                                : undefined
+                            }
+                          />
+                        </div>
+
+                        <div className="space-y-2.5 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                          <div className="flex items-center gap-3">
+                            <span className="text-[11px] text-zinc-400 w-10">
+                              Speed
+                            </span>
+                            <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full"
+                                style={{
+                                  width: `${speedPct}%`,
+                                  background: accent,
+                                  transition: "width 0.5s ease-out",
+                                }}
+                              />
+                            </div>
+                            <span className="text-[11px] font-mono text-zinc-500 w-14 text-right">
+                              {(s.avgDurationMs / 1000).toFixed(1)}s
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-[11px] text-zinc-400 w-10">
+                              Cost
+                            </span>
+                            <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full"
+                                style={{
+                                  width: `${costPct}%`,
+                                  background: accent,
+                                  transition: "width 0.5s ease-out",
+                                }}
+                              />
+                            </div>
+                            <span className="text-[11px] font-mono text-zinc-500 w-14 text-right">
+                              {formatCost(s.totalCost)}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Metric
-                      label="Correct"
-                      value={s.correct}
-                      total={s.total}
-                      onClickFailures={
-                        s.correct < s.total
-                          ? () =>
-                              setFilter({
-                                kind: "model-fail",
-                                model: s.model,
-                                dimension: "correct",
-                              })
-                          : undefined
-                      }
-                    />
-                    <Metric
-                      label="Complete"
-                      value={s.complete}
-                      total={s.total}
-                      onClickFailures={
-                        s.complete < s.total
-                          ? () =>
-                              setFilter({
-                                kind: "model-fail",
-                                model: s.model,
-                                dimension: "complete",
-                              })
-                          : undefined
-                      }
-                    />
-                    <Metric
-                      label="Cites source"
-                      value={s.cites_source}
-                      total={s.total}
-                      onClickFailures={
-                        s.cites_source < s.total
-                          ? () =>
-                              setFilter({
-                                kind: "model-fail",
-                                model: s.model,
-                                dimension: "cites_source",
-                              })
-                          : undefined
-                      }
-                    />
-                    <Metric
-                      label="No hallucination"
-                      value={s.no_hallucination}
-                      total={s.total}
-                      onClickFailures={
-                        s.no_hallucination < s.total
-                          ? () =>
-                              setFilter({
-                                kind: "model-fail",
-                                model: s.model,
-                                dimension: "no_hallucination",
-                              })
-                          : undefined
-                      }
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
@@ -537,7 +602,7 @@ export default function EvalPage() {
   );
 }
 
-function Metric({
+function RingMetric({
   label,
   value,
   total,
@@ -549,27 +614,74 @@ function Metric({
   onClickFailures?: () => void;
 }) {
   const pct = total === 0 ? 0 : Math.round((value / total) * 100);
-  const color =
+  const r = 24;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (pct / 100) * circ;
+  const scoreClass =
     pct >= 80
-      ? "text-green-600 dark:text-green-400"
+      ? {
+          stroke: "stroke-green-500 dark:stroke-green-400",
+          text: "text-green-600 dark:text-green-400",
+        }
       : pct >= 60
-        ? "text-yellow-600 dark:text-yellow-400"
-        : "text-red-600 dark:text-red-400";
+        ? {
+            stroke: "stroke-yellow-500 dark:stroke-yellow-400",
+            text: "text-yellow-600 dark:text-yellow-400",
+          }
+        : {
+            stroke: "stroke-red-500 dark:stroke-red-400",
+            text: "text-red-600 dark:text-red-400",
+          };
   const failures = total - value;
   return (
-    <div>
-      <div className={`text-2xl font-semibold ${color}`}>{pct}%</div>
-      <div className="text-xs text-zinc-500 mt-1">
-        {label} ({value}/{total})
-        {onClickFailures && failures > 0 && (
-          <button
-            onClick={onClickFailures}
-            className="ml-2 text-blue-600 dark:text-blue-400 hover:underline"
-            title={`Filter to the ${failures} failure${failures === 1 ? "" : "s"}`}
-          >
-            see {failures}
-          </button>
-        )}
+    <div className="flex flex-col items-center gap-1.5">
+      <div className="relative w-16 h-16">
+        <svg className="w-full h-full -rotate-90" viewBox="0 0 64 64">
+          <circle
+            cx="32"
+            cy="32"
+            r={r}
+            fill="none"
+            className="stroke-zinc-100 dark:stroke-zinc-800"
+            strokeWidth="5"
+          />
+          <circle
+            cx="32"
+            cy="32"
+            r={r}
+            fill="none"
+            className={scoreClass.stroke}
+            strokeWidth="5"
+            strokeDasharray={circ}
+            strokeDashoffset={offset}
+            strokeLinecap="round"
+            style={{ transition: "stroke-dashoffset 0.7s ease-out" }}
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className={`text-sm font-bold ${scoreClass.text}`}>
+            {pct}%
+          </span>
+        </div>
+      </div>
+      <div className="text-center">
+        <div className="text-[11px] font-medium text-zinc-600 dark:text-zinc-400">
+          {label}
+        </div>
+        <div className="text-[10px] text-zinc-400 dark:text-zinc-500">
+          {value}/{total}
+          {onClickFailures && failures > 0 && (
+            <>
+              {" · "}
+              <button
+                onClick={onClickFailures}
+                className="text-blue-500 dark:text-blue-400 hover:underline"
+              >
+                see {failures}
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
