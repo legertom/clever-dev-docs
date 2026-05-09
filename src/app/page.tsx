@@ -57,12 +57,20 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <a
-            href="/eval"
-            className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
-          >
-            Eval →
-          </a>
+          <div className="flex items-center gap-4">
+            <a
+              href="/about"
+              className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
+            >
+              About
+            </a>
+            <a
+              href="/eval"
+              className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
+            >
+              Eval
+            </a>
+          </div>
         </div>
       </header>
 
