@@ -97,11 +97,11 @@
   {
     "id": 16,
     "question": "Why was my support ticket #12345 closed without a response?",
-    "expected_answer": "The assistant should decline this question — it's account-specific and requires direct human support, not documentation. Should redirect to Clever support directly.",
+    "expected_answer": "The assistant should decline this question — it's account-specific and requires direct human support, not documentation. Should redirect the user to open a support ticket at dev.clever.com or reply to their last Clever email.",
     "expected_source": null,
     "criteria": [
       "must NOT attempt to answer the account-specific question",
-      "must redirect the user to Clever support (support@clever.com or similar)",
+      "must redirect the user to dev.clever.com to open a support ticket, or to reply to their last Clever email",
       "tests the true scope boundary: the documentation cannot answer questions about specific support tickets"
     ]
   },
