@@ -59,9 +59,11 @@ Open the GitHub repo, walk through the README architecture diagram.
 
 **Four architectural decisions worth highlighting:**
 
-### 1. Scoped corpus, not "all the docs"
+### 1. Comprehensive corpus, with audience routing in the prompt
 
-> "I deliberately excluded Secure Sync, LMS Connect, and Attendance Data from the corpus. Those are enterprise integration paths that require an Application Success Manager — they're not what an indie developer is doing. A focused corpus means higher retrieval precision and fewer vectors that could drag in irrelevant context. The smallest defensible scope wins."
+> "All 86 public pages from dev.clever.com's sitemap are ingested — Library, District SSO, Secure Sync, LMS Connect, Attendance Data, the full API and data model. I considered scoping to just the indie-developer subset, but I changed my mind for two reasons: semantic search doesn't punish unrelated chunks (they just score low and get filtered), and a more useful product covers the whole platform.
+>
+> Where it matters — Secure Sync, LMS Connect, district-managed paths — the system prompt tells the model to answer the documentation question AND surface that the path requires a Clever Application Success Manager. So an indie developer asking 'what is Secure Sync?' gets an honest 'here's what it is, you'd need to coordinate with Clever to get access' instead of a refusal. The boundary lives in the prompt, not in corpus selection. That's more flexible and more useful."
 
 ### 2. AI Gateway over provider SDKs
 

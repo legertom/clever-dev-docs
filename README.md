@@ -61,7 +61,7 @@ Developer query
 
 ### Key architectural decisions
 
-**1. Scoped corpus.** I deliberately excluded Secure Sync, LMS Connect, and Attendance docs from the ingestion. Those integration paths require an Application Success Manager and aren't accessible to the indie/vibe-coder audience this assistant serves. A focused corpus = higher retrieval precision + fewer hallucination vectors.
+**1. Comprehensive corpus, audience-aware system prompt.** All ~86 public pages from `dev.clever.com/sitemap.xml` are ingested (Library, District SSO, Secure Sync, LMS Connect, Attendance, full API + data model). Earlier I considered scoping to just the indie-developer subset, but two things changed my mind: semantic search doesn't punish unrelated chunks (they just score low and get filtered), and a more useful product covers the *informational* questions across the whole platform. Where it matters — Secure Sync, LMS Connect, district-managed paths — the system prompt instructs the model to **answer the question AND surface that the path requires a Clever Application Success Manager**. The boundary is enforced in prompt logic, not by exclusion. This means an indie developer asking about Secure Sync gets an honest "here's what it is, but you'd need to coordinate with Clever to get access" instead of a refusal.
 
 **2. AI Gateway over direct provider SDKs.** Going through `@ai-sdk/gateway` (rather than `@ai-sdk/openai`) means: one API key handles all providers, OIDC auth on deployed Vercel functions (no key in env vars), and the `/eval` page can compare OpenAI vs Anthropic with a single string change.
 
@@ -89,6 +89,20 @@ The service-role key bypasses Postgres Row-Level Security and is the highest-pri
 The chat and eval routes themselves don't need the service-role key for reads — they could be downgraded to the anon key with appropriate Postgres `SELECT` policies on the `documents` table. We use the service-role key here for simplicity, since this project has no public write paths.
 
 **Row Level Security is enabled on the `documents` table with no policies attached — defense in depth.** Our reads go through the service-role key which bypasses RLS, so functionality isn't affected. But because RLS is on, the `anon` or `publishable` keys can't read the table either. If client-side reads are ever introduced, the absence of an explicit `SELECT` policy fails closed instead of leaking. This is the Supabase-recommended default and the same pattern you'd want on any internal Postgres table that doesn't need direct browser access.
+
+## Known risks with the comprehensive corpus
+
+Expanding from a scoped 23-page corpus to all 86 pages introduced trade-offs I deliberately took on. These are worth knowing about — and most of them have a planned mitigation that didn't make the take-home cut.
+
+| Risk | What can go wrong | Current mitigation | What I'd add for prod |
+|---|---|---|---|
+| **Audience confusion** — an indie dev could be told how to set up Secure Sync without realizing they can't actually do it themselves | A developer wastes time pursuing the wrong integration path | System prompt has explicit AUDIENCE ROUTING rules: when answering district-tier questions (Secure Sync, LMS Connect), the model must surface the ASM requirement and suggest the self-serve alternative when relevant. Eval Q13 tests this behavior end-to-end. | An onboarding step that asks the user about their use case once and persists the context (e.g. "you're an indie dev building a Library integration") — used to bias retrieval and to tailor the audience-routing prompt |
+| **Topic-adjacent retrieval drift** — "What is Secure Sync?" pulls LMS Connect chunks because both are district-level products | Answer technically correct but sourced from the wrong neighborhood of the corpus, which can erode citation trust | Top-5 retrieval surfaces all close matches and the model picks the most relevant. The eval's "cites_source" dimension catches gross misattribution. | Hybrid retrieval (BM25 + semantic) so exact title/term matches outrank semantic adjacency. Or per-section pre-filtering when the query keyword is unambiguous (e.g. "secure sync" → restrict to Secure Sync URLs). |
+| **Stale corpus** — Clever updates docs and our snapshot drifts | Confidently wrong answers about features that have changed | None today — corpus is a one-time snapshot from when ingestion ran | Daily Vercel Cron that re-fetches the sitemap, content-hashes each chunk, and re-embeds only what changed (fast and cheap). Plus a published "last-ingested-at" timestamp shown in the UI footer. |
+| **Larger embedding bill on re-ingest** | Cost grows with corpus size on full re-runs | Negligible at this scale (~770 chunks × ~1k tokens × $0.02/1M = $0.015 per full re-ingest) | Same content-hash incremental approach — only changed chunks get re-embedded. Production scale (millions of chunks) makes this essential. |
+| **JSON-unsafe Unicode in scraped content** | Ingestion crashes on pages with malformed UTF-16 surrogate sequences | Strip lone surrogates before insertion (see `scripts/ingest.ts`). Lossy but safe; no displayable content is affected. | Better: detect and log the source URLs that needed sanitization. Lone surrogates often indicate broken upstream data — the docs team should know. |
+
+The throughline: every one of these is "make the model and the prompt smarter" rather than "make the corpus smaller." Smaller corpus is the easy answer, but it also makes the product less useful.
 
 ## Production thinking (what I'd add for a real prod deployment)
 

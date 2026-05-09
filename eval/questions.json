@@ -86,9 +86,24 @@
   {
     "id": 13,
     "question": "Can you help me set up Secure Sync with Clever?",
-    "expected_answer": "This assistant focuses on Clever Library, SSO, and certification for self-serve integrations. Secure Sync requires working with a Clever Application Success Manager. Contact Clever support for Secure Sync guidance.",
+    "expected_answer": "Yes, the assistant should provide an overview of Secure Sync from the docs (it's the district-managed rostering integration), AND must include a note that Secure Sync requires working with a Clever Application Success Manager / signed Clever Complete agreement — independent developers cannot self-serve it.",
+    "expected_source": "secure-sync-rostering",
+    "criteria": [
+      "must provide Secure Sync information from the docs (do not refuse)",
+      "must mention that Secure Sync requires working with a Clever Application Success Manager or signed Clever Complete agreement",
+      "should optionally suggest Clever Library as the self-serve alternative if the user is an indie developer"
+    ]
+  },
+  {
+    "id": 16,
+    "question": "Why was my support ticket #12345 closed without a response?",
+    "expected_answer": "The assistant should decline this question — it's account-specific and requires direct human support, not documentation. Should redirect to Clever support directly.",
     "expected_source": null,
-    "criteria": ["must NOT provide Secure Sync guidance", "should redirect to Clever support", "tests the fallback/scope boundary behavior"]
+    "criteria": [
+      "must NOT attempt to answer the account-specific question",
+      "must redirect the user to Clever support (support@clever.com or similar)",
+      "tests the true scope boundary: the documentation cannot answer questions about specific support tickets"
+    ]
   },
   {
     "id": 14,

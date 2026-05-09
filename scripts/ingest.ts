@@ -22,12 +22,34 @@ import { embedMany } from "ai";
 
 const BASE_URL = "https://dev.clever.com";
 
-// Scoped to Clever Library, Certification, SSO, and API basics.
-// Intentionally excludes Secure Sync, LMS Connect, and Attendance —
-// those require an Application Success Manager and are out of scope
-// for the indie/vibe coder audience this assistant serves.
+// Comprehensive corpus: every public docs page from dev.clever.com,
+// derived from the official sitemap.xml.
+//
+// Earlier versions of this script were scoped to a "Library + SSO +
+// API basics" subset. We expanded to the full corpus because:
+//   1. Semantic search doesn't punish unrelated chunks — they just
+//      score low and get filtered. So broader corpus ≠ noisier results.
+//   2. A more useful product. An assistant that can answer LMS Connect
+//      or Secure Sync informational questions (even if the user can't
+//      self-serve those paths) is more valuable than one that declines.
+//   3. The "audience routing" concern is now handled in the system
+//      prompt instead of by exclusion: when a question topic suggests
+//      a path that requires an Application Success Manager (Secure
+//      Sync, district-managed integrations), the model still answers
+//      the documentation question but explicitly notes the access
+//      requirement and points the user to support.
+//
+// Sourced from https://dev.clever.com/sitemap.xml — refresh by
+// re-fetching the sitemap if Clever publishes new pages.
 const DOC_PATHS = [
-  // Clever Library
+  // ── Getting started / overview ─────────────────────────────
+  "/docs/getting-started",
+  "/docs/what-is-clever",
+  "/docs/integration-types",
+  "/docs/core-concepts",
+  "/docs/onboarding",
+
+  // ── Clever Library ────────────────────────────────────────
   "/docs/library-sso",
   "/docs/setting-up-library-sso-and-rostering",
   "/docs/clever-library-rostering",
@@ -36,27 +58,96 @@ const DOC_PATHS = [
   "/docs/testing-library",
   "/docs/testing-clever-library-with-postman",
   "/docs/library-certification-guide",
+  "/docs/clever-single-sign-on-vs-clever-library-sso-copy",
 
-  // Certification & Going Live
-  "/docs/certification-overview",
-  "/docs/going-live",
-
-  // SSO fundamentals (relevant to Library SSO too)
+  // ── Single Sign-On (Library + District) ────────────────────
   "/docs/getting-started-with-clever-sso",
   "/docs/district-sso-vs-library-sso",
+  "/docs/setting-up-district-sso",
   "/docs/oauth-implementation",
   "/docs/oidc-implementation",
+  "/docs/migrating-to-oidc",
+  "/docs/the-userinfo-endpoint",
+  "/docs/example-oauth-walkthrough",
   "/docs/best-practices-edge-cases",
   "/docs/il-security",
   "/docs/multi-role-users-in-clever",
   "/docs/testing-your-sso-integration",
+  "/docs/clever-sso-assets",
+  "/docs/saml",
+  "/docs/saml-overview",
+  "/docs/saml-getting-started",
+  "/docs/moodle-sso-integration-guide",
 
-  // API & Data Model (overview-level)
+  // ── iOS-specific SSO ───────────────────────────────────────
+  "/docs/ios",
+  "/docs/ios-support",
+  "/docs/il-native-ios",
+  "/docs/liwc-ios-update",
+
+  // ── Certification & Going Live ─────────────────────────────
+  "/docs/certification-overview",
+  "/docs/going-live",
+  "/docs/library-certification-guide",
+  "/docs/district-sso-certification-guide",
+  "/docs/secure-sync-certification-guide",
+  "/docs/clever-secure-sync-certification-guide-copy",
+
+  // ── Secure Sync (district rostering) ───────────────────────
+  "/docs/secure-sync-rostering",
+  "/docs/anyschool-rostering",
+  "/docs/anyschool-api-schema",
+  "/docs/district-sso-1",
+  "/docs/data-model-quirks-and-supported-features-district-integrations",
+  "/docs/security",
+  "/docs/ss-design",
+  "/docs/sync-testing",
+  "/docs/sync-troubleshooting",
+  "/docs/data-changes",
+  "/docs/events-api",
+
+  // ── LMS Connect ────────────────────────────────────────────
+  "/docs/clever-lms-connect",
+  "/docs/lms-connect-overview",
+  "/docs/lms-connect-beginners-guide",
+  "/docs/lms-connect-output-behavior",
+  "/docs/lms-connect-lti-13-sso",
+  "/docs/lti-13-sso-setup-and-end-user-behavior",
+  "/docs/testing-your-lms-connect-integration",
+  "/docs/clever-lms-connect-api-errors",
+  "/docs/submitting-schoology-submissions",
+
+  // ── Attendance Data ────────────────────────────────────────
+  "/docs/attendance-data-overview",
+  "/docs/attendance-data-pagination",
+  "/docs/attendance-data-how-does-it-work",
+
+  // ── API: overview, schema, FAQs ────────────────────────────
   "/docs/api-overview",
-  "/docs/error-messages",
-  "/docs/data-model",
+  "/docs/api-reference",
+  "/docs/exploring-the-clever-api",
+  "/docs/api-v3-faqs",
+  "/docs/api-v3-upgrade-guide",
+  "/docs/api-v31",
+  "/docs/whats-new-in-api-v31",
+  "/docs/new-in-api-v3",
   "/docs/clever-api-v31-data-schema",
+  "/docs/error-messages",
   "/docs/paging-and-limits",
+  "/docs/libraries",
+  "/docs/resources",
+  "/docs/extension-fields",
+  "/docs/updating-to-use-tls-12-on-connection-to-clever-api",
+
+  // ── Data Model (per-resource) ──────────────────────────────
+  "/docs/data-model",
+  "/docs/contacts-guardians",
+  "/docs/courses",
+  "/docs/districts",
+  "/docs/schools",
+  "/docs/sections",
+  "/docs/terms",
+  "/docs/users",
 ];
 
 // Chunk target: 800-1200 chars. Developer docs have dense, structured
@@ -295,7 +386,13 @@ async function embedAndStore(chunks: Chunk[]): Promise<void> {
     });
 
     const rows = batch.map((chunk, j) => ({
-      content: chunk.content,
+      // Strip unpaired UTF-16 surrogates. Some scraped pages contain
+      // malformed Unicode (typically broken emoji sequences or stray
+      // bytes) that the Postgres JSONB serializer rejects with
+      // "Unicode low surrogate must follow a high surrogate". Stripping
+      // them is safe — well-formed text is unaffected, and lone
+      // surrogates carry no displayable meaning.
+      content: chunk.content.replace(/[\uD800-\uDFFF]/g, ""),
       url: chunk.url,
       title: chunk.title,
       chunk_index: chunk.chunkIndex,
