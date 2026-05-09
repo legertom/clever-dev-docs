@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "ingest": "tsx scripts/ingest.ts",
-    "eval": "tsx eval/run-eval.ts"
+    "ingest": "tsx --env-file=.env.local scripts/ingest.ts",
+    "eval": "tsx --env-file=.env.local eval/run-eval.ts"
   },
   "dependencies": {
     "@ai-sdk/gateway": "^3.0.112",

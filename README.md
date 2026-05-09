@@ -69,6 +69,25 @@ Developer query
 
 **4. Live eval, not just CI eval.** A `/eval` page that interviewers can click during the demo is more compelling than a CLI eval that ran "trust me, last week." It also matches how a real customer team would think about continuous evaluation.
 
+## Security: secret-handling posture
+
+Two distinct credentials live in this project, and they're handled differently on purpose.
+
+**`AI_GATEWAY_API_KEY` — handled via OIDC, never stored as an env var on Vercel.**
+The Vercel AI Gateway authenticates deployed functions using OIDC tokens issued automatically by the Vercel runtime. There's no API key in the project's env vars at all. For local development, a personal AI Gateway key lives in `.env.local` (gitignored). This is the platform-native pattern.
+
+**`SUPABASE_SERVICE_ROLE_KEY` — encrypted in Vercel, marked Sensitive, scoped to Production + Preview only.**
+The service-role key bypasses Postgres Row-Level Security and is the highest-privilege credential in the system. To minimize blast radius:
+
+- The Supabase Marketplace integration injects it directly into the Vercel runtime, marked **Sensitive** — encrypted at rest, never readable from the dashboard after provisioning, never returned by the API.
+- It is **not** scoped to the Development environment, which means `vercel env pull` will not drop it into any developer's local machine.
+- Local ingestion (`pnpm ingest`) requires it once. The dev machine running ingestion fetches the key directly from the Supabase dashboard into `.env.local` (gitignored) — it never touches Vercel's env-pull bundle.
+- In a real production setup you'd take this further: ingestion runs as a Vercel Function or scheduled cron (so the service-role key never leaves Vercel's secure injection), and the local ingestion path is removed entirely.
+
+The chat and eval routes themselves don't need the service-role key for reads — they could be downgraded to the anon key with appropriate Postgres `SELECT` policies on the `documents` table. We use the service-role key here for simplicity, since this project has no public write paths.
+
+**Row Level Security is enabled on the `documents` table with no policies attached — defense in depth.** Our reads go through the service-role key which bypasses RLS, so functionality isn't affected. But because RLS is on, the `anon` or `publishable` keys can't read the table either. If client-side reads are ever introduced, the absence of an explicit `SELECT` policy fails closed instead of leaking. This is the Supabase-recommended default and the same pattern you'd want on any internal Postgres table that doesn't need direct browser access.
+
 ## Production thinking (what I'd add for a real prod deployment)
 
 - **Observability:** structured logging on every chat request (query, retrieved similarities, answer length, model latency) into a sink like Vercel Logs / Datadog. Critical to spot retrieval drift.
