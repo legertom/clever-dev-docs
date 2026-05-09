@@ -81,17 +81,25 @@ Open the GitHub repo, walk through the README architecture diagram.
 
 Navigate to https://clever-dev-docs.vercel.app/eval
 
-> "This page runs the same 15-question test set against three different models in parallel: gpt-4o-mini, gpt-5.4, and Claude Haiku 4.5 — all routed through the AI Gateway. Each answer is scored by an LLM-as-judge on three rubric dimensions: correctness, citation, and hallucination resistance.
+> "This page runs the same 15-question test set against three different models in parallel: gpt-4o-mini, gpt-5.4, and Claude Haiku 4.5 — all routed through the AI Gateway. Each answer is scored by an LLM-as-judge on three rubric dimensions: correctness, citation, and hallucination resistance. And every result shows the actual USD cost it took to produce it.
 >
 > Click Run."
 
 While running:
 
-> "Two things to notice. One: the cross-provider comparison — OpenAI versus Anthropic — is a string change in the allowlist. There's no Anthropic SDK installed. No code refactor. The Gateway abstracts the provider. Two: I'm intentionally comparing a cheap model — gpt-4o-mini — against a flagship — gpt-5.4. For RAG, retrieval quality matters more than model size. The grounded context does most of the work. So if the cheap model gets within a few points on this rubric, that's the right production choice."
+> "Three things to notice. One: the cross-provider comparison — OpenAI versus Anthropic — is a string change in the allowlist. No Anthropic SDK installed, no code refactor. The Gateway abstracts the provider. Two: I'm intentionally comparing a cheap model — gpt-4o-mini — against a flagship — gpt-5.4. Three: notice the cost column. Each row shows USD cost computed from real token usage and current AI Gateway pricing."
+
+When the eval finishes — concrete numbers from a representative run:
+
+> "Here's the trade-off in dollars. On the question 'What's the difference between Clever Library and Clever Single Sign-On?' — a question that requires actual reasoning over context, not just retrieval — gpt-4o-mini cost $0.00028 and got the answer wrong. gpt-5.4 cost $0.00817 — about 29 times more — and got it right. Claude Haiku 4.5 cost $0.00296, about 10 times more, also right.
+>
+> So 'cheap always wins' is the wrong takeaway. The honest takeaway is: cheap wins on factual lookups where the doc literally says the answer. The flagship is worth it on questions that require synthesis across chunks. Without the eval, you'd never see that. You'd just hear users complain.
+>
+> If I were running this in production, the architecture would be: route easy queries to gpt-4o-mini by default, escalate to a more expensive model only when a confidence signal — embedding similarity, output length, or a learned classifier — says the question is hard. That's an A/B testable decision and the eval is the harness for testing it."
 
 When the eval finishes:
 
-> "If you were on a customer team, this is the page you'd watch when you change a chunk size, swap a prompt, or update the corpus. Continuous evaluation is what keeps RAG honest as the system evolves."
+> "If you were on a customer team, this is the page you'd watch when you change a chunk size, swap a prompt, or update the corpus. Continuous evaluation is what keeps RAG honest as the system evolves — and surfacing cost makes the trade-off impossible to ignore."
 
 ---
 
@@ -135,11 +143,13 @@ This is what makes it a Vercel SA demo, not just an AI demo. Hit these explicitl
 
 ### Why gpt-4o-mini over gpt-5.4 for the production default?
 
-> "RAG quality is dominated by retrieval, not by the generation model. The /eval page proves this — gpt-4o-mini scores within a few points of gpt-5.4 on these questions. gpt-4o-mini is roughly 10x cheaper and noticeably faster. The right answer is to start with the cheap model, validate against an eval, and only upgrade if a specific class of questions starts failing. The eval makes that decision data-driven, not vibes-driven."
+> "Cost. gpt-4o-mini is roughly 25-30x cheaper per query than gpt-5.4 — about $0.0003 vs $0.008 on a typical RAG question. For most factual lookups in our docs, the cheap model is sufficient because the retrieved context is doing the heavy lifting. The eval shows where it isn't, and those are the questions where you'd want to escalate. The point of starting with the cheap model isn't that it's always best — it's that the eval tells you exactly which questions need the upgrade, instead of paying the flagship price for every query as insurance."
 
 ### What's the cost at scale?
 
-> "Per query: roughly 1 embedding call (~$0.00001), 1 vector search (free), and 1 LLM completion. With gpt-4o-mini at ~600 input + 200 output tokens, each query is about $0.0002. Even at 100k queries/month — way more than Clever Library would generate — that's $20/month in inference plus negligible Supabase + Vercel Functions cost. The cost story is the second-best story for the indie audience, behind the deflection metric."
+> "Per query, measured live in the eval: about $0.0003 with gpt-4o-mini, including the retrieval-augmented context. The embedding step is about $0.00001 — negligible. Vector search is free. So the dominant cost is the LLM completion.
+>
+> At 100k queries per month — well above what Clever Library volume would realistically generate — that's $30 per month in inference. Add Supabase free tier and Vercel Pro and the entire system runs for under $50 a month at that scale. If we routed 10% of queries to gpt-5.4 as a smart-escalation path, we'd add maybe $20 more. The cost story is genuinely incidental — the deflection-of-support-tickets metric is what justifies the product."
 
 ### How would you handle docs being updated?
 

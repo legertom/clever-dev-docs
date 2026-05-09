@@ -69,6 +69,8 @@ Developer query
 
 **4. Live eval, not just CI eval.** A `/eval` page that interviewers can click during the demo is more compelling than a CLI eval that ran "trust me, last week." It also matches how a real customer team would think about continuous evaluation.
 
+**5. Cost transparency, not "trust me it's cheap."** The eval page surfaces real USD cost per query and aggregate cost per model, computed from token counts returned by the AI Gateway against published per-token prices. This makes the cost/quality trade-off concrete: on a sample reasoning question, `gpt-4o-mini` costs ~$0.00028 and answered incorrectly, while `gpt-5.4` costs ~$0.00817 (29x more) and answered correctly. That's the kind of finding that should drive a routing strategy — escalate hard questions, default to cheap on easy ones — rather than paying flagship prices on every query as insurance.
+
 ## Security: secret-handling posture
 
 Two distinct credentials live in this project, and they're handled differently on purpose.
