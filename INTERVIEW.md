@@ -81,7 +81,9 @@ Open the GitHub repo, walk through the README architecture diagram.
 
 Navigate to https://clever-dev-docs.vercel.app/eval
 
-> "This page runs the same 15-question test set against three different models in parallel: gpt-4o-mini, gpt-5.4, and Claude Haiku 4.5 — all routed through the AI Gateway. Each answer is scored by an LLM-as-judge on three rubric dimensions: correctness, citation, and hallucination resistance. The judge is Claude Sonnet 4.6 — deliberately a different family than the OpenAI candidates, which eliminates the same-family rating bias you'd get if you used GPT to judge GPT. And every result shows the actual USD cost it took to produce it.
+> "This page runs the same 15-question test set against three different models in parallel: gpt-4o-mini, gpt-5.4, and Claude Haiku 4.5 — all routed through the AI Gateway. Each answer is scored on four rubric dimensions: correct, complete, cites source, and no hallucination. The judge is Claude Sonnet 4.6 — deliberately a different family than the OpenAI candidates, which eliminates the same-family rating bias you'd get if you used GPT to judge GPT. And every result shows the actual USD cost it took to produce it.
+>
+> Quick note on why correct and complete are separate dimensions. An answer like 'Yes, Clever Library is free to build on' is correct — but if it omits the required 'you must offer freemium to end users' caveat, it's incomplete. Those are different failure modes with different consequences: incomplete is annoying, wrong is dangerous. Splitting them lets us optimize for each independently."
 >
 > Click Run."
 

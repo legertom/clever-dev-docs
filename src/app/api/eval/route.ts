@@ -118,7 +118,13 @@ export async function POST(req: Request) {
   const outputTokens = result.usage?.outputTokens ?? 0;
   const cost = calculateCost(body.model, inputTokens, outputTokens);
 
-  // 3. Score with LLM-as-judge
+  // 3. Score with LLM-as-judge.
+  // Four dimensions, with correct vs complete deliberately separated:
+  //   - correct      = nothing the answer says is wrong
+  //   - complete     = the answer covers the key points the question demands
+  // An answer can be correct but incomplete (e.g. "Yes, free to build" —
+  // true, but omits the required freemium-for-end-users clause). That's
+  // a meaningfully different failure from a wrong answer.
   const judgePrompt = `You are evaluating a RAG system's answer about Clever developer documentation.
 
 QUESTION: ${body.question}
@@ -130,16 +136,19 @@ ACTUAL ANSWER: ${answer}
 EVALUATION CRITERIA:
 ${body.criteria.map((c, i) => `${i + 1}. ${c}`).join("\n")}
 
+The criteria are written with "must" (required for correctness) vs "should" (required for completeness). Use that distinction.
+
 RETRIEVED SOURCES: ${chunks.map((c) => c.url).join(", ") || "none"}
 EXPECTED SOURCE URL CONTAINS: ${body.expected_source ?? "(none — assistant should decline to answer)"}
 
-Score the answer with simple yes/no on three dimensions:
-1. correct: Does the answer accurately reflect the docs based on the criteria?
-2. cites_source: Does the answer reference or link to a source document?
-3. no_hallucination: Does the answer avoid fabricating information not present in the retrieved sources?
+Score the answer with simple yes/no on four dimensions:
+1. correct: Nothing in the answer is factually wrong relative to the docs. An answer that is partial but accurate is correct=true. (Maps to "must" criteria.)
+2. complete: The answer covers all the key points the question demands. An answer that is true but missing important context is complete=false. (Maps to "should" criteria.)
+3. cites_source: Does the answer reference or link to a source document?
+4. no_hallucination: Does the answer avoid fabricating information not present in the retrieved sources?
 
 Respond ONLY with this exact JSON (no markdown, no prose):
-{"correct": true/false, "cites_source": true/false, "no_hallucination": true/false, "reasoning": "brief explanation under 100 chars"}`;
+{"correct": true/false, "complete": true/false, "cites_source": true/false, "no_hallucination": true/false, "reasoning": "brief explanation under 100 chars"}`;
 
   const { text: judgeResponse } = await generateText({
     model: JUDGE_MODEL,
@@ -148,6 +157,7 @@ Respond ONLY with this exact JSON (no markdown, no prose):
 
   let scores = {
     correct: false,
+    complete: false,
     cites_source: false,
     no_hallucination: false,
     reasoning: "",
@@ -161,6 +171,7 @@ Respond ONLY with this exact JSON (no markdown, no prose):
     const parsed = JSON.parse(cleaned);
     scores = {
       correct: !!parsed.correct,
+      complete: !!parsed.complete,
       cites_source: !!parsed.cites_source,
       no_hallucination: !!parsed.no_hallucination,
       reasoning: parsed.reasoning ?? "",

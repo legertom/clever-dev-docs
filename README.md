@@ -154,12 +154,15 @@ The same eval — but with side-by-side comparison across multiple models — is
 
 15 hand-picked questions covering Library SSO, certification, data fields, multi-role users, error codes, and one out-of-scope question (Secure Sync) to test the fallback boundary. See `eval/questions.json`.
 
-Each answer is scored by an LLM-as-judge (`openai/gpt-4o-mini`) on three rubric dimensions:
-1. **Correct** — does the answer reflect what the docs actually say?
-2. **Cites source** — does the answer reference a source doc?
-3. **No hallucination** — does the answer avoid fabricating information?
+Each answer is scored by an LLM-as-judge (`anthropic/claude-sonnet-4.6` — deliberately a different model family from two of three candidates to reduce same-family rating bias) on four rubric dimensions:
+1. **Correct** — nothing in the answer is factually wrong (maps to "must" criteria in the test set)
+2. **Complete** — the answer covers the required points (maps to "should" criteria)
+3. **Cites source** — does the answer reference a source doc?
+4. **No hallucination** — does the answer avoid fabricating information?
 
-Using a fixed judge across all candidate models keeps comparisons fair (we measure model quality, not judge variance).
+`Correct` and `complete` are kept separate on purpose. An answer like *"Yes, Clever Library is free to build on"* is *correct* — but if it omits the required *"you must offer free/freemium to end users"* clause, it's *incomplete*. Conflating these two failure modes hides actionable signal: incomplete answers are usable; wrong answers are dangerous.
+
+Using a fixed judge across all candidates keeps comparisons fair (we measure model quality, not judge variance).
 
 ## License
 

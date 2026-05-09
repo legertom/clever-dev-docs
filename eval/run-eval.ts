@@ -35,6 +35,7 @@ interface EvalResult {
   retrievedSources: string[];
   scores: {
     correct: boolean;
+    complete: boolean;
     cites_source: boolean;
     no_hallucination: boolean;
   };
@@ -54,6 +55,9 @@ async function runQuestion(
     prompt: q.question,
   });
 
+  // See src/app/api/eval/route.ts for the full rationale on the four
+  // dimensions. Short version: correct vs complete are deliberately
+  // separated — an answer can be true but missing required context.
   const judgePrompt = `You are evaluating a RAG system's answer about Clever developer documentation.
 
 QUESTION: ${q.question}
@@ -65,16 +69,19 @@ ACTUAL ANSWER: ${answer}
 EVALUATION CRITERIA:
 ${q.criteria.map((c, i) => `${i + 1}. ${c}`).join("\n")}
 
+The criteria are written with "must" (required for correctness) vs "should" (required for completeness). Use that distinction.
+
 RETRIEVED SOURCES: ${chunks.map((c) => c.url).join(", ") || "none"}
 EXPECTED SOURCE URL CONTAINS: ${q.expected_source ?? "(none — assistant should decline to answer)"}
 
-Score the answer with simple yes/no on three dimensions:
-1. correct: Does the answer accurately reflect the docs based on the criteria?
-2. cites_source: Does the answer reference or link to a source document?
-3. no_hallucination: Does the answer avoid fabricating information not present in the retrieved sources?
+Score the answer with simple yes/no on four dimensions:
+1. correct: Nothing in the answer is factually wrong. Partial-but-accurate is correct=true. (Maps to "must" criteria.)
+2. complete: The answer covers all key points the question demands. True-but-missing-context is complete=false. (Maps to "should" criteria.)
+3. cites_source: Does the answer reference or link to a source document?
+4. no_hallucination: Does the answer avoid fabricating information not present in the retrieved sources?
 
 Respond ONLY with this exact JSON (no markdown, no prose):
-{"correct": true/false, "cites_source": true/false, "no_hallucination": true/false, "reasoning": "brief explanation"}`;
+{"correct": true/false, "complete": true/false, "cites_source": true/false, "no_hallucination": true/false, "reasoning": "brief explanation"}`;
 
   const { text: judgeResponse } = await generateText({
     model: JUDGE_MODEL,
@@ -83,6 +90,7 @@ Respond ONLY with this exact JSON (no markdown, no prose):
 
   let scores = {
     correct: false,
+    complete: false,
     cites_source: false,
     no_hallucination: false,
   };
@@ -94,6 +102,7 @@ Respond ONLY with this exact JSON (no markdown, no prose):
     );
     scores = {
       correct: !!parsed.correct,
+      complete: !!parsed.complete,
       cites_source: !!parsed.cites_source,
       no_hallucination: !!parsed.no_hallucination,
     };
@@ -103,9 +112,9 @@ Respond ONLY with this exact JSON (no markdown, no prose):
   }
 
   // A question passes if it gets the answer right AND doesn't hallucinate.
-  // Citation is tracked separately — important for trust but not strictly
-  // required to "pass" since some answers (declining out-of-scope queries)
-  // legitimately have no source.
+  // Completeness and citation are tracked separately — they're quality
+  // signals but missing them doesn't make an answer dangerous the way
+  // wrongness or hallucination does.
   const pass = scores.correct && scores.no_hallucination;
 
   return {
@@ -134,26 +143,22 @@ async function main() {
 
   const passing = results.filter((r) => r.pass).length;
   const correctCount = results.filter((r) => r.scores.correct).length;
+  const completeCount = results.filter((r) => r.scores.complete).length;
   const citationCount = results.filter((r) => r.scores.cites_source).length;
   const noHallucinationCount = results.filter(
     (r) => r.scores.no_hallucination
   ).length;
 
+  const pct = (n: number) => `${Math.round((n / results.length) * 100)}%`;
+
   console.log(`\n${"═".repeat(60)}`);
   console.log(`  EVAL RESULTS`);
   console.log(`${"═".repeat(60)}`);
-  console.log(
-    `  Pass rate:        ${passing}/${results.length} (${Math.round((passing / results.length) * 100)}%)`
-  );
-  console.log(
-    `  Correct:          ${correctCount}/${results.length} (${Math.round((correctCount / results.length) * 100)}%)`
-  );
-  console.log(
-    `  Cites source:     ${citationCount}/${results.length} (${Math.round((citationCount / results.length) * 100)}%)`
-  );
-  console.log(
-    `  No hallucination: ${noHallucinationCount}/${results.length} (${Math.round((noHallucinationCount / results.length) * 100)}%)`
-  );
+  console.log(`  Pass rate:        ${passing}/${results.length} (${pct(passing)})`);
+  console.log(`  Correct:          ${correctCount}/${results.length} (${pct(correctCount)})`);
+  console.log(`  Complete:         ${completeCount}/${results.length} (${pct(completeCount)})`);
+  console.log(`  Cites source:     ${citationCount}/${results.length} (${pct(citationCount)})`);
+  console.log(`  No hallucination: ${noHallucinationCount}/${results.length} (${pct(noHallucinationCount)})`);
   console.log(`${"═".repeat(60)}\n`);
 
   const failures = results.filter((r) => !r.pass);
@@ -162,7 +167,7 @@ async function main() {
     for (const f of failures) {
       console.log(`  Q${f.id}: ${f.question}`);
       console.log(
-        `    Scores: correct=${f.scores.correct} cites=${f.scores.cites_source} noHalluc=${f.scores.no_hallucination}`
+        `    Scores: correct=${f.scores.correct} complete=${f.scores.complete} cites=${f.scores.cites_source} noHalluc=${f.scores.no_hallucination}`
       );
       console.log(`    Reason: ${f.reasoning}`);
       console.log(`    Answer: ${f.answer.slice(0, 200)}...`);
@@ -175,8 +180,9 @@ async function main() {
     summary: {
       total: results.length,
       passing,
-      passRate: `${Math.round((passing / results.length) * 100)}%`,
+      passRate: pct(passing),
       correct: correctCount,
+      complete: completeCount,
       citationCount,
       noHallucinationCount,
     },

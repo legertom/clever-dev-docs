@@ -17,6 +17,7 @@ type Model = (typeof MODELS)[number];
 
 interface Scores {
   correct: boolean;
+  complete: boolean;
   cites_source: boolean;
   no_hallucination: boolean;
   reasoning: string;
@@ -60,7 +61,7 @@ type Filter =
   | {
       kind: "model-fail";
       model: Model;
-      dimension: "correct" | "cites_source" | "no_hallucination";
+      dimension: "correct" | "complete" | "cites_source" | "no_hallucination";
     };
 
 export default function EvalPage() {
@@ -133,6 +134,7 @@ export default function EvalPage() {
         return qr.results.some(
           (r) =>
             !r.scores.correct ||
+            !r.scores.complete ||
             !r.scores.cites_source ||
             !r.scores.no_hallucination
         );
@@ -170,6 +172,7 @@ export default function EvalPage() {
         model,
         total: 0,
         correct: 0,
+        complete: 0,
         cites_source: 0,
         no_hallucination: 0,
         avgDurationMs: 0,
@@ -182,6 +185,7 @@ export default function EvalPage() {
       model,
       total: modelResults.length,
       correct: modelResults.filter((r) => r.scores.correct).length,
+      complete: modelResults.filter((r) => r.scores.complete).length,
       cites_source: modelResults.filter((r) => r.scores.cites_source).length,
       no_hallucination: modelResults.filter((r) => r.scores.no_hallucination)
         .length,
@@ -258,7 +262,7 @@ export default function EvalPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <Metric
                       label="Correct"
                       value={s.correct}
@@ -270,6 +274,21 @@ export default function EvalPage() {
                                 kind: "model-fail",
                                 model: s.model,
                                 dimension: "correct",
+                              })
+                          : undefined
+                      }
+                    />
+                    <Metric
+                      label="Complete"
+                      value={s.complete}
+                      total={s.total}
+                      onClickFailures={
+                        s.complete < s.total
+                          ? () =>
+                              setFilter({
+                                kind: "model-fail",
+                                model: s.model,
+                                dimension: "complete",
                               })
                           : undefined
                       }
@@ -320,8 +339,11 @@ export default function EvalPage() {
             <p className="text-zinc-500 dark:text-zinc-400 mb-6 max-w-2xl mx-auto">
               Each test question is run through the full RAG pipeline (retrieve
               → generate) using {MODELS.length} different models, then scored
-              by an LLM-as-judge on three dimensions: correctness, citation,
-              and hallucination resistance.
+              by Claude Sonnet 4.6 as judge on four dimensions:{" "}
+              <strong>correct</strong> (no factual errors),{" "}
+              <strong>complete</strong> (covers required points),{" "}
+              <strong>cites source</strong>, and{" "}
+              <strong>no hallucination</strong>.
             </p>
             <p className="text-sm text-zinc-400">
               Click <strong>Run Eval</strong> to start. Takes ~1-2 minutes for{" "}
@@ -409,8 +431,9 @@ export default function EvalPage() {
                       {mr.usage.inputTokens}↓ {mr.usage.outputTokens}↑
                     </span>
                   </div>
-                  <div className="flex gap-2 mb-3">
+                  <div className="flex flex-wrap gap-2 mb-3">
                     <ScoreBadge label="correct" value={mr.scores.correct} />
+                    <ScoreBadge label="complete" value={mr.scores.complete} />
                     <ScoreBadge
                       label="cites"
                       value={mr.scores.cites_source}
