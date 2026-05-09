@@ -167,6 +167,10 @@ This is what makes it a Vercel SA demo, not just an AI demo. Hit these explicitl
 
 > "Fine-tuning works for stable patterns and structured outputs. RAG works for changing facts. Clever's docs are updated frequently — new APIs, deprecated fields, new compliance requirements — and a fine-tuned model would go stale immediately and silently. RAG fails loudly: bad retrieval, no answer. That's a much safer failure mode for a customer-facing tool."
 
+### Why is the chat route using the service-role key instead of a least-privilege read-only key?
+
+> "For the take-home, I used Supabase's service-role key server-side to keep the data layer simple. Since the corpus is public docs, the risk is low — there's no PII or student data in the table. In production, I'd split permissions: admin ingestion can use elevated access, but regular chat queries should use least-privilege read access. Concretely, that means an `anon` key with a `SELECT`-only RLS policy on the `documents` table — the policy already scaffolds for this since RLS is enabled, just no policies attached today. The two paths having different keys also means a leaked chat-route credential can't be used to wipe or modify the corpus."
+
 ### What about SOC 2, FERPA, COPPA — Clever has strict data requirements?
 
 > "Three things. One, the docs themselves are public — there's no student PII in the corpus, so the highest-risk data classes aren't in scope. Two, Vercel offers SOC 2 compliance and a Business Associate Agreement under their Enterprise plan, plus the AI Gateway has zero data retention by default. Three, for the Library SSO product specifically, Clever already requires partners to meet FERPA and COPPA requirements — this assistant lives upstream of that, helping developers ship a compliant integration faster."
