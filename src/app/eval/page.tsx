@@ -554,9 +554,15 @@ export default function EvalPage() {
               <strong>cites source</strong>, and{" "}
               <strong>no hallucination</strong>.
             </p>
-            <p className="text-sm text-zinc-400">
-              Click <strong>Run Eval</strong> to start. Takes ~1-2 minutes for{" "}
-              {questions.length * MODELS.length} runs.
+            <button
+              onClick={runEval}
+              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-base font-medium px-6 py-3 shadow-sm transition-colors"
+            >
+              Run Eval
+              <span aria-hidden="true">→</span>
+            </button>
+            <p className="text-sm text-zinc-400 mt-4">
+              Takes ~30-60 seconds for {questions.length * MODELS.length} runs.
             </p>
           </div>
         )}
