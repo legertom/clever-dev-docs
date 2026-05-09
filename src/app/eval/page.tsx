@@ -274,6 +274,26 @@ export default function EvalPage() {
             </button>
           </div>
         </div>
+        {running && (
+          <div className="border-t border-zinc-200 dark:border-zinc-800 -mx-6 px-6 pt-3">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-blue-500"
+                    style={{
+                      width: `${progress.total > 0 ? (progress.current / progress.total) * 100 : 0}%`,
+                      transition: "width 0.4s ease-out",
+                    }}
+                  />
+                </div>
+                <span className="text-xs font-mono text-zinc-500 shrink-0">
+                  {progress.current}/{progress.total} questions
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
