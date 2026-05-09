@@ -48,10 +48,25 @@ interface QuestionResult {
   results: ModelResult[];
 }
 
+// Filter that selects which subset of question results to display.
+// "model:dimension" format lets us key per-model failures (e.g.
+// "openai/gpt-4o-mini:correct" = questions where this model failed
+// the correctness check).
+type Filter =
+  | { kind: "all" }
+  | { kind: "any-failure" }
+  | { kind: "disagreement" }
+  | {
+      kind: "model-fail";
+      model: Model;
+      dimension: "correct" | "cites_source" | "no_hallucination";
+    };
+
 export default function EvalPage() {
   const [results, setResults] = useState<QuestionResult[]>([]);
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
+  const [filter, setFilter] = useState<Filter>({ kind: "all" });
 
   async function runQuestion(
     q: (typeof questions)[number],
@@ -105,6 +120,44 @@ export default function EvalPage() {
 
     setRunning(false);
   }
+
+  // ── Filter predicates ──────────────────────────────────────
+  // Each returns true if the question result matches the filter.
+  // Computed lazily so we can also surface "X of N" counts on chips.
+  function matchesFilter(qr: QuestionResult, f: Filter): boolean {
+    switch (f.kind) {
+      case "all":
+        return true;
+      case "any-failure":
+        return qr.results.some(
+          (r) =>
+            !r.scores.correct ||
+            !r.scores.cites_source ||
+            !r.scores.no_hallucination
+        );
+      case "disagreement": {
+        // Models disagree on correctness. The most demo-worthy filter:
+        // surfaces the questions where the cheap-vs-flagship trade-off
+        // actually mattered.
+        const correctnessSet = new Set(
+          qr.results.map((r) => r.scores.correct)
+        );
+        return correctnessSet.size > 1;
+      }
+      case "model-fail":
+        return qr.results.some(
+          (r) => r.model === f.model && !r.scores[f.dimension]
+        );
+    }
+  }
+
+  const visibleResults = results.filter((r) => matchesFilter(r, filter));
+
+  const filterCounts = {
+    all: results.length,
+    "any-failure": results.filter((r) => matchesFilter(r, { kind: "any-failure" })).length,
+    disagreement: results.filter((r) => matchesFilter(r, { kind: "disagreement" })).length,
+  };
 
   // ── Aggregate scores per model ─────────────────────────────
   const summary = MODELS.map((model) => {
@@ -205,16 +258,50 @@ export default function EvalPage() {
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
-                    <Metric label="Correct" value={s.correct} total={s.total} />
+                    <Metric
+                      label="Correct"
+                      value={s.correct}
+                      total={s.total}
+                      onClickFailures={
+                        s.correct < s.total
+                          ? () =>
+                              setFilter({
+                                kind: "model-fail",
+                                model: s.model,
+                                dimension: "correct",
+                              })
+                          : undefined
+                      }
+                    />
                     <Metric
                       label="Cites source"
                       value={s.cites_source}
                       total={s.total}
+                      onClickFailures={
+                        s.cites_source < s.total
+                          ? () =>
+                              setFilter({
+                                kind: "model-fail",
+                                model: s.model,
+                                dimension: "cites_source",
+                              })
+                          : undefined
+                      }
                     />
                     <Metric
                       label="No hallucination"
                       value={s.no_hallucination}
                       total={s.total}
+                      onClickFailures={
+                        s.no_hallucination < s.total
+                          ? () =>
+                              setFilter({
+                                kind: "model-fail",
+                                model: s.model,
+                                dimension: "no_hallucination",
+                              })
+                          : undefined
+                      }
                     />
                   </div>
                 </div>
@@ -242,8 +329,59 @@ export default function EvalPage() {
           </div>
         )}
 
+        {/* Filter chips */}
+        {results.length > 0 && (
+          <div className="flex items-center flex-wrap gap-2">
+            <span className="text-xs text-zinc-500 mr-1">Filter:</span>
+            <FilterChip
+              label="All"
+              count={filterCounts.all}
+              active={filter.kind === "all"}
+              onClick={() => setFilter({ kind: "all" })}
+            />
+            <FilterChip
+              label="Any failure"
+              count={filterCounts["any-failure"]}
+              active={filter.kind === "any-failure"}
+              onClick={() => setFilter({ kind: "any-failure" })}
+              disabled={filterCounts["any-failure"] === 0}
+            />
+            <FilterChip
+              label="Models disagreed"
+              count={filterCounts.disagreement}
+              active={filter.kind === "disagreement"}
+              onClick={() => setFilter({ kind: "disagreement" })}
+              disabled={filterCounts.disagreement === 0}
+            />
+            {filter.kind === "model-fail" && (
+              // Show the active model-fail filter as a removable chip
+              // since it's not part of the static chip set.
+              <FilterChip
+                label={`${filter.model.split("/")[1]} failed ${filter.dimension.replace("_", " ")}`}
+                count={visibleResults.length}
+                active
+                onClick={() => setFilter({ kind: "all" })}
+                removable
+              />
+            )}
+          </div>
+        )}
+
+        {/* Empty filter state */}
+        {results.length > 0 && visibleResults.length === 0 && (
+          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 text-center text-zinc-500">
+            No questions match this filter.{" "}
+            <button
+              onClick={() => setFilter({ kind: "all" })}
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              Clear filter
+            </button>
+          </div>
+        )}
+
         {/* Per-question results */}
-        {results.map((r) => (
+        {visibleResults.map((r) => (
           <section
             key={r.questionId}
             className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden"
@@ -342,10 +480,12 @@ function Metric({
   label,
   value,
   total,
+  onClickFailures,
 }: {
   label: string;
   value: number;
   total: number;
+  onClickFailures?: () => void;
 }) {
   const pct = total === 0 ? 0 : Math.round((value / total) * 100);
   const color =
@@ -354,13 +494,65 @@ function Metric({
       : pct >= 60
         ? "text-yellow-600 dark:text-yellow-400"
         : "text-red-600 dark:text-red-400";
+  const failures = total - value;
   return (
     <div>
       <div className={`text-2xl font-semibold ${color}`}>{pct}%</div>
       <div className="text-xs text-zinc-500 mt-1">
         {label} ({value}/{total})
+        {onClickFailures && failures > 0 && (
+          <button
+            onClick={onClickFailures}
+            className="ml-2 text-blue-600 dark:text-blue-400 hover:underline"
+            title={`Filter to the ${failures} failure${failures === 1 ? "" : "s"}`}
+          >
+            see {failures}
+          </button>
+        )}
       </div>
     </div>
+  );
+}
+
+function FilterChip({
+  label,
+  count,
+  active,
+  onClick,
+  disabled,
+  removable,
+}: {
+  label: string;
+  count: number;
+  active: boolean;
+  onClick: () => void;
+  disabled?: boolean;
+  removable?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+        active
+          ? "bg-blue-600 text-white"
+          : disabled
+            ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed"
+            : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+      }`}
+    >
+      <span>{label}</span>
+      <span
+        className={`text-[10px] px-1.5 rounded-full ${
+          active
+            ? "bg-white/20"
+            : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400"
+        }`}
+      >
+        {count}
+      </span>
+      {removable && active && <span className="ml-0.5">×</span>}
+    </button>
   );
 }
 
