@@ -15,6 +15,16 @@ const MODELS = [
 ] as const;
 type Model = (typeof MODELS)[number];
 
+// Worker-pool concurrency for the eval. Each "worker" pulls the next
+// question and runs its 3 model calls in parallel. So effective
+// concurrency at the LLM call level is CONCURRENCY × MODELS.length.
+//
+// Why 5: 5 × 3 = 15 simultaneous LLM calls. Well under AI Gateway's
+// per-key rate limits (typically 100+ RPM) and under any reasonable
+// browser HTTP/2 connection cap. Pushing higher gives diminishing
+// returns once we're bottlenecked by the slowest individual call.
+const CONCURRENCY = 5;
+
 interface Scores {
   correct: boolean;
   complete: boolean;
@@ -107,18 +117,45 @@ export default function EvalPage() {
     setResults([]);
     setProgress({ current: 0, total: questions.length });
 
-    for (let i = 0; i < questions.length; i++) {
-      const q = questions[i];
-      // Run all models for this question in parallel
-      const modelResults = await Promise.all(
-        MODELS.map((m) => runQuestion(q, m))
-      );
-      setResults((prev) => [
-        ...prev,
-        { questionId: q.id, question: q.question, results: modelResults },
-      ]);
-      setProgress({ current: i + 1, total: questions.length });
+    // Worker pool: shared index counter, each worker pulls the next
+    // question. As each completes its 3-model fan-out, results are
+    // inserted into state in question-id order regardless of completion
+    // order — so the rendered list never shuffles even though work is
+    // happening out of order.
+    let nextIndex = 0;
+    let completed = 0;
+
+    async function worker(): Promise<void> {
+      while (true) {
+        const i = nextIndex++;
+        if (i >= questions.length) return;
+
+        const q = questions[i];
+        const modelResults = await Promise.all(
+          MODELS.map((m) => runQuestion(q, m))
+        );
+
+        setResults((prev) =>
+          [
+            ...prev,
+            {
+              questionId: q.id,
+              question: q.question,
+              results: modelResults,
+            },
+          ].sort((a, b) => a.questionId - b.questionId)
+        );
+
+        completed += 1;
+        setProgress({ current: completed, total: questions.length });
+      }
     }
+
+    await Promise.all(
+      Array.from({ length: Math.min(CONCURRENCY, questions.length) }, () =>
+        worker()
+      )
+    );
 
     setRunning(false);
   }
