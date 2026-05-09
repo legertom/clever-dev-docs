@@ -155,6 +155,18 @@ This is what makes it a Vercel SA demo, not just an AI demo. Hit these explicitl
 >
 > What it doesn't catch: subtle hallucinations where the answer is plausible but unverified — because right now the judge only sees source URLs, not the actual chunk text. To fix that I'd pass the retrieved chunk content into the judge prompt, then ask 'is each claim in this answer supported by this context?' That's the standard claim-level entailment pattern that RAGAS and TruLens implement. It's a 30-minute change. I left it out for the demo to keep judge tokens cheap, but it's the first thing I'd ship next."
 
+### How does the eval run 45 model calls so fast?
+
+> "Worker-pool concurrency, not naive batching. Easiest way to explain: imagine a grocery store with 5 cashiers and 15 customers.
+>
+> Naive batching says: 'cashiers, ring up customers 1-5. When ALL of you are done, then start on 6-10.' Problem: if customer 3 has a coupon mess that takes 8 minutes, the other 4 cashiers stand idle waiting before any of them can call the next customer.
+>
+> Worker pool says: 'whenever ANY cashier becomes free, they call the next number.' Cashiers are never idle while there's work to do.
+>
+> Same applies here. Five worker async functions each run a while-loop that pulls the next question off a shared index. LLM call latency has high variance — the Claude Sonnet judge can take 2-8 seconds — so naive batching would leave four workers waiting on every slow outlier. Worker pool eliminates that. End-to-end time is bounded by total_work ÷ N rather than slowest_per_batch × num_batches.
+>
+> The general principle: any time you have variable-latency work and a fixed concurrency budget, a worker pool beats Promise.all over chunks."
+
 ### What's the cost at scale?
 
 > "Per query, measured live in the eval: about $0.0003 with gpt-4o-mini, including the retrieval-augmented context. The embedding step is about $0.00001 — negligible. Vector search is free. So the dominant cost is the LLM completion.
