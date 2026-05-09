@@ -3,6 +3,7 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import questions from "../../../eval/questions.json";
 
 // Three-way comparison demonstrates the AI Gateway value prop:
@@ -421,7 +422,7 @@ export default function EvalPage() {
                   </div>
                   <div className="prose prose-sm dark:prose-invert max-w-none mb-3 text-zinc-700 dark:text-zinc-300 [&_a]:text-blue-600 dark:[&_a]:text-blue-400 [&_a]:underline [&_table]:text-xs [&_th]:bg-zinc-100 dark:[&_th]:bg-zinc-800 [&_th]:px-2 [&_th]:py-1 [&_td]:px-2 [&_td]:py-1 [&_th]:border [&_td]:border [&_th]:border-zinc-300 [&_td]:border-zinc-300 dark:[&_th]:border-zinc-700 dark:[&_td]:border-zinc-700">
                     <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
+                      remarkPlugins={[remarkGfm, remarkBreaks]}
                       components={{
                         a: ({ href, children }) => (
                           <a
