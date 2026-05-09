@@ -1,0 +1,107 @@
+[
+  {
+    "id": 1,
+    "question": "Is Clever Library free to build on?",
+    "expected_answer": "Yes, Clever Library is free to build. Clever Library integrations must offer a free trial, demo, or freemium experience.",
+    "expected_source": "library-sso",
+    "criteria": ["must confirm it is free", "should mention the requirement for free/freemium access for end users"]
+  },
+  {
+    "id": 2,
+    "question": "Can I get student email addresses through Clever Library?",
+    "expected_answer": "No. Student email addresses are not available through Clever Library. If your app requires student email, one workaround is to ask students to provide it the first time they sign in.",
+    "expected_source": "library-sso",
+    "criteria": ["must clearly say no", "should mention workaround of asking students directly"]
+  },
+  {
+    "id": 3,
+    "question": "How long does Library certification take?",
+    "expected_answer": "The certification review process typically takes about 1-2 weeks after submission, though this depends on the completeness of the submission.",
+    "expected_source": "library-certification-guide",
+    "criteria": ["must mention a timeframe", "should not fabricate a specific number if docs are vague"]
+  },
+  {
+    "id": 4,
+    "question": "What's the difference between Clever Library and Clever Single Sign-On?",
+    "expected_answer": "Clever Library is a teacher-managed, bottom-up integration path where teachers authorize data sharing at the classroom level. Clever SSO (District SSO) is a district-managed, top-down integration where districts authorize data sharing for the entire district.",
+    "expected_source": "district-sso-vs-library-sso",
+    "criteria": ["must distinguish teacher-managed vs district-managed", "should mention scope difference (classroom vs district)"]
+  },
+  {
+    "id": 5,
+    "question": "What data fields are available for students in Clever Library?",
+    "expected_answer": "Student first name, last initial, and grade. Student email is NOT available through Clever Library.",
+    "expected_source": "library-sso",
+    "criteria": ["must list specific fields (first name, last initial, grade)", "must note that email is not available"]
+  },
+  {
+    "id": 6,
+    "question": "Do I need an Application Success Manager to do a Clever Library integration?",
+    "expected_answer": "No. Clever Library is a self-serve integration path. You do not need an Application Success Manager — those are for district-level (Secure Sync) integrations.",
+    "expected_source": "library-sso",
+    "criteria": ["must say no or indicate it is self-serve", "should not hallucinate requirements"]
+  },
+  {
+    "id": 7,
+    "question": "What happens if a user belongs to a district that is already connected to my app?",
+    "expected_answer": "District integrations take precedence over Clever Library connections. If a user belongs to a district that is already connected with your application, the district-level connection takes precedence over the Clever Library connection.",
+    "expected_source": "library-sso",
+    "criteria": ["must state that district connections take precedence", "should be clear about the implication for Library connections"]
+  },
+  {
+    "id": 8,
+    "question": "How do I implement OAuth with Clever?",
+    "expected_answer": "Clever supports OAuth 2.0 for SSO. You redirect users to Clever's authorization endpoint, receive an authorization code, exchange it for a token, and use the token to access user data via the Clever API.",
+    "expected_source": "oauth-implementation",
+    "criteria": ["must describe the OAuth flow", "should mention authorization code exchange", "should reference the Clever API"]
+  },
+  {
+    "id": 9,
+    "question": "What testing tools does Clever provide for Library integrations?",
+    "expected_answer": "Clever provides a testing wizard in the developer dashboard and supports testing with Postman. There are sandbox/demo district environments available for testing.",
+    "expected_source": "testing-library",
+    "criteria": ["must mention testing tools or dashboard", "should mention Postman or sandbox environments"]
+  },
+  {
+    "id": 10,
+    "question": "What are the common error codes in the Clever API?",
+    "expected_answer": "The Clever API returns standard HTTP error codes. Common ones include 401 (unauthorized), 403 (forbidden), 404 (not found), and rate limiting errors.",
+    "expected_source": "error-messages",
+    "criteria": ["must reference specific error codes or types", "should mention authentication/authorization errors"]
+  },
+  {
+    "id": 11,
+    "question": "What is the Clever data model for Library integrations?",
+    "expected_answer": "The data model includes teachers, students, sections (classes), and schools. Teachers are connected to sections, and students are enrolled in those sections. Data access is scoped to the classroom level.",
+    "expected_source": "data-model",
+    "criteria": ["must mention key entities (teachers, students, sections)", "should note classroom-level scoping"]
+  },
+  {
+    "id": 12,
+    "question": "How do I handle multi-role users in Clever?",
+    "expected_answer": "Some users in Clever can have multiple roles (e.g., a user who is both a teacher and a district admin). Your application should handle these cases appropriately.",
+    "expected_source": "multi-role-users-in-clever",
+    "criteria": ["must acknowledge multi-role users exist", "should describe how to handle them"]
+  },
+  {
+    "id": 13,
+    "question": "Can you help me set up Secure Sync with Clever?",
+    "expected_answer": "This assistant focuses on Clever Library, SSO, and certification for self-serve integrations. Secure Sync requires working with a Clever Application Success Manager. Contact Clever support for Secure Sync guidance.",
+    "expected_source": null,
+    "criteria": ["must NOT provide Secure Sync guidance", "should redirect to Clever support", "tests the fallback/scope boundary behavior"]
+  },
+  {
+    "id": 14,
+    "question": "What are Clever's requirements for certification?",
+    "expected_answer": "Certification requires meeting specific technical and UX requirements including proper SSO implementation, correct data handling, and providing marketing collateral for your app listing.",
+    "expected_source": "certification-overview",
+    "criteria": ["must reference real certification requirements from the docs", "should not fabricate specific requirements"]
+  },
+  {
+    "id": 15,
+    "question": "What happens after my app is certified?",
+    "expected_answer": "After certification, your app goes live in the Clever Library or App Store. You follow the 'Going Live' process which includes finalizing your app listing.",
+    "expected_source": "going-live",
+    "criteria": ["must describe the post-certification process", "should reference going live or app listing"]
+  }
+]
