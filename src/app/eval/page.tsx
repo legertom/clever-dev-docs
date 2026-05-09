@@ -27,12 +27,19 @@ interface Source {
   similarity: number;
 }
 
+interface Usage {
+  inputTokens: number;
+  outputTokens: number;
+  cost: number; // USD
+}
+
 interface ModelResult {
   model: Model;
   answer: string;
   scores: Scores;
   sources: Source[];
   durationMs: number;
+  usage: Usage;
 }
 
 interface QuestionResult {
@@ -74,6 +81,7 @@ export default function EvalPage() {
       },
       sources: data.sources ?? [],
       durationMs: Date.now() - start,
+      usage: data.usage ?? { inputTokens: 0, outputTokens: 0, cost: 0 },
     };
   }
 
@@ -111,8 +119,11 @@ export default function EvalPage() {
         cites_source: 0,
         no_hallucination: 0,
         avgDurationMs: 0,
+        totalCost: 0,
+        avgCost: 0,
       };
     }
+    const totalCost = modelResults.reduce((s, r) => s + r.usage.cost, 0);
     return {
       model,
       total: modelResults.length,
@@ -123,6 +134,8 @@ export default function EvalPage() {
       avgDurationMs: Math.round(
         modelResults.reduce((s, r) => s + r.durationMs, 0) / modelResults.length
       ),
+      totalCost,
+      avgCost: totalCost / modelResults.length,
     };
   });
 
@@ -176,9 +189,20 @@ export default function EvalPage() {
                     <h3 className="font-mono text-sm font-medium text-zinc-900 dark:text-zinc-100">
                       {s.model}
                     </h3>
-                    <span className="text-xs text-zinc-500">
-                      avg {s.avgDurationMs}ms
-                    </span>
+                    <div className="text-xs text-zinc-500 text-right">
+                      <div>avg {s.avgDurationMs}ms</div>
+                      <div>
+                        total{" "}
+                        <span className="font-mono">
+                          {formatCost(s.totalCost)}
+                        </span>{" "}
+                        · avg{" "}
+                        <span className="font-mono">
+                          {formatCost(s.avgCost)}
+                        </span>
+                        /q
+                      </div>
+                    </div>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
                     <Metric label="Correct" value={s.correct} total={s.total} />
@@ -241,8 +265,9 @@ export default function EvalPage() {
                     <span className="font-mono text-xs text-zinc-500">
                       {mr.model}
                     </span>
-                    <span className="text-xs text-zinc-400">
-                      {mr.durationMs}ms
+                    <span className="text-xs text-zinc-400 font-mono">
+                      {mr.durationMs}ms · {formatCost(mr.usage.cost)} ·{" "}
+                      {mr.usage.inputTokens}↓ {mr.usage.outputTokens}↑
                     </span>
                   </div>
                   <div className="flex gap-2 mb-3">
@@ -337,6 +362,16 @@ function Metric({
       </div>
     </div>
   );
+}
+
+// Format cost for display. Per-question costs are tiny ($0.0001 - $0.005),
+// so we show 4 decimals at the question level. The summary card shows
+// totals which can reach cents — handled with conditional precision.
+function formatCost(cost: number): string {
+  if (cost === 0) return "$0";
+  if (cost < 0.001) return `$${cost.toFixed(5)}`;
+  if (cost < 1) return `$${cost.toFixed(4)}`;
+  return `$${cost.toFixed(2)}`;
 }
 
 function ScoreBadge({ label, value }: { label: string; value: boolean }) {

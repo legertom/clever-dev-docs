@@ -1,6 +1,6 @@
 /**
  * /api/eval — runs a single eval question through the RAG pipeline
- * with a specified model and returns the answer + rubric scores.
+ * with a specified model and returns the answer + rubric scores + cost.
  *
  * Used by the /eval page for live, in-browser evaluation. The page
  * calls this endpoint once per (question × model) combination so it
@@ -30,6 +30,27 @@ const ALLOWED_MODELS = new Set([
   "anthropic/claude-haiku-4.5",
 ]);
 
+// Per-token pricing in USD, sourced from the AI Gateway models endpoint:
+//   curl https://ai-gateway.vercel.sh/v1/models
+// Costs change occasionally — for production, fetch live via
+// gateway.getAvailableModels() instead of hardcoding.
+//
+// Easier-to-read /1M tokens equivalents:
+//   openai/gpt-4o-mini       — $0.15 in / $0.60 out
+//   openai/gpt-5.4           — $2.50 in / $15.00 out
+//   anthropic/claude-haiku-4.5 — $1.00 in / $5.00 out
+//
+// gpt-5.4 is ~17x more expensive on input, ~25x on output vs gpt-4o-mini.
+// The eval is what justifies whether that premium is worth it.
+const MODEL_PRICING: Record<
+  string,
+  { input: number; output: number }
+> = {
+  "openai/gpt-4o-mini": { input: 0.00000015, output: 0.0000006 },
+  "openai/gpt-5.4": { input: 0.0000025, output: 0.000015 },
+  "anthropic/claude-haiku-4.5": { input: 0.000001, output: 0.000005 },
+};
+
 // Judge model is fixed to keep evaluation comparable across runs.
 // Using the same judge for every contestant means we measure the
 // contestant's quality, not judge variance.
@@ -41,6 +62,16 @@ interface EvalRequest {
   criteria: string[];
   expected_source: string | null;
   model: string;
+}
+
+function calculateCost(
+  model: string,
+  inputTokens: number,
+  outputTokens: number
+): number {
+  const pricing = MODEL_PRICING[model];
+  if (!pricing) return 0;
+  return inputTokens * pricing.input + outputTokens * pricing.output;
 }
 
 export async function POST(req: Request) {
@@ -57,12 +88,19 @@ export async function POST(req: Request) {
   const chunks = await retrieveRelevantChunks(body.question);
   const systemPrompt = buildSystemPrompt(chunks);
 
-  // 2. Generate answer with the requested model
-  const { text: answer } = await generateText({
+  // 2. Generate answer with the requested model. Capture usage so we can
+  //    surface cost on the eval page — the cost story is the single most
+  //    persuasive comparison between the cheap and flagship models.
+  const result = await generateText({
     model: body.model,
     system: systemPrompt,
     prompt: body.question,
   });
+
+  const answer = result.text;
+  const inputTokens = result.usage?.inputTokens ?? 0;
+  const outputTokens = result.usage?.outputTokens ?? 0;
+  const cost = calculateCost(body.model, inputTokens, outputTokens);
 
   // 3. Score with LLM-as-judge
   const judgePrompt = `You are evaluating a RAG system's answer about Clever developer documentation.
@@ -123,5 +161,10 @@ Respond ONLY with this exact JSON (no markdown, no prose):
       title: c.title,
       similarity: c.similarity,
     })),
+    usage: {
+      inputTokens,
+      outputTokens,
+      cost,
+    },
   });
 }
