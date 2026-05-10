@@ -333,7 +333,7 @@ export default function EvalPage() {
                     />
                     <div className="relative p-5">
                       <div
-                        className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] pointer-events-none"
+                        className="absolute inset-0 opacity-[0.04] pointer-events-none"
                         style={{
                           background: `linear-gradient(135deg, ${accent}, transparent)`,
                         }}
@@ -345,11 +345,11 @@ export default function EvalPage() {
                               className="w-2.5 h-2.5 rounded-full shrink-0"
                               style={{ background: accent }}
                             />
-                            <h3 className="font-mono text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                            <h3 className="font-mono text-sm font-medium text-clever-navy">
                               {s.model}
                             </h3>
                           </div>
-                          <span className="text-[11px] text-zinc-400 font-mono">
+                          <span className="text-[11px] text-clever-black/40 font-mono">
                             {formatCost(s.avgCost)}/q
                           </span>
                         </div>
@@ -417,12 +417,12 @@ export default function EvalPage() {
                           />
                         </div>
 
-                        <div className="space-y-2.5 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                        <div className="space-y-2.5 pt-4 border-t border-clever-light-blue">
                           <div className="flex items-center gap-3">
-                            <span className="text-[11px] text-zinc-400 w-10">
+                            <span className="text-[11px] text-clever-black/40 w-10">
                               Speed
                             </span>
-                            <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                            <div className="flex-1 h-1.5 bg-clever-light-blue/50 rounded-full overflow-hidden">
                               <div
                                 className="h-full rounded-full"
                                 style={{
@@ -432,15 +432,15 @@ export default function EvalPage() {
                                 }}
                               />
                             </div>
-                            <span className="text-[11px] font-mono text-zinc-500 w-14 text-right">
+                            <span className="text-[11px] font-mono text-clever-black/50 w-14 text-right">
                               {(s.avgDurationMs / 1000).toFixed(1)}s
                             </span>
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="text-[11px] text-zinc-400 w-10">
+                            <span className="text-[11px] text-clever-black/40 w-10">
                               Cost
                             </span>
-                            <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                            <div className="flex-1 h-1.5 bg-clever-light-blue/50 rounded-full overflow-hidden">
                               <div
                                 className="h-full rounded-full"
                                 style={{
@@ -450,7 +450,7 @@ export default function EvalPage() {
                                 }}
                               />
                             </div>
-                            <span className="text-[11px] font-mono text-zinc-500 w-14 text-right">
+                            <span className="text-[11px] font-mono text-clever-black/50 w-14 text-right">
                               {formatCost(s.totalCost)}
                             </span>
                           </div>
@@ -650,19 +650,19 @@ export default function EvalPage() {
                 </h3>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-zinc-200 dark:divide-zinc-800">
+            <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-clever-light-blue">
               {r.results.map((mr) => (
                 <div key={mr.model} className="p-5">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="font-mono text-xs text-zinc-500">
+                    <span className="font-mono text-xs font-medium text-clever-navy">
                       {mr.model}
                     </span>
-                    <span className="text-xs text-zinc-400 font-mono">
+                    <span className="text-xs text-clever-black/40 font-mono">
                       {mr.durationMs}ms · {formatCost(mr.usage.cost)} ·{" "}
                       {mr.usage.inputTokens}↓ {mr.usage.outputTokens}↑
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="flex flex-wrap gap-1.5 mb-3">
                     <ScoreBadge label="correct" value={mr.scores.correct} />
                     <ScoreBadge label="complete" value={mr.scores.complete} />
                     <ScoreBadge
@@ -674,7 +674,7 @@ export default function EvalPage() {
                       value={mr.scores.no_hallucination}
                     />
                   </div>
-                  <div className="prose prose-sm dark:prose-invert max-w-none mb-3 text-zinc-700 dark:text-zinc-300 [&_a]:text-blue-600 dark:[&_a]:text-blue-400 [&_a]:underline [&_table]:text-xs [&_th]:bg-zinc-100 dark:[&_th]:bg-zinc-800 [&_th]:px-2 [&_th]:py-1 [&_td]:px-2 [&_td]:py-1 [&_th]:border [&_td]:border [&_th]:border-zinc-300 [&_td]:border-zinc-300 dark:[&_th]:border-zinc-700 dark:[&_td]:border-zinc-700">
+                  <div className="prose prose-sm max-w-none mb-3 text-clever-black [&_a]:text-clever-blue [&_a]:underline [&_strong]:text-clever-navy [&_table]:text-xs [&_th]:bg-clever-light-blue/40 [&_th]:px-2 [&_th]:py-1 [&_td]:px-2 [&_td]:py-1 [&_th]:border [&_td]:border [&_th]:border-clever-light-blue [&_td]:border-clever-light-blue">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm, remarkBreaks]}
                       components={{
@@ -693,13 +693,13 @@ export default function EvalPage() {
                     </ReactMarkdown>
                   </div>
                   {mr.scores.reasoning && (
-                    <p className="text-xs text-zinc-500 italic mb-3">
+                    <p className="text-xs text-clever-black/50 italic mb-3">
                       Judge: {mr.scores.reasoning}
                     </p>
                   )}
                   {mr.sources.length > 0 && (
-                    <details className="text-xs text-zinc-500">
-                      <summary className="cursor-pointer hover:text-zinc-700 dark:hover:text-zinc-300">
+                    <details className="text-xs text-clever-black/50">
+                      <summary className="cursor-pointer hover:text-clever-navy transition-colors">
                         {mr.sources.length} sources retrieved
                       </summary>
                       <ul className="mt-2 space-y-1 ml-4">
@@ -709,11 +709,11 @@ export default function EvalPage() {
                               href={s.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-600 dark:text-blue-400 hover:underline"
+                              className="text-clever-blue hover:text-clever-navy transition-colors"
                             >
                               {s.title}
                             </a>{" "}
-                            <span className="text-zinc-400">
+                            <span className="text-clever-black/30">
                               (sim: {s.similarity.toFixed(2)})
                             </span>
                           </li>
@@ -746,21 +746,12 @@ function RingMetric({
   const r = 24;
   const circ = 2 * Math.PI * r;
   const offset = circ - (pct / 100) * circ;
-  const scoreClass =
+  const scoreColor =
     pct >= 80
-      ? {
-          stroke: "stroke-green-500 dark:stroke-green-400",
-          text: "text-green-600 dark:text-green-400",
-        }
+      ? { stroke: "#4ECC97", text: "text-clever-green" }
       : pct >= 60
-        ? {
-            stroke: "stroke-yellow-500 dark:stroke-yellow-400",
-            text: "text-yellow-600 dark:text-yellow-400",
-          }
-        : {
-            stroke: "stroke-red-500 dark:stroke-red-400",
-            text: "text-red-600 dark:text-red-400",
-          };
+        ? { stroke: "#FFE478", text: "text-clever-orange" }
+        : { stroke: "#F78239", text: "text-clever-orange" };
   const failures = total - value;
   return (
     <div className="flex flex-col items-center gap-1.5">
@@ -771,7 +762,7 @@ function RingMetric({
             cy="32"
             r={r}
             fill="none"
-            className="stroke-zinc-100 dark:stroke-zinc-800"
+            stroke="#DAEBFF"
             strokeWidth="5"
           />
           <circle
@@ -779,7 +770,7 @@ function RingMetric({
             cy="32"
             r={r}
             fill="none"
-            className={scoreClass.stroke}
+            stroke={scoreColor.stroke}
             strokeWidth="5"
             strokeDasharray={circ}
             strokeDashoffset={offset}
@@ -788,23 +779,23 @@ function RingMetric({
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`text-sm font-bold ${scoreClass.text}`}>
+          <span className={`text-sm font-bold ${scoreColor.text}`}>
             {pct}%
           </span>
         </div>
       </div>
       <div className="text-center">
-        <div className="text-[11px] font-medium text-zinc-600 dark:text-zinc-400">
+        <div className="text-[11px] font-medium text-clever-navy">
           {label}
         </div>
-        <div className="text-[10px] text-zinc-400 dark:text-zinc-500">
+        <div className="text-[10px] text-clever-black/40">
           {value}/{total}
           {onClickFailures && failures > 0 && (
             <>
               {" · "}
               <button
                 onClick={onClickFailures}
-                className="text-blue-500 dark:text-blue-400 hover:underline"
+                className="text-clever-blue hover:underline"
               >
                 see {failures}
               </button>
@@ -871,10 +862,10 @@ function formatCost(cost: number): string {
 function ScoreBadge({ label, value }: { label: string; value: boolean }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${
+      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium ${
         value
-          ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-          : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
+          ? "bg-clever-green/15 text-clever-green"
+          : "bg-clever-orange/15 text-clever-orange"
       }`}
     >
       {value ? "✓" : "✗"} {label}
