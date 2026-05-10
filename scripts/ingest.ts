@@ -150,6 +150,27 @@ const DOC_PATHS = [
   "/docs/users",
 ];
 
+// ── Integration path classification ─────────────────────────
+// Tags each doc URL with the integration path it belongs to.
+// The model uses this to disambiguate answers that differ by path
+// (e.g. student data fields for Library vs Secure Sync).
+type IntegrationPath = "library" | "secure_sync" | "lms_connect" | "attendance" | "general";
+
+const PATH_RULES: Array<{ match: (p: string) => boolean; path: IntegrationPath }> = [
+  { match: (p) => /library|clever-library/.test(p), path: "library" },
+  { match: (p) => /secure-sync|anyschool|sync-te|sync-tr|data-changes|events-api|district-sso-1|ss-design/.test(p), path: "secure_sync" },
+  { match: (p) => /lms-connect|clever-lms|lti-13|schoology/.test(p), path: "lms_connect" },
+  { match: (p) => /attendance/.test(p), path: "attendance" },
+];
+
+function classifyPath(url: string): IntegrationPath {
+  const slug = url.replace(BASE_URL, "");
+  for (const rule of PATH_RULES) {
+    if (rule.match(slug)) return rule.path;
+  }
+  return "general";
+}
+
 // Chunk target: 800-1200 chars. Developer docs have dense, structured
 // content — too-small chunks lose context (e.g. a table split from its
 // header), too-large chunks dilute retrieval precision.
@@ -261,6 +282,7 @@ interface Chunk {
   url: string;
   title: string;
   chunkIndex: number;
+  integrationPath: IntegrationPath;
 }
 
 function chunkContent(page: PageContent): Chunk[] {
@@ -268,6 +290,7 @@ function chunkContent(page: PageContent): Chunk[] {
   const chunks: Chunk[] = [];
   let currentChunk = "";
   let chunkIndex = 0;
+  const integrationPath = classifyPath(page.url);
 
   for (const section of sections) {
     // If adding this section would exceed target, flush the current chunk
@@ -280,6 +303,7 @@ function chunkContent(page: PageContent): Chunk[] {
         url: page.url,
         title: page.title,
         chunkIndex: chunkIndex++,
+        integrationPath,
       });
 
       // Carry over the last CHUNK_OVERLAP chars for continuity.
@@ -299,6 +323,7 @@ function chunkContent(page: PageContent): Chunk[] {
       url: page.url,
       title: page.title,
       chunkIndex: chunkIndex,
+      integrationPath,
     });
   }
 
@@ -329,6 +354,7 @@ function splitLargeChunk(chunk: Chunk): Chunk[] {
         url: chunk.url,
         title: chunk.title,
         chunkIndex: chunk.chunkIndex * 100 + idx++,
+        integrationPath: chunk.integrationPath,
       });
       const overlap = current.slice(-CHUNK_OVERLAP);
       current = overlap + "\n\n" + para;
@@ -343,6 +369,7 @@ function splitLargeChunk(chunk: Chunk): Chunk[] {
       url: chunk.url,
       title: chunk.title,
       chunkIndex: chunk.chunkIndex * 100 + idx,
+      integrationPath: chunk.integrationPath,
     });
   }
 
@@ -396,6 +423,7 @@ async function embedAndStore(chunks: Chunk[]): Promise<void> {
       url: chunk.url,
       title: chunk.title,
       chunk_index: chunk.chunkIndex,
+      integration_path: chunk.integrationPath,
       embedding: JSON.stringify(embeddings[j]),
     }));
 
@@ -432,6 +460,15 @@ async function main() {
   console.log(
     `   Avg chunk size: ${Math.round(allChunks.reduce((s, c) => s + c.content.length, 0) / allChunks.length)} chars`
   );
+
+  const pathCounts = allChunks.reduce<Record<string, number>>((acc, c) => {
+    acc[c.integrationPath] = (acc[c.integrationPath] || 0) + 1;
+    return acc;
+  }, {});
+  console.log(`   By integration path:`);
+  for (const [path, count] of Object.entries(pathCounts).sort((a, b) => b[1] - a[1])) {
+    console.log(`     ${path}: ${count}`);
+  }
 
   console.log(`\n🔢 Embedding and storing...\n`);
   await embedAndStore(allChunks);

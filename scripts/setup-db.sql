@@ -8,6 +8,7 @@ create table if not exists documents (
   url text not null,
   title text not null,
   chunk_index integer not null,
+  integration_path text not null default 'general',
   embedding vector(1536) -- text-embedding-3-small outputs 1536 dimensions
 );
 
@@ -31,6 +32,7 @@ returns table (
   url text,
   title text,
   chunk_index integer,
+  integration_path text,
   similarity float
 )
 language plpgsql
@@ -43,6 +45,7 @@ begin
     d.url,
     d.title,
     d.chunk_index,
+    d.integration_path,
     1 - (d.embedding <=> query_embedding) as similarity
   from documents d
   where 1 - (d.embedding <=> query_embedding) > match_threshold

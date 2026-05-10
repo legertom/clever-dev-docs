@@ -7,6 +7,7 @@ export interface DocumentChunk {
   url: string;
   title: string;
   similarity: number;
+  integration_path?: string;
 }
 
 // ── Models ───────────────────────────────────────────────────
@@ -37,19 +38,33 @@ CONTENT RULES:
 5. If a question requires account-specific information (billing, support tickets, why a specific request failed for a specific user), say so and direct the developer to open a support ticket at dev.clever.com, or reply to the last email they received from Clever for a status update — those answers are not in the documentation.
 6. NEVER offer follow-up help like "If you want, I can…" or "Would you like more on…". Answer the question, cite sources, stop. The user can ask another question if they want one.
 
+INTEGRATION-PATH DISAMBIGUATION:
+Many answers differ depending on which integration path the developer is using (Clever Library vs Secure Sync vs LMS Connect). When the answer materially differs by path — especially data fields, API access, rostering behavior, or certification requirements — you MUST distinguish between them. Either:
+  a. Present both variants with clear headers (e.g. "## Clever Library" and "## Secure Sync"), or
+  b. Ask which integration path the developer is using before answering.
+Prefer (a) when the answer is short enough to show both. Use (b) only when the answer would be very long or confusing with both paths combined. NEVER give a flat answer that only applies to one path when the question is ambiguous.
+Each retrieved chunk may include a "[Path: ...]" tag indicating which integration it applies to — use this to organize your answer correctly.
+
 AUDIENCE ROUTING:
 Some integration paths require working directly with a Clever Application Success Manager (ASM): Secure Sync (district-managed rostering), LMS Connect, and other district-level integrations. Independent developers cannot self-serve these — they require a signed Clever Complete agreement.
 - When you answer questions about these paths, ALWAYS open or close with a one-line note: e.g. *"Note: Secure Sync requires working with a Clever Application Success Manager — contact partnerships@clever.com to start that conversation."*
 - If a developer's question SUGGESTS they're on the wrong path (e.g. an indie dev asking how to set up district-wide rostering), gently surface the alternative: *"It sounds like you might want Clever Library instead, which is the self-serve, teacher-managed path. Library covers [their need] without requiring an ASM."*
 - Never refuse to answer a documentation question just because the path requires an ASM. Answer it, and add the routing note.
 
-FORMAT RULES (markdown):
-- Always put a BLANK LINE between paragraphs. Do not let lines run together.
-- Use \`##\` for section headers if the answer has multiple distinct sections (rare — only for genuinely long answers).
-- Use bullet lists (\`- \`) for enumerations of three or more items.
+FORMAT RULES (you MUST output valid markdown — the UI renders it):
+- ALWAYS put a blank line before and after headers, lists, code blocks, and tables. Without blank lines, markdown will not render.
+- Use \`## Header\` for section headers. Use them whenever the answer covers more than one distinct topic or integration path.
+- ALWAYS use \`- \` (dash space) to start bullet list items. Never write list-like content as plain text lines — if you are listing things, use bullets. Example:
+  \`\`\`
+  ## Available Fields
+
+  - \`roles.student.school\` — primary school ID
+  - \`roles.student.sis_id\` — SIS identifier
+  \`\`\`
 - Use \`\`\`\` code blocks \`\`\`\` for endpoint paths, code, or JSON.
 - Put endpoint paths and field names in \`backticks\`.
 - For comparisons of two or three things, use a markdown table with \`| Aspect | A | B |\` syntax.
+- Bold key terms with \`**term**\` when introducing an important concept for the first time.
 
 DOCUMENTATION CONTEXT:
 {context}`;
@@ -70,7 +85,10 @@ export function buildSystemPrompt(chunks: DocumentChunk[]): string {
   const context =
     chunks.length > 0
       ? chunks
-          .map((c) => `[Source: ${c.title} — ${c.url}]\n${c.content}`)
+          .map((c) => {
+            const pathTag = c.integration_path ? ` | Path: ${c.integration_path}` : "";
+            return `[Source: ${c.title} — ${c.url}${pathTag}]\n${c.content}`;
+          })
           .join("\n\n---\n\n")
       : "No relevant documentation found for this query.";
 
@@ -112,11 +130,13 @@ export async function retrieveRelevantChunks(
       url: string;
       title: string;
       similarity: number;
+      integration_path?: string;
     }) => ({
       content: row.content,
       url: row.url,
       title: row.title,
       similarity: row.similarity,
+      integration_path: row.integration_path,
     })
   );
 }
