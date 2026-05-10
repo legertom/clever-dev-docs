@@ -120,6 +120,42 @@ export default function AboutPage() {
             </div>
           </section>
 
+          {/* Ingestion pipeline */}
+          <section>
+            <h2 className="text-2xl text-clever-navy mb-3 font-[family-name:var(--font-heading)]">
+              Building the knowledge base
+            </h2>
+            <p className="text-clever-black/70 leading-relaxed mb-4 font-[family-name:var(--font-body)]">
+              The vector database is populated by a CLI script (<code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">pnpm ingest</code>) that
+              scrapes, chunks, and embeds the Clever developer docs into Supabase
+              Postgres with the pgvector extension. The pipeline runs as a full
+              rebuild — every run deletes existing rows and re-inserts from
+              scratch.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Card
+                title="Scrape"
+                body="76 doc pages from dev.clever.com are fetched sequentially with a 500ms delay. Cheerio strips nav, sidebar, and footer elements, then extracts text from headings, paragraphs, list items, code blocks, and table cells."
+                accent="bg-clever-blue"
+              />
+              <Card
+                title="Chunk"
+                body="Each page is split into ~1,000-character chunks with 200-character overlap, breaking on markdown heading boundaries first, then paragraph boundaries for oversized sections."
+                accent="bg-clever-green"
+              />
+              <Card
+                title="Tag"
+                body="Every chunk is classified into an integration path — Library, Secure Sync, LMS Connect, Attendance, or general — by matching the source URL against a priority-ordered rule table."
+                accent="bg-clever-yellow"
+              />
+              <Card
+                title="Embed &amp; store"
+                body="Chunks are embedded in batches of 100 using text-embedding-3-small (1,536 dimensions) via the AI Gateway, then inserted into a Postgres table indexed with HNSW for fast cosine similarity search."
+                accent="bg-clever-orange"
+              />
+            </div>
+          </section>
+
           {/* Key decisions */}
           <section>
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
