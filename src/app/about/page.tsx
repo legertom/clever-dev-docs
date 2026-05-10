@@ -9,47 +9,58 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-zinc-950">
-      <header className="border-b border-zinc-200 dark:border-zinc-800 px-6 py-4 flex-shrink-0">
-        <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
-              C
+    <div className="flex flex-col min-h-screen bg-white">
+      {/* Hero header with navy background */}
+      <header className="bg-clever-navy px-6 pt-6 pb-16 relative overflow-hidden">
+        {/* Decorative brand shapes */}
+        <div className="absolute top-8 right-12 w-48 h-48 bg-clever-blue/20 clever-blob-1" aria-hidden="true" />
+        <div className="absolute -bottom-8 right-1/3 w-32 h-32 bg-clever-green/15 clever-blob-2" aria-hidden="true" />
+        <div className="absolute top-20 left-8 w-20 h-20 bg-clever-yellow/10 clever-blob-3" aria-hidden="true" />
+
+        <div className="max-w-3xl mx-auto relative">
+          <nav className="flex items-center justify-between mb-12">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c3.87 0 7 3.13 7 7 0 1.93-.78 3.68-2.05 4.95l-1.41-1.41A5.014 5.014 0 0017 12c0-2.76-2.24-5-5-5v3L8 6l4-4v3z" fill="white" opacity="0.9"/>
+                  <path d="M12 22C6.48 22 2 17.52 2 12h3c0 3.87 3.13 7 7 7v-3l4 4-4 4v-3z" fill="white"/>
+                </svg>
+              </div>
+              <span className="text-white/80 text-sm font-[family-name:var(--font-body)]">Clever Dev Docs</span>
             </div>
-            <div>
-              <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                About
-              </h1>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                How this assistant works
-              </p>
+            <div className="flex items-center gap-4">
+              <Link
+                href="/"
+                className="text-sm font-medium text-white/70 hover:text-white transition-colors font-[family-name:var(--font-body)]"
+              >
+                Chat
+              </Link>
+              <Link
+                href="/eval"
+                className="text-sm font-medium text-white/70 hover:text-white transition-colors font-[family-name:var(--font-body)]"
+              >
+                Eval
+              </Link>
             </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              Chat
-            </Link>
-            <Link
-              href="/eval"
-              className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              Eval
-            </Link>
-          </div>
+          </nav>
+
+          <h1 className="text-4xl sm:text-5xl text-white font-normal font-[family-name:var(--font-heading)] leading-[0.95] mb-4">
+            About this assistant
+          </h1>
+          <p className="text-lg text-white/60 max-w-lg font-[family-name:var(--font-body)] leading-relaxed">
+            Architecture, design decisions, and the production thinking behind a RAG-powered docs assistant.
+          </p>
         </div>
       </header>
 
-      <main className="flex-1 px-6 py-12">
-        <article className="max-w-3xl mx-auto space-y-12">
-          {/* Intro */}
-          <section>
-            <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+      <main className="flex-1 px-6 -mt-6">
+        <article className="max-w-3xl mx-auto space-y-12 pb-16">
+          {/* Intro card overlapping the hero */}
+          <section className="bg-white rounded-2xl border border-clever-light-blue p-8 shadow-sm">
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               What this is
             </h2>
-            <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)]">
               A RAG-powered assistant that answers natural-language questions
               about the Clever developer platform — Library, SSO,
               certification, the API — grounded in the official docs at{" "}
@@ -57,7 +68,7 @@ export default function AboutPage() {
                 href="https://dev.clever.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400 underline"
+                className="text-clever-blue hover:text-clever-navy underline transition-colors"
               >
                 dev.clever.com
               </a>
@@ -68,10 +79,10 @@ export default function AboutPage() {
 
           {/* Audience */}
           <section>
-            <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               Who it&apos;s for
             </h2>
-            <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)]">
               Independent developers integrating with Clever Library — often
               solo builders shipping a classroom app, going through
               certification, working at 11pm without access to a human support
@@ -82,35 +93,39 @@ export default function AboutPage() {
 
           {/* Architecture */}
           <section>
-            <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               How it works
             </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <Card
                 title="Retrieval"
                 body="Your question is embedded and matched against 86 pages of Clever docs via pgvector cosine similarity search. The top chunks become the model's context."
+                accent="bg-clever-blue"
               />
               <Card
                 title="Generation"
                 body="The AI SDK streams a completion through the Vercel AI Gateway. The model sees only retrieved docs — no memorized knowledge about Clever."
+                accent="bg-clever-green"
               />
               <Card
                 title="Confidence gate"
                 body="Below 0.6 similarity on retrieval, the system prompt switches modes: the model admits uncertainty instead of improvising. Wrong answers about certification requirements are more expensive than 'I don't know.'"
+                accent="bg-clever-orange"
               />
               <Card
                 title="Audience routing"
-                body="Every chunk is tagged with its integration path (Library, Secure Sync, LMS Connect, or general). When answers differ by path — like available data fields — the model presents both variants or asks which path the developer is on, instead of giving a flat answer that only applies to one."
+                body="Every chunk is tagged with its integration path (Library, Secure Sync, LMS Connect, or general). When answers differ by path, the model presents both variants or asks which path the developer is on."
+                accent="bg-clever-yellow"
               />
             </div>
           </section>
 
           {/* Key decisions */}
           <section>
-            <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               Design decisions
             </h2>
-            <dl className="space-y-4">
+            <dl className="space-y-5">
               <DecisionItem
                 term="gpt-4o-mini over a flagship model"
                 definition="At ~$0.0003 per query, the cheap model handles factual lookups where retrieval does the heavy lifting. The eval shows exactly which questions need a smarter model."
@@ -132,112 +147,111 @@ export default function AboutPage() {
 
           {/* Production thinking */}
           <section>
-            <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               Production thinking
             </h2>
-            <ul className="space-y-2 text-zinc-600 dark:text-zinc-300">
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1.5 shrink-0">&#8226;</span>
-                <span>
-                  <strong className="text-zinc-900 dark:text-zinc-100">
-                    Re-ingestion:
-                  </strong>{" "}
-                  content-hash chunks, only re-embed what changed. A daily cron
-                  polls the sitemap for diffs.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1.5 shrink-0">&#8226;</span>
-                <span>
-                  <strong className="text-zinc-900 dark:text-zinc-100">
-                    Low-confidence queue:
-                  </strong>{" "}
-                  every &quot;I couldn&apos;t find it&quot; gets logged — the
-                  strongest signal of doc gaps the support team should see.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1.5 shrink-0">&#8226;</span>
-                <span>
-                  <strong className="text-zinc-900 dark:text-zinc-100">
-                    Rate limiting:
-                  </strong>{" "}
-                  public endpoints with LLM calls behind them get expensive fast
-                  under abuse.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1.5 shrink-0">&#8226;</span>
-                <span>
-                  <strong className="text-zinc-900 dark:text-zinc-100">
-                    Eval in CI:
-                  </strong>{" "}
-                  the test suite gates PRs on pass-rate, preventing silent
-                  regressions when prompts or models change.
-                </span>
-              </li>
+            <ul className="space-y-3 text-clever-black/70 font-[family-name:var(--font-body)]">
+              <ProductionItem
+                title="Re-ingestion"
+                text="Content-hash chunks, only re-embed what changed. A daily cron polls the sitemap for diffs."
+              />
+              <ProductionItem
+                title="Low-confidence queue"
+                text='Every "I couldn&apos;t find it" gets logged — the strongest signal of doc gaps the support team should see.'
+              />
+              <ProductionItem
+                title="Rate limiting"
+                text="Public endpoints with LLM calls behind them get expensive fast under abuse."
+              />
+              <ProductionItem
+                title="Eval in CI"
+                text="The test suite gates PRs on pass-rate, preventing silent regressions when prompts or models change."
+              />
             </ul>
           </section>
 
           {/* Stack */}
           <section>
-            <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               Stack
             </h2>
-            <div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
-              <table className="w-full text-sm text-left">
-                <thead className="bg-zinc-50 dark:bg-zinc-800/50 text-zinc-600 dark:text-zinc-400">
+            <div className="overflow-x-auto rounded-xl border border-clever-light-blue">
+              <table className="w-full text-sm text-left font-[family-name:var(--font-body)]">
+                <thead className="bg-clever-light-blue/50 text-clever-navy">
                   <tr>
-                    <th className="px-4 py-2.5 font-medium">Layer</th>
-                    <th className="px-4 py-2.5 font-medium">Choice</th>
+                    <th className="px-5 py-3 font-medium">Layer</th>
+                    <th className="px-5 py-3 font-medium">Choice</th>
                   </tr>
                 </thead>
-                <tbody className="text-zinc-700 dark:text-zinc-300 divide-y divide-zinc-100 dark:divide-zinc-800">
-                  <tr>
-                    <td className="px-4 py-2.5">Framework</td>
-                    <td className="px-4 py-2.5">Next.js App Router</td>
+                <tbody className="text-clever-black/70 divide-y divide-clever-light-blue">
+                  <tr className="bg-white">
+                    <td className="px-5 py-3">Framework</td>
+                    <td className="px-5 py-3">Next.js App Router</td>
                   </tr>
-                  <tr>
-                    <td className="px-4 py-2.5">AI</td>
-                    <td className="px-4 py-2.5">
+                  <tr className="bg-clever-light-blue/10">
+                    <td className="px-5 py-3">AI</td>
+                    <td className="px-5 py-3">
                       Vercel AI SDK v6 + AI Gateway
                     </td>
                   </tr>
-                  <tr>
-                    <td className="px-4 py-2.5">Default model</td>
-                    <td className="px-4 py-2.5">
-                      <code className="text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
+                  <tr className="bg-white">
+                    <td className="px-5 py-3">Default model</td>
+                    <td className="px-5 py-3">
+                      <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">
                         openai/gpt-4o-mini
                       </code>
                     </td>
                   </tr>
-                  <tr>
-                    <td className="px-4 py-2.5">Embeddings</td>
-                    <td className="px-4 py-2.5">
-                      <code className="text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
+                  <tr className="bg-clever-light-blue/10">
+                    <td className="px-5 py-3">Embeddings</td>
+                    <td className="px-5 py-3">
+                      <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">
                         openai/text-embedding-3-small
                       </code>
                     </td>
                   </tr>
-                  <tr>
-                    <td className="px-4 py-2.5">Vector store</td>
-                    <td className="px-4 py-2.5">
+                  <tr className="bg-white">
+                    <td className="px-5 py-3">Vector store</td>
+                    <td className="px-5 py-3">
                       Supabase Postgres + pgvector (Vercel Marketplace)
                     </td>
                   </tr>
-                  <tr>
-                    <td className="px-4 py-2.5">Hosting</td>
-                    <td className="px-4 py-2.5">Vercel (Fluid Compute)</td>
+                  <tr className="bg-clever-light-blue/10">
+                    <td className="px-5 py-3">Hosting</td>
+                    <td className="px-5 py-3">Vercel (Fluid Compute)</td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </section>
+
+          {/* Brand identity */}
+          <section className="bg-clever-light-blue/30 rounded-2xl p-8 border border-clever-light-blue">
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
+              Brand identity
+            </h2>
+            <p className="text-clever-black/70 leading-relaxed mb-6 font-[family-name:var(--font-body)]">
+              The interface follows the Clever Brand Guidelines (V7, August 2025).
+              Typography pairs Merriweather (serif headings, standing in for the
+              brand&apos;s ABC Arizona Mix) with Inter (sans-serif body text,
+              standing in for Messina Sans). Colors draw from the primary palette —
+              Clever Blue, white, and dark navy — with secondary accents for visual
+              expression.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <ColorSwatch color="bg-clever-blue" label="Clever Blue" hex="#1464FF" />
+              <ColorSwatch color="bg-clever-navy" label="Navy" hex="#0A1E46" textLight />
+              <ColorSwatch color="bg-clever-light-blue" label="Light Blue" hex="#DAEBFF" />
+              <ColorSwatch color="bg-clever-yellow" label="Yellow" hex="#FFE478" />
+              <ColorSwatch color="bg-clever-orange" label="Orange" hex="#F78239" />
+              <ColorSwatch color="bg-clever-green" label="Green" hex="#4ECC97" />
+            </div>
+          </section>
         </article>
       </main>
 
-      <footer className="border-t border-zinc-200 dark:border-zinc-800 px-6 py-4">
-        <p className="max-w-3xl mx-auto text-xs text-zinc-400 text-center">
+      <footer className="border-t border-clever-light-blue px-6 py-4">
+        <p className="max-w-3xl mx-auto text-xs text-clever-black/40 text-center font-[family-name:var(--font-body)]">
           Built by Tom Leger as a Vercel Solutions Architect take-home (Track B:
           AI Cloud).
         </p>
@@ -246,13 +260,14 @@ export default function AboutPage() {
   );
 }
 
-function Card({ title, body }: { title: string; body: string }) {
+function Card({ title, body, accent }: { title: string; body: string; accent: string }) {
   return (
-    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 p-4">
-      <h3 className="font-medium text-zinc-900 dark:text-zinc-100 mb-1.5">
+    <div className="rounded-xl border border-clever-light-blue bg-white p-5 relative overflow-hidden">
+      <div className={`absolute top-0 left-0 w-1 h-full ${accent}`} />
+      <h3 className="font-medium text-clever-navy mb-2 font-[family-name:var(--font-heading)] text-lg">
         {title}
       </h3>
-      <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+      <p className="text-sm text-clever-black/60 leading-relaxed font-[family-name:var(--font-body)]">
         {body}
       </p>
     </div>
@@ -267,11 +282,35 @@ function DecisionItem({
   definition: string;
 }) {
   return (
-    <div>
-      <dt className="font-medium text-zinc-900 dark:text-zinc-100">{term}</dt>
-      <dd className="mt-1 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+    <div className="pl-4 border-l-2 border-clever-light-blue">
+      <dt className="font-medium text-clever-navy font-[family-name:var(--font-body)]">{term}</dt>
+      <dd className="mt-1 text-sm text-clever-black/60 leading-relaxed font-[family-name:var(--font-body)]">
         {definition}
       </dd>
+    </div>
+  );
+}
+
+function ProductionItem({ title, text }: { title: string; text: string }) {
+  return (
+    <li className="flex items-start gap-3">
+      <span className="w-1.5 h-1.5 rounded-full bg-clever-blue mt-2 shrink-0" />
+      <span>
+        <strong className="text-clever-navy">{title}:</strong>{" "}
+        {text}
+      </span>
+    </li>
+  );
+}
+
+function ColorSwatch({ color, label, hex, textLight }: { color: string; label: string; hex: string; textLight?: boolean }) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className={`w-8 h-8 rounded-lg ${color} border border-black/5`} />
+      <div>
+        <div className={`text-xs font-medium ${textLight ? "text-clever-navy" : "text-clever-black/70"}`}>{label}</div>
+        <div className="text-[10px] font-mono text-clever-black/40">{hex}</div>
+      </div>
     </div>
   );
 }

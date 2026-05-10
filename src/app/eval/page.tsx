@@ -256,14 +256,14 @@ export default function EvalPage() {
   const maxCost = Math.max(...summary.map((s) => s.totalCost), 0.0001);
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-6 py-4">
+    <div className="min-h-screen bg-clever-light-blue/20">
+      <header className="border-b border-clever-light-blue bg-white px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+            <h1 className="text-xl font-[family-name:var(--font-heading)] text-clever-navy">
               RAG Evaluation
             </h1>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+            <p className="text-sm text-clever-black/50 mt-1 font-[family-name:var(--font-body)]">
               {questions.length} test questions × {MODELS.length} models ={" "}
               {questions.length * MODELS.length} runs
             </p>
@@ -271,14 +271,14 @@ export default function EvalPage() {
           <div className="flex items-center gap-3">
             <a
               href="/"
-              className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-sm text-clever-blue hover:text-clever-navy transition-colors font-[family-name:var(--font-body)]"
             >
-              ← Back to chat
+              Back to chat
             </a>
             <button
               onClick={runEval}
               disabled={running}
-              className="rounded-lg bg-blue-600 px-5 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
+              className="rounded-xl bg-clever-blue px-5 py-2 text-white font-medium hover:bg-clever-navy disabled:opacity-50 transition-colors font-[family-name:var(--font-body)]"
             >
               {running
                 ? `Running ${progress.current}/${progress.total}...`
@@ -287,19 +287,19 @@ export default function EvalPage() {
           </div>
         </div>
         {running && (
-          <div className="border-t border-zinc-200 dark:border-zinc-800 -mx-6 px-6 pt-3">
+          <div className="border-t border-clever-light-blue -mx-6 px-6 pt-3">
             <div className="max-w-7xl mx-auto">
               <div className="flex items-center gap-3">
-                <div className="flex-1 h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-clever-light-blue/50 rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-blue-500"
+                    className="h-full rounded-full bg-clever-blue"
                     style={{
                       width: `${progress.total > 0 ? (progress.current / progress.total) * 100 : 0}%`,
                       transition: "width 0.4s ease-out",
                     }}
                   />
                 </div>
-                <span className="text-xs font-mono text-zinc-500 shrink-0">
+                <span className="text-xs font-mono text-clever-black/50 shrink-0">
                   {progress.current}/{progress.total} questions
                 </span>
               </div>
@@ -312,7 +312,7 @@ export default function EvalPage() {
         {/* Summary scoreboard */}
         {results.length > 0 && (
           <section>
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+            <h2 className="text-lg font-[family-name:var(--font-heading)] text-clever-navy mb-4">
               Summary
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -325,7 +325,7 @@ export default function EvalPage() {
                 return (
                   <div
                     key={s.model}
-                    className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden"
+                    className="rounded-xl border border-clever-light-blue bg-white overflow-hidden"
                   >
                     <div
                       className="h-1"
@@ -466,7 +466,7 @@ export default function EvalPage() {
 
         {/* Loading illustration */}
         {running && results.length === 0 && (
-          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-16 flex flex-col items-center">
+          <div className="rounded-xl border border-clever-light-blue bg-white p-16 flex flex-col items-center">
             <div className="relative w-36 h-36 mb-8">
               <div
                 className="absolute inset-0 animate-spin"
@@ -477,7 +477,7 @@ export default function EvalPage() {
                     cx="72"
                     cy="72"
                     r="62"
-                    stroke="#3b82f6"
+                    stroke="#1464FF"
                     strokeWidth="3"
                     fill="none"
                     strokeDasharray={2 * Math.PI * 62}
@@ -529,10 +529,10 @@ export default function EvalPage() {
                 </svg>
               </div>
             </div>
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
-              Evaluating models…
+            <h2 className="text-lg font-[family-name:var(--font-heading)] text-clever-navy mb-2">
+              Evaluating models...
             </h2>
-            <p className="text-sm text-zinc-400 text-center max-w-md">
+            <p className="text-sm text-clever-black/50 text-center max-w-md font-[family-name:var(--font-body)]">
               Retrieving documents, generating answers, and scoring results
               with Claude Sonnet 4.6 as judge
             </p>
@@ -541,27 +541,26 @@ export default function EvalPage() {
 
         {/* Empty state */}
         {results.length === 0 && !running && (
-          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-12 text-center">
-            <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
+          <div className="rounded-xl border border-clever-light-blue bg-white p-12 text-center">
+            <h2 className="text-2xl font-[family-name:var(--font-heading)] text-clever-navy mb-3">
               Compare RAG quality across models
             </h2>
-            <p className="text-zinc-500 dark:text-zinc-400 mb-6 max-w-2xl mx-auto">
+            <p className="text-clever-black/50 mb-6 max-w-2xl mx-auto font-[family-name:var(--font-body)]">
               Each test question is run through the full RAG pipeline (retrieve
-              → generate) using {MODELS.length} different models, then scored
+              then generate) using {MODELS.length} different models, then scored
               by Claude Sonnet 4.6 as judge on four dimensions:{" "}
-              <strong>correct</strong> (no factual errors),{" "}
-              <strong>complete</strong> (covers required points),{" "}
-              <strong>cites source</strong>, and{" "}
-              <strong>no hallucination</strong>.
+              <strong className="text-clever-navy">correct</strong> (no factual errors),{" "}
+              <strong className="text-clever-navy">complete</strong> (covers required points),{" "}
+              <strong className="text-clever-navy">cites source</strong>, and{" "}
+              <strong className="text-clever-navy">no hallucination</strong>.
             </p>
             <button
               onClick={runEval}
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-base font-medium px-6 py-3 shadow-sm transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl bg-clever-blue hover:bg-clever-navy text-white text-base font-medium px-6 py-3 transition-colors font-[family-name:var(--font-body)]"
             >
               Run Eval
-              <span aria-hidden="true">→</span>
             </button>
-            <p className="text-sm text-zinc-400 mt-4">
+            <p className="text-sm text-clever-black/40 mt-4 font-[family-name:var(--font-body)]">
               Takes ~30-60 seconds for {questions.length * MODELS.length} runs.
             </p>
           </div>
@@ -570,7 +569,7 @@ export default function EvalPage() {
         {/* Filter chips */}
         {results.length > 0 && (
           <div className="flex items-center flex-wrap gap-x-2 gap-y-2">
-            <span className="text-xs text-zinc-500 mr-1">Filter:</span>
+            <span className="text-xs text-clever-black/50 mr-1 font-[family-name:var(--font-body)]">Filter:</span>
             <FilterChip
               label="All"
               count={filterCounts.all}
@@ -584,7 +583,7 @@ export default function EvalPage() {
               onClick={() => setFilter({ kind: "any-failure" })}
               disabled={filterCounts["any-failure"] === 0}
             />
-            <div className="w-px h-4 bg-zinc-200 dark:bg-zinc-700 mx-1" />
+            <div className="w-px h-4 bg-clever-light-blue mx-1" />
             {(
               ["correct", "complete", "cites_source", "no_hallucination"] as const
             ).map((dim) => (
@@ -602,7 +601,7 @@ export default function EvalPage() {
                 disabled={filterCounts[dim] === 0}
               />
             ))}
-            <div className="w-px h-4 bg-zinc-200 dark:bg-zinc-700 mx-1" />
+            <div className="w-px h-4 bg-clever-light-blue mx-1" />
             <FilterChip
               label="Models disagreed"
               count={filterCounts.disagreement}
@@ -624,11 +623,11 @@ export default function EvalPage() {
 
         {/* Empty filter state */}
         {results.length > 0 && visibleResults.length === 0 && (
-          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 text-center text-zinc-500">
+          <div className="rounded-xl border border-clever-light-blue bg-white p-8 text-center text-clever-black/50 font-[family-name:var(--font-body)]">
             No questions match this filter.{" "}
             <button
               onClick={() => setFilter({ kind: "all" })}
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-clever-blue hover:text-clever-navy transition-colors"
             >
               Clear filter
             </button>
@@ -639,14 +638,14 @@ export default function EvalPage() {
         {visibleResults.map((r) => (
           <section
             key={r.questionId}
-            className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden"
+            className="rounded-xl border border-clever-light-blue bg-white overflow-hidden"
           >
-            <div className="px-5 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50">
+            <div className="px-5 py-4 border-b border-clever-light-blue bg-clever-light-blue/20">
               <div className="flex items-baseline gap-3">
-                <span className="text-xs font-mono text-zinc-400">
+                <span className="text-xs font-mono text-clever-black/40">
                   Q{r.questionId}
                 </span>
-                <h3 className="font-medium text-zinc-900 dark:text-zinc-100">
+                <h3 className="font-medium text-clever-navy font-[family-name:var(--font-body)]">
                   {r.question}
                 </h3>
               </div>
@@ -836,12 +835,12 @@ function FilterChip({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors font-[family-name:var(--font-body)] ${
         active
-          ? "bg-blue-600 text-white"
+          ? "bg-clever-blue text-white"
           : disabled
-            ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed"
-            : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+            ? "bg-clever-light-blue/30 text-clever-black/30 cursor-not-allowed"
+            : "bg-white border border-clever-light-blue text-clever-navy hover:bg-clever-light-blue/50"
       }`}
     >
       <span>{label}</span>
@@ -849,7 +848,7 @@ function FilterChip({
         className={`text-[10px] px-1.5 rounded-full ${
           active
             ? "bg-white/20"
-            : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400"
+            : "bg-clever-light-blue text-clever-navy/60"
         }`}
       >
         {count}

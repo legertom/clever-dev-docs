@@ -14,8 +14,6 @@
 
 import { getSupabase } from "@/lib/supabase";
 
-// Always fetch fresh on each request — the whole point is to see the
-// latest feedback as it comes in, not a cached snapshot.
 export const revalidate = 0;
 
 interface FeedbackRow {
@@ -50,8 +48,6 @@ export default async function FeedbackPage({
   const { data, error } = await query;
   const rows = (data ?? []) as FeedbackRow[];
 
-  // Counts for the filter chips. Two extra small queries; cheap enough
-  // for an admin page that gets infrequent traffic.
   const [{ count: lowCount }, { count: reportCount }] = await Promise.all([
     supabase
       .from("feedback")
@@ -66,23 +62,23 @@ export default async function FeedbackPage({
   const totalCount = (lowCount ?? 0) + (reportCount ?? 0);
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-6 py-4">
+    <div className="min-h-screen bg-clever-light-blue/20">
+      <header className="border-b border-clever-light-blue bg-white px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+            <h1 className="text-xl font-[family-name:var(--font-heading)] text-clever-navy">
               Feedback queue
             </h1>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+            <p className="text-sm text-clever-black/50 mt-1 font-[family-name:var(--font-body)]">
               Doc gaps and answer issues. The signal a docs/support team
               would triage.
             </p>
           </div>
           <a
             href="/"
-            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+            className="text-sm text-clever-blue hover:text-clever-navy transition-colors font-[family-name:var(--font-body)]"
           >
-            ← Back to chat
+            Back to chat
           </a>
         </div>
       </header>
@@ -90,7 +86,7 @@ export default async function FeedbackPage({
       <main className="max-w-5xl mx-auto px-6 py-8 space-y-6">
         {/* Filter chips */}
         <div className="flex items-center gap-2">
-          <span className="text-xs text-zinc-500 mr-1">Filter:</span>
+          <span className="text-xs text-clever-black/50 mr-1 font-[family-name:var(--font-body)]">Filter:</span>
           <FilterLink
             href="/feedback"
             active={!kindFilter}
@@ -112,13 +108,13 @@ export default async function FeedbackPage({
         </div>
 
         {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 p-4 text-sm text-red-700 dark:text-red-300">
+          <div className="rounded-xl border border-clever-orange/30 bg-clever-orange/5 p-4 text-sm text-clever-orange font-[family-name:var(--font-body)]">
             Failed to load feedback: {error.message}
           </div>
         )}
 
         {rows.length === 0 && !error && (
-          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-12 text-center text-zinc-500">
+          <div className="rounded-xl border border-clever-light-blue bg-white p-12 text-center text-clever-black/50 font-[family-name:var(--font-body)]">
             No feedback {kindFilter ? `of type "${kindFilter}"` : "yet"}. Ask
             a question the docs can&apos;t answer, or use the &ldquo;Flag for
             review&rdquo; button on a chat response, and it will show up here.
@@ -149,10 +145,10 @@ function FilterLink({
   return (
     <a
       href={href}
-      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors font-[family-name:var(--font-body)] ${
         active
-          ? "bg-blue-600 text-white"
-          : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+          ? "bg-clever-blue text-white"
+          : "bg-white border border-clever-light-blue text-clever-navy hover:bg-clever-light-blue/50"
       }`}
     >
       <span>{label}</span>
@@ -160,7 +156,7 @@ function FilterLink({
         className={`text-[10px] px-1.5 rounded-full ${
           active
             ? "bg-white/20"
-            : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400"
+            : "bg-clever-light-blue text-clever-navy/60"
         }`}
       >
         {count}
@@ -180,25 +176,25 @@ function FeedbackCard({ row }: { row: FeedbackRow }) {
   });
 
   return (
-    <article className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
-      <div className="px-5 py-3 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/30 flex items-center justify-between text-xs">
+    <article className="rounded-xl border border-clever-light-blue bg-white overflow-hidden font-[family-name:var(--font-body)]">
+      <div className="px-5 py-3 border-b border-clever-light-blue bg-clever-light-blue/20 flex items-center justify-between text-xs">
         <div className="flex items-center gap-3">
           <span
-            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded font-medium ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-medium ${
               isLow
-                ? "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300"
-                : "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300"
+                ? "bg-clever-yellow/30 text-clever-orange"
+                : "bg-clever-blue/10 text-clever-blue"
             }`}
           >
-            {isLow ? "🔍 Low-confidence retrieval" : "🚩 User report"}
+            {isLow ? "Low-confidence retrieval" : "User report"}
           </span>
           {isLow && row.top_similarity !== null && (
-            <span className="text-zinc-500 font-mono">
+            <span className="text-clever-black/40 font-mono">
               top similarity: {row.top_similarity.toFixed(3)}
             </span>
           )}
         </div>
-        <time className="text-zinc-500" dateTime={row.created_at}>
+        <time className="text-clever-black/40" dateTime={row.created_at}>
           {dateStr}
         </time>
       </div>
@@ -206,10 +202,10 @@ function FeedbackCard({ row }: { row: FeedbackRow }) {
       <div className="p-5 space-y-3">
         {row.query && (
           <div>
-            <div className="text-[10px] uppercase tracking-wider text-zinc-400 mb-1">
+            <div className="text-[10px] uppercase tracking-wider text-clever-black/40 mb-1">
               Query
             </div>
-            <p className="text-sm text-zinc-900 dark:text-zinc-100">
+            <p className="text-sm text-clever-navy">
               {row.query}
             </p>
           </div>
@@ -217,10 +213,10 @@ function FeedbackCard({ row }: { row: FeedbackRow }) {
 
         {row.response && (
           <div>
-            <div className="text-[10px] uppercase tracking-wider text-zinc-400 mb-1">
+            <div className="text-[10px] uppercase tracking-wider text-clever-black/40 mb-1">
               Response
             </div>
-            <p className="text-sm text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap line-clamp-6">
+            <p className="text-sm text-clever-black/70 whitespace-pre-wrap line-clamp-6">
               {row.response}
             </p>
           </div>
@@ -228,18 +224,18 @@ function FeedbackCard({ row }: { row: FeedbackRow }) {
 
         {row.user_note && (
           <div>
-            <div className="text-[10px] uppercase tracking-wider text-zinc-400 mb-1">
+            <div className="text-[10px] uppercase tracking-wider text-clever-black/40 mb-1">
               User note
             </div>
-            <p className="text-sm italic text-zinc-700 dark:text-zinc-300">
+            <p className="text-sm italic text-clever-black/70">
               &ldquo;{row.user_note}&rdquo;
             </p>
           </div>
         )}
 
         {row.retrieved_urls && row.retrieved_urls.length > 0 && (
-          <details className="text-xs text-zinc-500">
-            <summary className="cursor-pointer hover:text-zinc-700 dark:hover:text-zinc-300">
+          <details className="text-xs text-clever-black/50">
+            <summary className="cursor-pointer hover:text-clever-navy transition-colors">
               {row.retrieved_urls.length} sources retrieved
             </summary>
             <ul className="mt-2 space-y-1 ml-4">
@@ -249,7 +245,7 @@ function FeedbackCard({ row }: { row: FeedbackRow }) {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 dark:text-blue-400 hover:underline"
+                    className="text-clever-blue hover:text-clever-navy transition-colors"
                   >
                     {url.replace("https://dev.clever.com", "")}
                   </a>

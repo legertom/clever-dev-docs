@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
 :root {
+  --clever-blue: #1464FF;
+  --clever-navy: #0A1E46;
+  --clever-light-blue: #DAEBFF;
+  --clever-black: #1C1C1C;
+  --clever-yellow: #FFE478;
+  --clever-orange: #F78239;
+  --clever-green: #4ECC97;
+
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1C1C1C;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-clever-blue: #1464FF;
+  --color-clever-navy: #0A1E46;
+  --color-clever-light-blue: #DAEBFF;
+  --color-clever-black: #1C1C1C;
+  --color-clever-yellow: #FFE478;
+  --color-clever-orange: #F78239;
+  --color-clever-green: #4ECC97;
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), Inter, system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), Merriweather, Georgia, serif;
+  line-height: 0.95;
+}
+
+/* Clever brand decorative blob shapes via CSS */
+.clever-blob-1 {
+  clip-path: polygon(20% 0%, 80% 10%, 100% 50%, 85% 90%, 30% 100%, 0% 60%);
+}
+
+.clever-blob-2 {
+  clip-path: polygon(50% 0%, 100% 30%, 90% 80%, 40% 100%, 0% 70%, 10% 20%);
+}
+
+.clever-blob-3 {
+  clip-path: polygon(30% 0%, 90% 15%, 100% 60%, 70% 100%, 10% 85%, 0% 30%);
+}
+
+/* Smooth focus ring matching brand */
+*:focus-visible {
+  outline: 2px solid var(--clever-blue);
+  outline-offset: 2px;
 }

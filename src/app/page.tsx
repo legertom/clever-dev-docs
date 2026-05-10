@@ -10,7 +10,6 @@ import remarkBreaks from "remark-breaks";
 
 const transport = new DefaultChatTransport({ api: "/api/chat" });
 
-// Pull the joined text from a message's parts array.
 function messageText(m: UIMessage): string {
   return m.parts
     .filter((p): p is { type: "text"; text: string } => p.type === "text")
@@ -49,28 +48,31 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-zinc-950">
+    <div className="flex flex-col h-screen bg-white">
       {/* Header */}
-      <header className="border-b border-zinc-200 dark:border-zinc-800 px-6 py-4 flex-shrink-0">
+      <header className="border-b border-clever-light-blue bg-white px-6 py-4 flex-shrink-0">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
-              C
+            <div className="w-9 h-9 rounded-xl bg-clever-blue flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c3.87 0 7 3.13 7 7 0 1.93-.78 3.68-2.05 4.95l-1.41-1.41A5.014 5.014 0 0017 12c0-2.76-2.24-5-5-5v3L8 6l4-4v3z" fill="white" opacity="0.9"/>
+                <path d="M12 22C6.48 22 2 17.52 2 12h3c0 3.87 3.13 7 7 7v-3l4 4-4 4v-3z" fill="white"/>
+              </svg>
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                Clever Dev Docs Assistant
+              <h1 className="text-lg font-bold text-clever-navy font-[family-name:var(--font-heading)]">
+                Clever Dev Docs
               </h1>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Ask questions about Clever Library, SSO, APIs, and certification
+              <p className="text-sm text-clever-black/60 font-[family-name:var(--font-body)]">
+                Library, SSO, APIs, and certification
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <nav className="flex items-center gap-4">
             {messages.length > 0 && (
               <button
                 onClick={() => setMessages([])}
-                className="text-sm font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 whitespace-nowrap transition-colors"
+                className="text-sm font-medium text-clever-black/50 hover:text-clever-navy transition-colors"
                 aria-label="Start a new conversation"
               >
                 New chat
@@ -78,23 +80,23 @@ export default function Home() {
             )}
             <a
               href="/about"
-              className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
+              className="text-sm font-medium text-clever-blue hover:text-clever-navy transition-colors"
             >
               About
             </a>
             <a
               href="/feedback"
-              className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
+              className="text-sm font-medium text-clever-blue hover:text-clever-navy transition-colors"
             >
               Feedback
             </a>
             <a
               href="/eval"
-              className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"
+              className="text-sm font-medium text-clever-blue hover:text-clever-navy transition-colors"
             >
               Eval
             </a>
-          </div>
+          </nav>
         </div>
       </header>
 
@@ -102,21 +104,28 @@ export default function Home() {
       <main className="flex-1 overflow-y-auto px-6 py-6">
         <div className="max-w-3xl mx-auto space-y-6">
           {messages.length === 0 && (
-            <div className="text-center py-16">
-              <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
-                How can I help with your Clever integration?
-              </h2>
-              <p className="text-zinc-500 dark:text-zinc-400 mb-8 max-w-md mx-auto">
-                I can answer questions about Clever Library, SSO setup,
-                certification requirements, and the Clever API — all grounded in
-                the official developer docs.
-              </p>
-              <div className="flex flex-wrap justify-center gap-2">
+            <div className="py-16 relative">
+              {/* Decorative blobs */}
+              <div className="absolute -top-4 -right-8 w-32 h-32 bg-clever-yellow/30 clever-blob-1 blur-sm" aria-hidden="true" />
+              <div className="absolute bottom-8 -left-12 w-24 h-24 bg-clever-green/20 clever-blob-2 blur-sm" aria-hidden="true" />
+              <div className="absolute top-24 right-16 w-16 h-16 bg-clever-orange/20 clever-blob-3 blur-sm" aria-hidden="true" />
+
+              <div className="relative text-left max-w-lg">
+                <h2 className="text-4xl font-normal text-clever-navy mb-4 font-[family-name:var(--font-heading)] leading-[0.95]">
+                  How can I help with your Clever integration?
+                </h2>
+                <p className="text-clever-black/60 mb-8 leading-relaxed font-[family-name:var(--font-body)]">
+                  I can answer questions about Clever Library, SSO setup,
+                  certification requirements, and the Clever API — all grounded
+                  in the official developer docs.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
                 {SUGGESTED_QUESTIONS.map((q) => (
                   <button
                     key={q}
                     onClick={() => handleSuggestion(q)}
-                    className="px-4 py-2 text-sm rounded-full border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                    className="px-4 py-2.5 text-sm rounded-xl border border-clever-light-blue text-clever-navy bg-clever-light-blue/30 hover:bg-clever-light-blue hover:border-clever-blue/20 transition-all duration-200 font-[family-name:var(--font-body)]"
                   >
                     {q}
                   </button>
@@ -126,9 +135,6 @@ export default function Home() {
           )}
 
           {messages.map((message, idx) => {
-            // For assistant messages, find the user message that
-            // immediately preceded it — that's the query that produced
-            // this answer, included in any flag-for-review submission.
             const precedingQuery =
               message.role === "assistant"
                 ? messageText(
@@ -146,8 +152,8 @@ export default function Home() {
                 <div
                   className={`max-w-[85%] rounded-2xl px-5 py-3 ${
                     message.role === "user"
-                      ? "bg-blue-600 text-white"
-                      : "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
+                      ? "bg-clever-blue text-white"
+                      : "bg-clever-light-blue/40 text-clever-black border border-clever-light-blue"
                   }`}
                 >
                   {message.parts.map((part, i) => {
@@ -155,7 +161,7 @@ export default function Home() {
                       return (
                         <div
                           key={i}
-                          className="prose prose-sm dark:prose-invert max-w-none [&_a]:text-blue-600 dark:[&_a]:text-blue-400 [&_a]:underline"
+                          className="prose prose-sm max-w-none [&_a]:text-clever-blue [&_a]:underline font-[family-name:var(--font-body)]"
                         >
                           <ReactMarkdown
                             remarkPlugins={[remarkGfm, remarkBreaks]}
@@ -193,14 +199,14 @@ export default function Home() {
 
           {status === "submitted" && (
             <div className="flex justify-start">
-              <div className="bg-zinc-100 dark:bg-zinc-800 rounded-2xl px-5 py-3">
-                <div className="flex items-center gap-2 text-zinc-500">
+              <div className="bg-clever-light-blue/40 border border-clever-light-blue rounded-2xl px-5 py-3">
+                <div className="flex items-center gap-2 text-clever-blue">
                   <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                    <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                    <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce" />
+                    <span className="w-2 h-2 bg-clever-blue/60 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                    <span className="w-2 h-2 bg-clever-blue/60 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                    <span className="w-2 h-2 bg-clever-blue/60 rounded-full animate-bounce" />
                   </div>
-                  <span className="text-sm">Searching docs...</span>
+                  <span className="text-sm text-clever-black/60">Searching docs...</span>
                 </div>
               </div>
             </div>
@@ -211,24 +217,24 @@ export default function Home() {
       </main>
 
       {/* Input */}
-      <footer className="border-t border-zinc-200 dark:border-zinc-800 px-6 py-4 flex-shrink-0">
+      <footer className="border-t border-clever-light-blue bg-white px-6 py-4 flex-shrink-0">
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto flex gap-3">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about Clever Library, SSO, certification..."
             disabled={isLoading}
-            className="flex-1 rounded-xl border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-4 py-3 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            className="flex-1 rounded-xl border border-clever-light-blue bg-white px-4 py-3 text-clever-black placeholder:text-clever-black/40 focus:outline-none focus:ring-2 focus:ring-clever-blue/40 focus:border-clever-blue disabled:opacity-50 font-[family-name:var(--font-body)]"
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="rounded-xl bg-blue-600 px-6 py-3 text-white font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="rounded-xl bg-clever-blue px-6 py-3 text-white font-medium hover:bg-clever-navy disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-[family-name:var(--font-body)]"
           >
             Send
           </button>
         </form>
-        <p className="max-w-3xl mx-auto mt-2 text-xs text-zinc-400 text-center">
+        <p className="max-w-3xl mx-auto mt-2 text-xs text-clever-black/40 text-center font-[family-name:var(--font-body)]">
           Answers are generated from dev.clever.com docs. Always verify
           critical details in the official documentation.
         </p>
@@ -237,15 +243,6 @@ export default function Home() {
   );
 }
 
-// ── Flag for review ────────────────────────────────────────────
-// Lets the user flag an answer for human review. Submits to /api/feedback,
-// where the row joins the same queue that low-confidence retrieval logs
-// feed into. The UX is intentionally low-friction:
-//   - Single tap on the icon button opens an inline form
-//   - Note is optional — the query+response pair alone is useful signal
-//   - On submit, the form collapses to a confirmation
-// Keeping it inline (not modal) means the user doesn't lose their place
-// in the conversation.
 function FlagForReview({
   messageId,
   query,
@@ -262,21 +259,21 @@ function FlagForReview({
 
   if (submitted) {
     return (
-      <div className="mt-3 pt-3 border-t border-zinc-200 dark:border-zinc-700 text-xs text-zinc-500">
-        ✓ Flagged for review — thanks. The support team will see this.
+      <div className="mt-3 pt-3 border-t border-clever-light-blue text-xs text-clever-black/50">
+        Flagged for review — thanks. The support team will see this.
       </div>
     );
   }
 
   if (!open) {
     return (
-      <div className="mt-3 pt-3 border-t border-zinc-200 dark:border-zinc-700 flex items-center justify-end">
+      <div className="mt-3 pt-3 border-t border-clever-light-blue flex items-center justify-end">
         <button
           onClick={() => setOpen(true)}
-          className="text-xs text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 inline-flex items-center gap-1"
+          className="text-xs text-clever-black/50 hover:text-clever-navy inline-flex items-center gap-1 transition-colors"
           aria-label="Flag this response for human review"
         >
-          🚩 Flag for review
+          Flag for review
         </button>
       </div>
     );
@@ -300,17 +297,17 @@ function FlagForReview({
   }
 
   return (
-    <div className="mt-3 pt-3 border-t border-zinc-200 dark:border-zinc-700 space-y-2">
-      <p className="text-xs text-zinc-500">
+    <div className="mt-3 pt-3 border-t border-clever-light-blue space-y-2">
+      <p className="text-xs text-clever-black/50">
         What was wrong with this response? (optional)
       </p>
       <textarea
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        placeholder="e.g. answered the wrong question, missing a key detail, gave wrong API field name…"
+        placeholder="e.g. answered the wrong question, missing a key detail, gave wrong API field name..."
         maxLength={1000}
         disabled={submitting}
-        className="w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+        className="w-full rounded-lg border border-clever-light-blue bg-white px-3 py-2 text-sm text-clever-black placeholder:text-clever-black/40 focus:outline-none focus:ring-2 focus:ring-clever-blue/40 disabled:opacity-50"
         rows={2}
       />
       <div className="flex items-center justify-end gap-2">
@@ -320,19 +317,19 @@ function FlagForReview({
             setNote("");
           }}
           disabled={submitting}
-          className="text-xs text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 px-2 py-1"
+          className="text-xs text-clever-black/50 hover:text-clever-navy px-2 py-1 transition-colors"
         >
           Cancel
         </button>
         <button
           onClick={submit}
           disabled={submitting}
-          className="text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-md px-3 py-1.5 disabled:opacity-50"
+          className="text-xs bg-clever-blue hover:bg-clever-navy text-white rounded-lg px-3 py-1.5 disabled:opacity-50 transition-colors"
         >
-          {submitting ? "Submitting…" : "Submit"}
+          {submitting ? "Submitting..." : "Submit"}
         </button>
       </div>
-      <p className="text-[10px] text-zinc-400">
+      <p className="text-[10px] text-clever-black/40">
         We&apos;ll include the question and the response automatically. id:{" "}
         <span className="font-mono">{messageId.slice(0, 8)}</span>
       </p>
