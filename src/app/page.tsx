@@ -26,7 +26,7 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export default function Home() {
-  const { messages, sendMessage, status } = useChat({ transport });
+  const { messages, sendMessage, setMessages, status } = useChat({ transport });
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -67,6 +67,15 @@ export default function Home() {
             </div>
           </div>
           <div className="flex items-center gap-4">
+            {messages.length > 0 && (
+              <button
+                onClick={() => setMessages([])}
+                className="text-sm font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 whitespace-nowrap transition-colors"
+                aria-label="Start a new conversation"
+              >
+                New chat
+              </button>
+            )}
             <a
               href="/about"
               className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap"

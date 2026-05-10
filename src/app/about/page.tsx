@@ -100,7 +100,7 @@ export default function AboutPage() {
               />
               <Card
                 title="Audience routing"
-                body="The full corpus is indexed — including Secure Sync and LMS Connect — but the prompt routes developers to the right path. Indie devs get pointed toward Library; enterprise paths surface a note about contacting Clever."
+                body="Every chunk is tagged with its integration path (Library, Secure Sync, LMS Connect, or general). When answers differ by path — like available data fields — the model presents both variants or asks which path the developer is on, instead of giving a flat answer that only applies to one."
               />
             </div>
           </section>
