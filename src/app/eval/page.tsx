@@ -36,6 +36,7 @@ interface Scores {
   complete: boolean;
   cites_source: boolean;
   no_hallucination: boolean;
+  formatting: boolean;
   reasoning: string;
 }
 
@@ -70,13 +71,14 @@ interface QuestionResult {
 // "model:dimension" format lets us key per-model failures (e.g.
 // "openai/gpt-4o-mini:correct" = questions where this model failed
 // the correctness check).
-type Dimension = "correct" | "complete" | "cites_source" | "no_hallucination";
+type Dimension = "correct" | "complete" | "cites_source" | "no_hallucination" | "formatting";
 
 const DIMENSION_LABELS: Record<Dimension, string> = {
   correct: "Incorrect",
   complete: "Incomplete",
   cites_source: "Missing cites",
   no_hallucination: "Hallucinated",
+  formatting: "Bad format",
 };
 
 type Filter =
@@ -91,6 +93,9 @@ export default function EvalPage() {
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [filter, setFilter] = useState<Filter>({ kind: "all" });
+  const [saving, setSaving] = useState(false);
+  const [savedRunId, setSavedRunId] = useState<string | null>(null);
+  const [saveLabel, setSaveLabel] = useState("");
 
   async function runQuestion(
     q: (typeof questions)[number],
@@ -114,8 +119,10 @@ export default function EvalPage() {
       answer: data.answer ?? "ERROR",
       scores: data.scores ?? {
         correct: false,
+        complete: false,
         cites_source: false,
         no_hallucination: false,
+        formatting: false,
         reasoning: "request failed",
       },
       sources: data.sources ?? [],
@@ -170,6 +177,46 @@ export default function EvalPage() {
     );
 
     setRunning(false);
+    setSavedRunId(null);
+  }
+
+  async function saveRun() {
+    setSaving(true);
+    try {
+      const evalResults = results.flatMap((qr) =>
+        qr.results.map((mr) => ({
+          question_id: qr.questionId,
+          question: qr.question,
+          model: mr.model,
+          answer: mr.answer,
+          correct: mr.scores.correct,
+          complete: mr.scores.complete,
+          cites_source: mr.scores.cites_source,
+          no_hallucination: mr.scores.no_hallucination,
+          formatting: mr.scores.formatting,
+          reasoning: mr.scores.reasoning,
+          retrieved_urls: mr.sources.map((s) => s.url),
+          top_similarity: mr.sources[0]?.similarity ?? 0,
+          duration_ms: mr.durationMs,
+          cost_usd: mr.usage.cost,
+          input_tokens: mr.usage.inputTokens,
+          output_tokens: mr.usage.outputTokens,
+        }))
+      );
+
+      const res = await fetch("/api/eval/runs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          label: saveLabel || null,
+          results: evalResults,
+        }),
+      });
+      const data = await res.json();
+      if (data.id) setSavedRunId(data.id);
+    } finally {
+      setSaving(false);
+    }
   }
 
   // ── Filter predicates ──────────────────────────────────────
@@ -185,7 +232,8 @@ export default function EvalPage() {
             !r.scores.correct ||
             !r.scores.complete ||
             !r.scores.cites_source ||
-            !r.scores.no_hallucination
+            !r.scores.no_hallucination ||
+            !r.scores.formatting
         );
       case "disagreement": {
         // Models disagree on correctness. The most demo-worthy filter:
@@ -214,6 +262,7 @@ export default function EvalPage() {
     complete: results.filter((r) => matchesFilter(r, { kind: "dimension-fail", dimension: "complete" })).length,
     cites_source: results.filter((r) => matchesFilter(r, { kind: "dimension-fail", dimension: "cites_source" })).length,
     no_hallucination: results.filter((r) => matchesFilter(r, { kind: "dimension-fail", dimension: "no_hallucination" })).length,
+    formatting: results.filter((r) => matchesFilter(r, { kind: "dimension-fail", dimension: "formatting" })).length,
     disagreement: results.filter((r) => matchesFilter(r, { kind: "disagreement" })).length,
   };
 
@@ -230,6 +279,7 @@ export default function EvalPage() {
         complete: 0,
         cites_source: 0,
         no_hallucination: 0,
+        formatting: 0,
         avgDurationMs: 0,
         totalCost: 0,
         avgCost: 0,
@@ -244,6 +294,7 @@ export default function EvalPage() {
       cites_source: modelResults.filter((r) => r.scores.cites_source).length,
       no_hallucination: modelResults.filter((r) => r.scores.no_hallucination)
         .length,
+      formatting: modelResults.filter((r) => r.scores.formatting).length,
       avgDurationMs: Math.round(
         modelResults.reduce((s, r) => s + r.durationMs, 0) / modelResults.length
       ),
@@ -274,6 +325,12 @@ export default function EvalPage() {
               className="text-sm text-clever-blue hover:text-clever-navy transition-colors font-[family-name:var(--font-body)]"
             >
               Back to chat
+            </a>
+            <a
+              href="/eval/history"
+              className="text-sm text-clever-blue hover:text-clever-navy transition-colors font-[family-name:var(--font-body)]"
+            >
+              History
             </a>
             <button
               onClick={runEval}
@@ -415,6 +472,21 @@ export default function EvalPage() {
                                 : undefined
                             }
                           />
+                          <RingMetric
+                            label="Format"
+                            value={s.formatting}
+                            total={s.total}
+                            onClickFailures={
+                              s.formatting < s.total
+                                ? () =>
+                                    setFilter({
+                                      kind: "model-fail",
+                                      model: s.model,
+                                      dimension: "formatting",
+                                    })
+                                : undefined
+                            }
+                          />
                         </div>
 
                         <div className="space-y-2.5 pt-4 border-t border-clever-light-blue">
@@ -462,6 +534,32 @@ export default function EvalPage() {
               })}
             </div>
           </section>
+        )}
+
+        {/* Save run to DB */}
+        {results.length > 0 && !running && (
+          <div className="rounded-xl border border-clever-light-blue bg-white p-5 flex items-center gap-4">
+            <input
+              type="text"
+              value={saveLabel}
+              onChange={(e) => setSaveLabel(e.target.value)}
+              placeholder="Label this run (e.g. &quot;increased chunk overlap to 300&quot;)"
+              className="flex-1 text-sm border border-clever-light-blue rounded-lg px-3 py-2 text-clever-navy placeholder:text-clever-black/30 focus:outline-none focus:ring-2 focus:ring-clever-blue/30 font-[family-name:var(--font-body)]"
+            />
+            {savedRunId ? (
+              <span className="text-sm text-green-600 font-medium font-[family-name:var(--font-body)]">
+                Saved! <a href="/eval/history" className="text-clever-blue hover:text-clever-navy underline">View history</a>
+              </span>
+            ) : (
+              <button
+                onClick={saveRun}
+                disabled={saving}
+                className="rounded-xl bg-clever-navy px-5 py-2 text-white font-medium hover:bg-clever-blue disabled:opacity-50 transition-colors text-sm shrink-0 font-[family-name:var(--font-body)]"
+              >
+                {saving ? "Saving..." : "Save to DB"}
+              </button>
+            )}
+          </div>
         )}
 
         {/* Loading illustration */}
@@ -548,11 +646,12 @@ export default function EvalPage() {
             <p className="text-clever-black/50 mb-6 max-w-2xl mx-auto font-[family-name:var(--font-body)]">
               Each test question is run through the full RAG pipeline (retrieve
               then generate) using {MODELS.length} different models, then scored
-              by Claude Sonnet 4.6 as judge on four dimensions:{" "}
+              by Claude Sonnet 4.6 as judge on five dimensions:{" "}
               <strong className="text-clever-navy">correct</strong> (no factual errors),{" "}
               <strong className="text-clever-navy">complete</strong> (covers required points),{" "}
-              <strong className="text-clever-navy">cites source</strong>, and{" "}
-              <strong className="text-clever-navy">no hallucination</strong>.
+              <strong className="text-clever-navy">cites source</strong>,{" "}
+              <strong className="text-clever-navy">no hallucination</strong>, and{" "}
+              <strong className="text-clever-navy">formatting</strong> (valid markdown).
             </p>
             <button
               onClick={runEval}
@@ -585,7 +684,7 @@ export default function EvalPage() {
             />
             <div className="w-px h-4 bg-clever-light-blue mx-1" />
             {(
-              ["correct", "complete", "cites_source", "no_hallucination"] as const
+              ["correct", "complete", "cites_source", "no_hallucination", "formatting"] as const
             ).map((dim) => (
               <FilterChip
                 key={dim}
@@ -672,6 +771,10 @@ export default function EvalPage() {
                     <ScoreBadge
                       label="no halluc."
                       value={mr.scores.no_hallucination}
+                    />
+                    <ScoreBadge
+                      label="format"
+                      value={mr.scores.formatting}
                     />
                   </div>
                   <div className="prose prose-sm max-w-none mb-3 text-clever-black [&_a]:text-clever-blue [&_a]:underline [&_strong]:text-clever-navy [&_table]:text-xs [&_th]:bg-clever-light-blue/40 [&_th]:px-2 [&_th]:py-1 [&_td]:px-2 [&_td]:py-1 [&_th]:border [&_td]:border [&_th]:border-clever-light-blue [&_td]:border-clever-light-blue">

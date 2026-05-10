@@ -53,3 +53,44 @@ begin
   limit match_count;
 end;
 $$;
+
+-- ── Eval history tables ─────────────────────────────────────
+-- These power the tuning program: run evals, save scores to the DB,
+-- and watch dimensions improve as you refine chunks and prompts.
+
+-- One row per "Run Eval" execution (may cover multiple models).
+create table if not exists eval_runs (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  label text,
+  models text[] not null,
+  total_questions integer not null,
+  summary jsonb not null default '{}',
+  system_prompt_hash text,
+  chunk_config jsonb
+);
+
+-- One row per (question × model) within a run.
+create table if not exists eval_results (
+  id bigserial primary key,
+  run_id uuid not null references eval_runs(id) on delete cascade,
+  question_id integer not null,
+  question text not null,
+  model text not null,
+  answer text not null,
+  correct boolean not null,
+  complete boolean not null,
+  cites_source boolean not null,
+  no_hallucination boolean not null,
+  formatting boolean not null,
+  reasoning text,
+  retrieved_urls text[],
+  top_similarity float,
+  duration_ms integer,
+  cost_usd float,
+  input_tokens integer,
+  output_tokens integer
+);
+
+create index if not exists eval_results_run_id_idx
+  on eval_results(run_id);

@@ -21,6 +21,11 @@ import {
   buildSystemPrompt,
   DEFAULT_CHAT_MODEL,
 } from "../src/lib/rag";
+import {
+  saveEvalRun,
+  hashSystemPromptTemplate,
+  type EvalResultRow,
+} from "../src/lib/eval-runs";
 import questions from "./questions.json";
 
 // Judge model. See src/app/api/eval/route.ts for the full rationale.
@@ -38,6 +43,7 @@ interface EvalResult {
     complete: boolean;
     cites_source: boolean;
     no_hallucination: boolean;
+    formatting: boolean;
   };
   reasoning: string;
   pass: boolean;
@@ -74,14 +80,15 @@ The criteria are written with "must" (required for correctness) vs "should" (req
 RETRIEVED SOURCES: ${chunks.map((c) => c.url).join(", ") || "none"}
 EXPECTED SOURCE URL CONTAINS: ${q.expected_source ?? "(none — assistant should decline to answer)"}
 
-Score the answer with simple yes/no on four dimensions:
+Score the answer with simple yes/no on five dimensions:
 1. correct: Nothing in the answer is factually wrong. Partial-but-accurate is correct=true. (Maps to "must" criteria.)
 2. complete: The answer covers all key points the question demands. True-but-missing-context is complete=false. (Maps to "should" criteria.)
 3. cites_source: Does the answer reference or link to a source document?
 4. no_hallucination: Does the answer avoid fabricating information not present in the retrieved sources?
+5. formatting: Is the answer well-formatted markdown? Checks: headers have blank lines around them, lists use proper "- " syntax, code/endpoints are in backticks or fenced blocks, and the structure is scannable (not a wall of text).
 
 Respond ONLY with this exact JSON (no markdown, no prose):
-{"correct": true/false, "complete": true/false, "cites_source": true/false, "no_hallucination": true/false, "reasoning": "brief explanation"}`;
+{"correct": true/false, "complete": true/false, "cites_source": true/false, "no_hallucination": true/false, "formatting": true/false, "reasoning": "brief explanation"}`;
 
   const { text: judgeResponse } = await generateText({
     model: JUDGE_MODEL,
@@ -93,6 +100,7 @@ Respond ONLY with this exact JSON (no markdown, no prose):
     complete: false,
     cites_source: false,
     no_hallucination: false,
+    formatting: false,
   };
   let reasoning = "";
 
@@ -105,6 +113,7 @@ Respond ONLY with this exact JSON (no markdown, no prose):
       complete: !!parsed.complete,
       cites_source: !!parsed.cites_source,
       no_hallucination: !!parsed.no_hallucination,
+      formatting: !!parsed.formatting,
     };
     reasoning = parsed.reasoning ?? "";
   } catch {
@@ -148,6 +157,7 @@ async function main() {
   const noHallucinationCount = results.filter(
     (r) => r.scores.no_hallucination
   ).length;
+  const formattingCount = results.filter((r) => r.scores.formatting).length;
 
   const pct = (n: number) => `${Math.round((n / results.length) * 100)}%`;
 
@@ -159,6 +169,7 @@ async function main() {
   console.log(`  Complete:         ${completeCount}/${results.length} (${pct(completeCount)})`);
   console.log(`  Cites source:     ${citationCount}/${results.length} (${pct(citationCount)})`);
   console.log(`  No hallucination: ${noHallucinationCount}/${results.length} (${pct(noHallucinationCount)})`);
+  console.log(`  Formatting:       ${formattingCount}/${results.length} (${pct(formattingCount)})`);
   console.log(`${"═".repeat(60)}\n`);
 
   const failures = results.filter((r) => !r.pass);
@@ -167,7 +178,7 @@ async function main() {
     for (const f of failures) {
       console.log(`  Q${f.id}: ${f.question}`);
       console.log(
-        `    Scores: correct=${f.scores.correct} complete=${f.scores.complete} cites=${f.scores.cites_source} noHalluc=${f.scores.no_hallucination}`
+        `    Scores: correct=${f.scores.correct} complete=${f.scores.complete} cites=${f.scores.cites_source} noHalluc=${f.scores.no_hallucination} fmt=${f.scores.formatting}`
       );
       console.log(`    Reason: ${f.reasoning}`);
       console.log(`    Answer: ${f.answer.slice(0, 200)}...`);
@@ -185,6 +196,7 @@ async function main() {
       complete: completeCount,
       citationCount,
       noHallucinationCount,
+      formattingCount,
     },
     results,
   };
@@ -192,6 +204,41 @@ async function main() {
   const fs = await import("fs");
   fs.writeFileSync("eval/results.json", JSON.stringify(output, null, 2));
   console.log("  Results written to eval/results.json\n");
+
+  const label = process.argv[2] || null;
+
+  try {
+    const { buildSystemPrompt: getTemplate } = await import("../src/lib/rag");
+    const templateHash = hashSystemPromptTemplate(getTemplate([]));
+
+    const evalRows: EvalResultRow[] = results.map((r) => ({
+      question_id: r.id,
+      question: r.question,
+      model: DEFAULT_CHAT_MODEL,
+      answer: r.answer,
+      correct: r.scores.correct,
+      complete: r.scores.complete,
+      cites_source: r.scores.cites_source,
+      no_hallucination: r.scores.no_hallucination,
+      formatting: r.scores.formatting,
+      reasoning: r.reasoning,
+      retrieved_urls: r.retrievedSources,
+    }));
+
+    const runId = await saveEvalRun({
+      label: label ?? undefined,
+      results: evalRows,
+      systemPromptHash: templateHash,
+      chunkConfig: { match_count: 5, match_threshold: 0.5 },
+    });
+
+    console.log(`  Saved to DB as run ${runId}`);
+    if (label) console.log(`  Label: ${label}`);
+    console.log();
+  } catch (err) {
+    console.warn("  Could not save to DB (is SUPABASE_URL configured?):", err);
+    console.log();
+  }
 }
 
 main().catch((err) => {
