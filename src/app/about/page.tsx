@@ -339,8 +339,7 @@ export default function AboutPage() {
 
       <footer className="border-t border-clever-light-blue px-6 py-4">
         <p className="max-w-3xl mx-auto text-xs text-clever-black/40 text-center font-[family-name:var(--font-body)]">
-          Built by Tom Leger as a Vercel Solutions Architect take-home (Track B:
-          AI Cloud).
+          Clever Dev Docs Assistant
         </p>
       </footer>
     </div>
