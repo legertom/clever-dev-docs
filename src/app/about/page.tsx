@@ -53,10 +53,10 @@ export default function AboutPage() {
         </div>
       </header>
 
-      <main className="flex-1 px-6 -mt-6">
+      <main className="flex-1 px-6 -mt-10">
         <article className="max-w-3xl mx-auto space-y-12 pb-16">
           {/* Intro card overlapping the hero */}
-          <section className="bg-white rounded-2xl border border-clever-light-blue p-8 shadow-sm">
+          <section className="bg-white rounded-2xl border border-clever-light-blue p-8 shadow-md relative z-10">
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               What this is
             </h2>
@@ -83,76 +83,127 @@ export default function AboutPage() {
               Who it&apos;s for
             </h2>
             <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)]">
-              Independent developers integrating with Clever Library — often
-              solo builders shipping a classroom app, going through
-              certification, working at 11pm without access to a human support
-              agent. The existing support widget routes through a decision tree;
-              this gives them answers directly from the docs, instantly.
+              Any developer building on the Clever platform — whether
+              you&apos;re an independent builder shipping a classroom app, a
+              partner engineering team integrating Secure Sync, or an internal
+              developer working on the platform itself. The existing support
+              widget routes through a decision tree; this gives everyone answers
+              directly from the docs, instantly.
             </p>
           </section>
 
-          {/* Architecture */}
+          {/* Architecture — illustrated pipeline */}
           <section>
-            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
+            <h2 className="text-2xl text-clever-navy mb-8 font-[family-name:var(--font-heading)]">
               How it works
             </h2>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Card
-                title="Retrieval"
-                body="Your question is embedded and matched against 86 pages of Clever docs via pgvector cosine similarity search. The top chunks become the model's context."
-                accent="bg-clever-blue"
-              />
-              <Card
-                title="Generation"
-                body="The AI SDK streams a completion through the Vercel AI Gateway. The model sees only retrieved docs — no memorized knowledge about Clever."
-                accent="bg-clever-green"
-              />
-              <Card
-                title="Confidence gate"
-                body="Below 0.6 similarity on retrieval, the system prompt switches modes: the model admits uncertainty instead of improvising. Wrong answers about certification requirements are more expensive than 'I don't know.'"
-                accent="bg-clever-orange"
-              />
-              <Card
-                title="Audience routing"
-                body="Every chunk is tagged with its integration path (Library, Secure Sync, LMS Connect, or general). When answers differ by path, the model presents both variants or asks which path the developer is on."
-                accent="bg-clever-yellow"
-              />
+            <div className="relative">
+              {/* Vertical connector line */}
+              <div className="absolute left-6 sm:left-8 top-10 bottom-10 w-px bg-gradient-to-b from-clever-blue via-clever-green to-clever-orange" aria-hidden="true" />
+
+              <div className="space-y-0">
+                {/* Start node */}
+                <PipelineNode
+                  icon={<QuestionIcon />}
+                  color="bg-clever-blue"
+                  label="Your question"
+                  description="A developer asks a natural-language question about the Clever platform."
+                  isFirst
+                />
+
+                <PipelineNode
+                  icon={<EmbedIcon />}
+                  color="bg-clever-blue"
+                  label="Embed"
+                  description="The question is converted into a 1,536-dimension vector using text-embedding-3-small via the AI Gateway."
+                />
+
+                <PipelineNode
+                  icon={<SearchIcon />}
+                  color="bg-clever-blue"
+                  label="Retrieve"
+                  description="pgvector cosine similarity search matches the question against 86 pages of Clever docs. The top chunks become the model&apos;s context."
+                />
+
+                {/* Branch: confidence gate */}
+                <PipelineNode
+                  icon={<GateIcon />}
+                  color="bg-clever-orange"
+                  label="Confidence gate"
+                  description="Below 0.6 similarity, the system prompt switches modes — the model admits uncertainty instead of improvising."
+                  isBranch
+                />
+
+                <PipelineNode
+                  icon={<RouteIcon />}
+                  color="bg-clever-yellow"
+                  label="Audience routing"
+                  description="Chunks are tagged by integration path (Library, Secure Sync, LMS Connect). When answers differ by path, the model presents both variants."
+                  isBranch
+                />
+
+                <PipelineNode
+                  icon={<GenerateIcon />}
+                  color="bg-clever-green"
+                  label="Generate"
+                  description="The AI SDK streams a completion through the Vercel AI Gateway. The model sees only retrieved docs — no memorized knowledge."
+                />
+
+                {/* End node */}
+                <PipelineNode
+                  icon={<AnswerIcon />}
+                  color="bg-clever-green"
+                  label="Cited answer"
+                  description="The developer gets a grounded answer with source links back to dev.clever.com."
+                  isLast
+                />
+              </div>
             </div>
           </section>
 
-          {/* Ingestion pipeline */}
+          {/* Ingestion pipeline — illustrated */}
           <section>
             <h2 className="text-2xl text-clever-navy mb-3 font-[family-name:var(--font-heading)]">
               Building the knowledge base
             </h2>
-            <p className="text-clever-black/70 leading-relaxed mb-4 font-[family-name:var(--font-body)]">
+            <p className="text-clever-black/70 leading-relaxed mb-8 font-[family-name:var(--font-body)]">
               The vector database is populated by a CLI script (<code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">pnpm ingest</code>) that
               scrapes, chunks, and embeds the Clever developer docs into Supabase
               Postgres with the pgvector extension. The pipeline runs as a full
               rebuild — every run deletes existing rows and re-inserts from
               scratch.
             </p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Card
-                title="Scrape"
-                body="76 doc pages from dev.clever.com are fetched sequentially with a 500ms delay. Cheerio strips nav, sidebar, and footer elements, then extracts text from headings, paragraphs, list items, code blocks, and table cells."
-                accent="bg-clever-blue"
-              />
-              <Card
-                title="Chunk"
-                body="Each page is split into ~1,000-character chunks with 200-character overlap, breaking on markdown heading boundaries first, then paragraph boundaries for oversized sections."
-                accent="bg-clever-green"
-              />
-              <Card
-                title="Tag"
-                body="Every chunk is classified into an integration path — Library, Secure Sync, LMS Connect, Attendance, or general — by matching the source URL against a priority-ordered rule table."
-                accent="bg-clever-yellow"
-              />
-              <Card
-                title="Embed &amp; store"
-                body="Chunks are embedded in batches of 100 using text-embedding-3-small (1,536 dimensions) via the AI Gateway, then inserted into a Postgres table indexed with HNSW for fast cosine similarity search."
-                accent="bg-clever-orange"
-              />
+            <div className="relative">
+              <div className="absolute left-6 sm:left-8 top-10 bottom-10 w-px bg-gradient-to-b from-clever-blue via-clever-yellow to-clever-orange" aria-hidden="true" />
+
+              <div className="space-y-0">
+                <PipelineNode
+                  icon={<ScrapeIcon />}
+                  color="bg-clever-blue"
+                  label="Scrape"
+                  description="76 doc pages from dev.clever.com are fetched sequentially with a 500ms delay. Cheerio strips nav, sidebar, and footer elements, extracting text from headings, paragraphs, list items, code blocks, and table cells."
+                  isFirst
+                />
+                <PipelineNode
+                  icon={<ChunkIcon />}
+                  color="bg-clever-green"
+                  label="Chunk"
+                  description="Each page is split into ~1,000-character chunks with 200-character overlap, breaking on markdown heading boundaries first, then paragraph boundaries for oversized sections."
+                />
+                <PipelineNode
+                  icon={<RouteIcon />}
+                  color="bg-clever-yellow"
+                  label="Tag"
+                  description="Every chunk is classified into an integration path — Library, Secure Sync, LMS Connect, Attendance, or general — by matching the source URL against a priority-ordered rule table."
+                />
+                <PipelineNode
+                  icon={<StoreIcon />}
+                  color="bg-clever-orange"
+                  label="Embed &amp; store"
+                  description="Chunks are embedded in batches of 100 using text-embedding-3-small (1,536 dimensions) via the AI Gateway, then inserted into a Postgres table indexed with HNSW for fast cosine similarity search."
+                  isLast
+                />
+              </div>
             </div>
           </section>
 
@@ -296,17 +347,142 @@ export default function AboutPage() {
   );
 }
 
-function Card({ title, body, accent }: { title: string; body: string; accent: string }) {
+function PipelineNode({
+  icon,
+  color,
+  label,
+  description,
+  isFirst,
+  isLast,
+  isBranch,
+}: {
+  icon: React.ReactNode;
+  color: string;
+  label: string;
+  description: string;
+  isFirst?: boolean;
+  isLast?: boolean;
+  isBranch?: boolean;
+}) {
   return (
-    <div className="rounded-xl border border-clever-light-blue bg-white p-5 relative overflow-hidden">
-      <div className={`absolute top-0 left-0 w-1 h-full ${accent}`} />
-      <h3 className="font-medium text-clever-navy mb-2 font-[family-name:var(--font-heading)] text-lg">
-        {title}
-      </h3>
-      <p className="text-sm text-clever-black/60 leading-relaxed font-[family-name:var(--font-body)]">
-        {body}
-      </p>
+    <div className={`relative flex items-start gap-4 sm:gap-5 ${isFirst ? "" : "pt-6"} ${isLast ? "" : "pb-2"}`}>
+      {/* Node circle */}
+      <div className="relative z-10 shrink-0">
+        <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-2xl ${color} flex items-center justify-center shadow-sm ${isBranch ? "rotate-45" : ""}`}>
+          <div className={isBranch ? "-rotate-45" : ""}>{icon}</div>
+        </div>
+      </div>
+      {/* Content */}
+      <div className="pt-1 sm:pt-2 min-w-0">
+        <h3 className="font-medium text-clever-navy font-[family-name:var(--font-heading)] text-lg leading-tight">
+          {label}
+        </h3>
+        <p className="mt-1 text-sm text-clever-black/60 leading-relaxed font-[family-name:var(--font-body)]">
+          {description}
+        </p>
+      </div>
     </div>
+  );
+}
+
+function QuestionIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="white" opacity="0.9" />
+      <path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7z" fill="currentColor" opacity="0.4" />
+    </svg>
+  );
+}
+
+function EmbedIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="6" cy="12" r="2.5" fill="white" opacity="0.9" />
+      <circle cx="12" cy="6" r="2.5" fill="white" opacity="0.7" />
+      <circle cx="18" cy="12" r="2.5" fill="white" opacity="0.9" />
+      <circle cx="12" cy="18" r="2.5" fill="white" opacity="0.7" />
+      <path d="M8 11l2.5-3.5M14 8.5L16 11M8 13l2.5 3.5M14 15.5L16 13" stroke="white" strokeWidth="1" opacity="0.5" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="10.5" cy="10.5" r="6.5" stroke="white" strokeWidth="2.5" opacity="0.9" />
+      <path d="M15.5 15.5L20 20" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.9" />
+    </svg>
+  );
+}
+
+function GateIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2L2 7v10l10 5 10-5V7L12 2z" fill="white" opacity="0.9" />
+      <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
+    </svg>
+  );
+}
+
+function RouteIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 4v6" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.9" />
+      <path d="M12 10L6 18" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+      <path d="M12 10l6 8" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+      <path d="M12 10v8" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.9" />
+      <circle cx="6" cy="18" r="2" fill="white" opacity="0.9" />
+      <circle cx="12" cy="18" r="2" fill="white" opacity="0.9" />
+      <circle cx="18" cy="18" r="2" fill="white" opacity="0.9" />
+    </svg>
+  );
+}
+
+function GenerateIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="white" opacity="0.2" />
+      <path d="M8 12h2l1-3 2 6 1-3h2" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
+    </svg>
+  );
+}
+
+function AnswerIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 12l2 2 4-4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
+      <circle cx="12" cy="12" r="9" stroke="white" strokeWidth="2" opacity="0.5" />
+    </svg>
+  );
+}
+
+function ScrapeIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="white" opacity="0.2" />
+      <path d="M11 7h6M11 11h6M11 15h4M7 7h1M7 11h1M7 15h1" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.9" />
+    </svg>
+  );
+}
+
+function ChunkIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" fill="white" opacity="0.9" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" fill="white" opacity="0.7" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" fill="white" opacity="0.7" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" fill="white" opacity="0.5" />
+    </svg>
+  );
+}
+
+function StoreIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <ellipse cx="12" cy="7" rx="8" ry="3" fill="white" opacity="0.7" />
+      <path d="M4 7v5c0 1.66 3.58 3 8 3s8-1.34 8-3V7" stroke="white" strokeWidth="1.5" opacity="0.9" />
+      <path d="M4 12v5c0 1.66 3.58 3 8 3s8-1.34 8-3v-5" stroke="white" strokeWidth="1.5" opacity="0.9" />
+    </svg>
   );
 }
 
