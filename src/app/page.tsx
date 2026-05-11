@@ -25,7 +25,11 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export default function Home() {
-  const { messages, sendMessage, setMessages, status } = useChat({ transport });
+  const [chatId, setChatId] = useState(() => crypto.randomUUID());
+  const { messages, sendMessage, setMessages, status } = useChat({
+    id: chatId,
+    transport,
+  });
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -39,6 +43,12 @@ export default function Home() {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
     sendMessage({ text: input });
+    setInput("");
+  }
+
+  function resetChat() {
+    setMessages([]);
+    setChatId(crypto.randomUUID());
     setInput("");
   }
 
@@ -71,7 +81,7 @@ export default function Home() {
           <nav className="flex items-center gap-4">
             {messages.length > 0 && (
               <button
-                onClick={() => setMessages([])}
+                onClick={resetChat}
                 className="text-sm font-medium text-clever-black/50 hover:text-clever-navy transition-colors"
                 aria-label="Start a new conversation"
               >
