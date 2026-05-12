@@ -85,6 +85,14 @@ export default function AboutPage() {
                 />
 
                 <PipelineNode
+                  icon={<ShieldIcon />}
+                  color="bg-clever-orange"
+                  label="Classify"
+                  description="A lightweight LLM call classifies the query as on-topic, off-topic, harmful, or nonsense. Off-topic and harmful queries get a canned response — the RAG pipeline never runs."
+                  isBranch
+                />
+
+                <PipelineNode
                   icon={<EmbedIcon />}
                   color="bg-clever-blue"
                   label="Embed"
@@ -132,6 +140,60 @@ export default function AboutPage() {
                 />
               </div>
             </div>
+          </section>
+
+          {/* Guardrails */}
+          <section>
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
+              Guardrails
+            </h2>
+            <p className="text-clever-black/70 leading-relaxed mb-6 font-[family-name:var(--font-body)]">
+              Before a query enters the retrieval pipeline, a lightweight
+              classification step decides whether it belongs there at all.
+              This saves compute on junk queries and gives users an appropriate
+              response instead of a misleading &ldquo;I couldn&apos;t find
+              that in the docs.&rdquo;
+            </p>
+            <div className="overflow-x-auto rounded-xl border border-clever-light-blue">
+              <table className="w-full text-sm text-left font-[family-name:var(--font-body)]">
+                <thead className="bg-clever-light-blue/50 text-clever-navy">
+                  <tr>
+                    <th className="px-5 py-3 font-medium">Category</th>
+                    <th className="px-5 py-3 font-medium">Example</th>
+                    <th className="px-5 py-3 font-medium">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="text-clever-black/70 divide-y divide-clever-light-blue">
+                  <tr className="bg-white">
+                    <td className="px-5 py-3 font-medium text-clever-navy">On-topic</td>
+                    <td className="px-5 py-3">&ldquo;How do I get student data from the API?&rdquo;</td>
+                    <td className="px-5 py-3">Full RAG pipeline</td>
+                  </tr>
+                  <tr className="bg-clever-light-blue/10">
+                    <td className="px-5 py-3 font-medium text-clever-navy">Off-topic</td>
+                    <td className="px-5 py-3">&ldquo;Reverse a linked list in Python&rdquo;</td>
+                    <td className="px-5 py-3">Canned deflection, skip RAG</td>
+                  </tr>
+                  <tr className="bg-white">
+                    <td className="px-5 py-3 font-medium text-clever-navy">Harmful</td>
+                    <td className="px-5 py-3">Threats, harassment, dangerous requests</td>
+                    <td className="px-5 py-3">Safety response, skip RAG, logged</td>
+                  </tr>
+                  <tr className="bg-clever-light-blue/10">
+                    <td className="px-5 py-3 font-medium text-clever-navy">Nonsense</td>
+                    <td className="px-5 py-3">&ldquo;asdfghjkl&rdquo;, insults, trolling</td>
+                    <td className="px-5 py-3">Short deflection, skip RAG</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 text-sm text-clever-black/50 font-[family-name:var(--font-body)]">
+              The classifier runs as a single <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">generateText</code> call
+              with gpt-4o-mini — fast and cheap enough to gate every query.
+              Non-on-topic queries are logged so the team can monitor abuse
+              patterns without the data landing in the feedback queue as false
+              &ldquo;doc gaps.&rdquo;
+            </p>
           </section>
 
           {/* Ingestion pipeline — illustrated */}
@@ -362,6 +424,15 @@ function QuestionIcon() {
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="white" opacity="0.9" />
       <path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7z" fill="currentColor" opacity="0.4" />
+    </svg>
+  );
+}
+
+function ShieldIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" fill="white" opacity="0.9" />
+      <path d="M10 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
     </svg>
   );
 }

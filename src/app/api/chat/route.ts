@@ -1,10 +1,17 @@
-import { streamText, convertToModelMessages, UIMessage } from "ai";
+import {
+  streamText,
+  convertToModelMessages,
+  createUIMessageStream,
+  createUIMessageStreamResponse,
+  UIMessage,
+} from "ai";
 import {
   retrieveRelevantChunks,
   buildSystemPrompt,
   DEFAULT_CHAT_MODEL,
   CONFIDENCE_THRESHOLD,
 } from "@/lib/rag";
+import { classifyQuery, CANNED_RESPONSES } from "@/lib/guardrails";
 import { logFeedbackAsync } from "@/lib/feedback";
 
 // Vercel Function timeout. Generous enough for a long answer, low
@@ -29,6 +36,26 @@ export async function POST(req: Request) {
       ?.filter((p): p is { type: "text"; text: string } => p.type === "text")
       .map((p) => p.text)
       .join(" ") ?? "";
+
+  const category = await classifyQuery(queryText);
+
+  if (category !== "on_topic") {
+    logFeedbackAsync({
+      kind: "guardrail",
+      query: queryText,
+      category,
+    });
+
+    const responseText = CANNED_RESPONSES[category];
+    const stream = createUIMessageStream({
+      execute: async ({ writer }) => {
+        writer.write({ type: "text-start", id: "0" });
+        writer.write({ type: "text-delta", id: "0", delta: responseText });
+        writer.write({ type: "text-end", id: "0" });
+      },
+    });
+    return createUIMessageStreamResponse({ stream });
+  }
 
   const chunks = await retrieveRelevantChunks(queryText);
   const systemPrompt = buildSystemPrompt(chunks);

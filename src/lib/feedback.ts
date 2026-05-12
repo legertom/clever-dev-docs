@@ -10,14 +10,18 @@
  *     thought was bad. The strongest signal that a particular answer
  *     was unhelpful even when retrieval *did* work.
  *
- * Both feed the /feedback admin page where a support / docs team would
+ *   - guardrail: server-side, fired when query classification blocks a
+ *     query before it reaches the RAG pipeline (off-topic, harmful, or
+ *     nonsense). Tracks abuse patterns separately from doc gaps.
+ *
+ * All three feed the /feedback admin page where a support / docs team would
  * triage them. Inserts are best-effort: a failure to log feedback should
  * never break the user's chat or fail their report submission.
  */
 
 import { getSupabase } from "./supabase";
 
-export type FeedbackKind = "low_confidence" | "user_report";
+export type FeedbackKind = "low_confidence" | "user_report" | "guardrail";
 
 export interface FeedbackRow {
   kind: FeedbackKind;
@@ -26,6 +30,7 @@ export interface FeedbackRow {
   user_note?: string;
   retrieved_urls?: string[];
   top_similarity?: number;
+  category?: string;
 }
 
 export async function insertFeedback(row: FeedbackRow): Promise<void> {
