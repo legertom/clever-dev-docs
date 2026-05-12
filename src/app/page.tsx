@@ -62,21 +62,23 @@ export default function Home() {
       {/* Messages */}
       <main className="flex-1 overflow-y-auto px-6 py-6">
         <div className="max-w-3xl mx-auto space-y-6">
-          <div className="flex justify-end">
-            <button
-              onClick={resetChat}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-clever-light-blue bg-white px-3 py-1.5 text-sm font-medium text-clever-navy hover:bg-clever-light-blue/50 transition-colors font-[family-name:var(--font-body)]"
-              aria-label="Start a new conversation"
-            >
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M13.5 8a5.5 5.5 0 0 1-9.27 4.01l-.03-.03" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                <path d="M2.5 8a5.5 5.5 0 0 1 9.27-4.01l.03.03" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                <path d="M2.5 12.5v-3h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M13.5 3.5v3h-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              New chat
-            </button>
-          </div>
+          {messages.length > 0 && (
+            <div className="flex justify-end">
+              <button
+                onClick={resetChat}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-clever-light-blue bg-white px-3 py-1.5 text-sm font-medium text-clever-navy hover:bg-clever-light-blue/50 transition-colors font-[family-name:var(--font-body)]"
+                aria-label="Start a new conversation"
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M13.5 8a5.5 5.5 0 0 1-9.27 4.01l-.03-.03" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M2.5 8a5.5 5.5 0 0 1 9.27-4.01l.03.03" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M2.5 12.5v-3h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M13.5 3.5v3h-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                New chat
+              </button>
+            </div>
+          )}
           {messages.length === 0 && (
             <div className="py-16 relative">
               {/* Decorative blobs */}
