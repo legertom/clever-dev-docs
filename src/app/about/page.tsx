@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "About — Clever Dev Docs Assistant",
@@ -9,41 +8,15 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex-1 overflow-y-auto bg-white">
       {/* Hero header with navy background */}
-      <header className="bg-clever-navy px-6 pt-6 pb-16 relative overflow-hidden">
+      <header className="bg-clever-navy px-6 pt-10 pb-16 relative overflow-hidden">
         {/* Decorative brand shapes */}
         <div className="absolute top-8 right-12 w-48 h-48 bg-clever-blue/20 clever-blob-1" aria-hidden="true" />
         <div className="absolute -bottom-8 right-1/3 w-32 h-32 bg-clever-green/15 clever-blob-2" aria-hidden="true" />
         <div className="absolute top-20 left-8 w-20 h-20 bg-clever-yellow/10 clever-blob-3" aria-hidden="true" />
 
         <div className="max-w-3xl mx-auto relative">
-          <nav className="flex items-center justify-between mb-12">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c3.87 0 7 3.13 7 7 0 1.93-.78 3.68-2.05 4.95l-1.41-1.41A5.014 5.014 0 0017 12c0-2.76-2.24-5-5-5v3L8 6l4-4v3z" fill="white" opacity="0.9"/>
-                  <path d="M12 22C6.48 22 2 17.52 2 12h3c0 3.87 3.13 7 7 7v-3l4 4-4 4v-3z" fill="white"/>
-                </svg>
-              </div>
-              <span className="text-white/80 text-sm font-[family-name:var(--font-body)]">Clever Dev Docs</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/"
-                className="text-sm font-medium text-white/70 hover:text-white transition-colors font-[family-name:var(--font-body)]"
-              >
-                Chat
-              </Link>
-              <Link
-                href="/eval"
-                className="text-sm font-medium text-white/70 hover:text-white transition-colors font-[family-name:var(--font-body)]"
-              >
-                Eval
-              </Link>
-            </div>
-          </nav>
-
           <h1 className="text-4xl sm:text-5xl text-white font-normal font-[family-name:var(--font-heading)] leading-[0.95] mb-4">
             About this assistant
           </h1>

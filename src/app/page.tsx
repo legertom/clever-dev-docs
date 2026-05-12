@@ -58,28 +58,12 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      {/* Header */}
-      <header className="border-b border-clever-light-blue bg-white px-6 py-4 flex-shrink-0">
-        <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-clever-blue flex items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c3.87 0 7 3.13 7 7 0 1.93-.78 3.68-2.05 4.95l-1.41-1.41A5.014 5.014 0 0017 12c0-2.76-2.24-5-5-5v3L8 6l4-4v3z" fill="white" opacity="0.9"/>
-                <path d="M12 22C6.48 22 2 17.52 2 12h3c0 3.87 3.13 7 7 7v-3l4 4-4 4v-3z" fill="white"/>
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-clever-navy font-[family-name:var(--font-heading)]">
-                Clever Dev Docs
-              </h1>
-              <p className="text-sm text-clever-black/60 font-[family-name:var(--font-body)]">
-                Library, SSO, APIs, and certification
-              </p>
-            </div>
-          </div>
-          <nav className="flex items-center gap-4">
-            {messages.length > 0 && (
+    <div className="flex flex-col flex-1 min-h-0 bg-white">
+      {/* Messages */}
+      <main className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="max-w-3xl mx-auto space-y-6">
+          {messages.length > 0 && (
+            <div className="flex justify-end">
               <button
                 onClick={resetChat}
                 className="text-sm font-medium text-clever-black/50 hover:text-clever-navy transition-colors"
@@ -87,32 +71,8 @@ export default function Home() {
               >
                 New chat
               </button>
-            )}
-            <a
-              href="/about"
-              className="text-sm font-medium text-clever-blue hover:text-clever-navy transition-colors"
-            >
-              About
-            </a>
-            <a
-              href="/feedback"
-              className="text-sm font-medium text-clever-blue hover:text-clever-navy transition-colors"
-            >
-              Feedback
-            </a>
-            <a
-              href="/eval"
-              className="text-sm font-medium text-clever-blue hover:text-clever-navy transition-colors"
-            >
-              Eval
-            </a>
-          </nav>
-        </div>
-      </header>
-
-      {/* Messages */}
-      <main className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="max-w-3xl mx-auto space-y-6">
+            </div>
+          )}
           {messages.length === 0 && (
             <div className="py-16 relative">
               {/* Decorative blobs */}
@@ -125,9 +85,9 @@ export default function Home() {
                   How can I help with your Clever integration?
                 </h2>
                 <p className="text-clever-black/60 mb-8 leading-relaxed font-[family-name:var(--font-body)]">
-                  I can answer questions about Clever Library, SSO setup,
-                  certification requirements, and the Clever API — all grounded
-                  in the official developer docs.
+                  I can answer questions about Clever Library, Secure Sync,
+                  SSO, LMS Connect, certification, and the Clever API — all
+                  grounded in the official developer docs.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -232,7 +192,7 @@ export default function Home() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about Clever Library, SSO, certification..."
+            placeholder="Ask about Library, Secure Sync, SSO, certification..."
             disabled={isLoading}
             className="flex-1 rounded-xl border border-clever-light-blue bg-white px-4 py-3 text-clever-black placeholder:text-clever-black/40 focus:outline-none focus:ring-2 focus:ring-clever-blue/40 focus:border-clever-blue disabled:opacity-50 font-[family-name:var(--font-body)]"
           />

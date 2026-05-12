@@ -105,31 +105,15 @@ export default async function EvalHistoryPage() {
   const models = getAllModels(runs);
 
   return (
-    <div className="min-h-screen bg-clever-light-blue/20">
+    <div className="flex-1 overflow-y-auto bg-clever-light-blue/20">
       <header className="border-b border-clever-light-blue bg-white px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-[family-name:var(--font-heading)] text-clever-navy">
-              Eval History
-            </h1>
-            <p className="text-sm text-clever-black/50 mt-1 font-[family-name:var(--font-body)]">
-              {runs.length} saved runs — track score changes as you tune RAG
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <a
-              href="/eval"
-              className="text-sm text-clever-blue hover:text-clever-navy transition-colors font-[family-name:var(--font-body)]"
-            >
-              Run eval
-            </a>
-            <a
-              href="/"
-              className="text-sm text-clever-blue hover:text-clever-navy transition-colors font-[family-name:var(--font-body)]"
-            >
-              Back to chat
-            </a>
-          </div>
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-xl font-[family-name:var(--font-heading)] text-clever-navy">
+            Eval History
+          </h1>
+          <p className="text-sm text-clever-black/50 mt-1 font-[family-name:var(--font-body)]">
+            {runs.length} saved runs — track score changes as you tune RAG
+          </p>
         </div>
       </header>
 

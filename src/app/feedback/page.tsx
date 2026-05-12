@@ -62,24 +62,16 @@ export default async function FeedbackPage({
   const totalCount = (lowCount ?? 0) + (reportCount ?? 0);
 
   return (
-    <div className="min-h-screen bg-clever-light-blue/20">
+    <div className="flex-1 overflow-y-auto bg-clever-light-blue/20">
       <header className="border-b border-clever-light-blue bg-white px-6 py-4">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-[family-name:var(--font-heading)] text-clever-navy">
-              Feedback queue
-            </h1>
-            <p className="text-sm text-clever-black/50 mt-1 font-[family-name:var(--font-body)]">
-              Doc gaps and answer issues. The signal a docs/support team
-              would triage.
-            </p>
-          </div>
-          <a
-            href="/"
-            className="text-sm text-clever-blue hover:text-clever-navy transition-colors font-[family-name:var(--font-body)]"
-          >
-            Back to chat
-          </a>
+        <div className="max-w-5xl mx-auto">
+          <h1 className="text-xl font-[family-name:var(--font-heading)] text-clever-navy">
+            Feedback queue
+          </h1>
+          <p className="text-sm text-clever-black/50 mt-1 font-[family-name:var(--font-body)]">
+            Doc gaps and answer issues. The signal a docs/support team
+            would triage.
+          </p>
         </div>
       </header>
 
