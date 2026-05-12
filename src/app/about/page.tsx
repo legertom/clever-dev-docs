@@ -85,6 +85,14 @@ export default function AboutPage() {
                 />
 
                 <PipelineNode
+                  icon={<RateLimitIcon />}
+                  color="bg-clever-orange"
+                  label="Rate limit"
+                  description="Upstash Redis enforces a sliding window of 20 requests per minute per IP. Abusers get a 429 before any AI cost is incurred."
+                  isBranch
+                />
+
+                <PipelineNode
                   icon={<ShieldIcon />}
                   color="bg-clever-orange"
                   label="Classify"
@@ -283,7 +291,7 @@ export default function AboutPage() {
               />
               <ProductionItem
                 title="Rate limiting"
-                text="Public endpoints with LLM calls behind them get expensive fast under abuse."
+                text="Upstash Redis enforces a 20-request-per-minute sliding window per IP. Blocked requests return 429 before touching the AI Gateway."
               />
               <ProductionItem
                 title="Eval in CI"
@@ -424,6 +432,15 @@ function QuestionIcon() {
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="white" opacity="0.9" />
       <path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7z" fill="currentColor" opacity="0.4" />
+    </svg>
+  );
+}
+
+function RateLimitIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="white" strokeWidth="2" opacity="0.9" />
+      <path d="M12 7v5l3 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
     </svg>
   );
 }

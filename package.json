@@ -14,6 +14,8 @@
     "@ai-sdk/gateway": "^3.0.112",
     "@ai-sdk/react": "^3.0.179",
     "@supabase/supabase-js": "^2.105.4",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.38.0",
     "ai": "^6.0.177",
     "next": "16.2.6",
     "react": "19.2.4",

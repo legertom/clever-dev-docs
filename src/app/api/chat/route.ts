@@ -12,6 +12,7 @@ import {
   CONFIDENCE_THRESHOLD,
 } from "@/lib/rag";
 import { classifyQuery, CANNED_RESPONSES } from "@/lib/guardrails";
+import { rateLimiter } from "@/lib/rate-limit";
 import { logFeedbackAsync } from "@/lib/feedback";
 
 // Vercel Function timeout. Generous enough for a long answer, low
@@ -20,6 +21,16 @@ import { logFeedbackAsync } from "@/lib/feedback";
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+
+  const { success } = await rateLimiter.limit(ip);
+  if (!success) {
+    return new Response("Too many requests. Please try again shortly.", {
+      status: 429,
+    });
+  }
+
   const { messages }: { messages: UIMessage[] } = await req.json();
 
   // Pull out the latest user query for retrieval.
@@ -44,6 +55,7 @@ export async function POST(req: Request) {
       kind: "guardrail",
       query: queryText,
       category,
+      ip,
     });
 
     const responseText = CANNED_RESPONSES[category];

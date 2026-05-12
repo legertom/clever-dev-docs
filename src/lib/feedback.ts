@@ -31,6 +31,7 @@ export interface FeedbackRow {
   retrieved_urls?: string[];
   top_similarity?: number;
   category?: string;
+  ip?: string;
 }
 
 export async function insertFeedback(row: FeedbackRow): Promise<void> {
