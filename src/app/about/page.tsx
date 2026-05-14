@@ -261,6 +261,10 @@ export default function AboutPage() {
                 definition="At ~$0.0003 per query, the cheap model handles factual lookups where retrieval does the heavy lifting. The eval shows exactly which questions need a smarter model."
               />
               <DecisionItem
+                term="Layered defense, ascending cost"
+                definition="Every chat query passes through three filters in cheap-to-expensive order: a gpt-4o-mini classifier (~$0.00002) catches off-topic and harmful queries before retrieval runs; a confidence gate (~$0.0005) catches in-domain questions the docs can't answer and politely declines; full RAG generation (~$0.0003–$0.008) only runs when both checks pass. Front-loading the cheap layer means bad traffic gets bounced before flagship costs are paid — same pattern as a CDN with edge caches in front of origin."
+              />
+              <DecisionItem
                 term="AI Gateway over provider SDKs"
                 definition="One auth mechanism, one observability surface, zero code changes to swap providers. The eval page compares OpenAI and Anthropic models with a string change."
               />
