@@ -9,9 +9,9 @@ A RAG-powered chat assistant for Clever's developer documentation, built as a Ve
 
 ## The problem
 
-Developers building integrations for the [Clever Library](https://clever.com/library) frequently get stuck during integration and certification, generating support tickets for questions already answered in the public docs at [dev.clever.com](https://dev.clever.com). The existing support widget routes through a decision tree to human agents, and the existing search returns articles, not answers.
+Developers building on Clever — whether they're independent builders shipping a classroom app via Clever Library, partner engineering teams integrating Secure Sync at the district level, or internal Clever engineers — frequently get stuck on questions already answered in the public docs at [dev.clever.com](https://dev.clever.com). The existing support widget routes through a decision tree to human agents; the existing search returns articles, not answers.
 
-This assistant lets developers ask natural-language questions about Library SSO, rostering, certification, and the Clever API, and get cited answers grounded in the official docs.
+This assistant lets developers ask natural-language questions across the full Clever developer platform — Library, District SSO, Secure Sync, LMS Connect, Attendance Data, the Clever API, and the data model — and get cited answers grounded in the official docs.
 
 ## What it does
 
@@ -31,16 +31,23 @@ Developer query
 │ (useChat UI) │◀───│  streamText        │
 └──────────────┘    └─────────┬──────────┘
                               │
-                  1. embed query (text-embedding-3-small)
+                  1. rate-limit (Upstash) + classify query
+                     (off-topic / harmful queries skip pipeline)
                               │
                               ▼
-                  2. cosine search via Supabase pgvector
+                  2. embed query (text-embedding-3-small)
                               │
                               ▼
-                  3. build system prompt with retrieved chunks
+                  3. cosine search via Supabase pgvector
                               │
                               ▼
-                  4. stream completion via Vercel AI Gateway
+                  4. confidence gate → fallback if top sim < 0.6
+                              │
+                              ▼
+                  5. build system prompt with retrieved chunks
+                              │
+                              ▼
+                  6. stream completion via Vercel AI Gateway
                      ↓
               [openai/gpt-4o-mini] (default)
               [openai/gpt-5.4]      (eval comparison)
@@ -55,7 +62,7 @@ Developer query
 | AI SDK | Vercel AI SDK v6 | Required. Provider-agnostic, streaming-first. |
 | Model routing | **Vercel AI Gateway** | One env var (or OIDC on Vercel) for all providers. Cross-provider eval needs zero code changes. |
 | Default LLM | `openai/gpt-4o-mini` | Cheap and fast. For RAG, retrieval quality matters more than model size. |
-| Embeddings | `openai/text-embedding-3-small` | $0.02/1M tokens. Best cost/quality for this corpus size (~70 chunks). |
+| Embeddings | `openai/text-embedding-3-small` | $0.02/1M tokens. Best cost/quality for this corpus size (~770 chunks across 86 doc pages). |
 | Vector store | **Supabase Postgres + pgvector** | Provisioned via Vercel Marketplace. Production-grade, generous free tier, HNSW index for fast ANN search. |
 | Hosting | Vercel | Required. Fluid Compute functions, OIDC auth for AI Gateway. |
 
@@ -111,11 +118,12 @@ Expanding from a scoped 23-page corpus to all 86 pages introduced trade-offs I d
 
 The throughline: every one of these is "make the model and the prompt smarter" rather than "make the corpus smaller." Smaller corpus is the easy answer, but it also makes the product less useful.
 
-## Production thinking (what I'd add for a real prod deployment)
+## Production thinking
 
 - **Observability:** structured logging on every chat request (query, retrieved similarities, answer length, model latency) into a sink like Vercel Logs / Datadog. Critical to spot retrieval drift.
 - **Re-ingestion strategy:** content-hash each chunk, only re-embed changed chunks on doc updates. A daily Vercel Cron polling the dev.clever.com sitemap for changes.
-- **Rate limiting:** Upstash + middleware on `/api/chat` to prevent abuse. The assessment scope skipped this.
+- **Rate limiting:** Upstash Redis sliding-window limiter at 20 requests / 60s per IP on `/api/chat`. Blocked requests return 429 before any AI Gateway cost is incurred. (Shipped.)
+- **Pre-flight guardrails:** a lightweight `gpt-4o-mini` classifier categorizes every query as on-topic / off-topic / harmful / nonsense *before* RAG runs. Off-topic and harmful queries get a canned response and skip retrieval entirely, saving tokens and giving users an appropriate message instead of an unhelpful "I couldn't find that." (Shipped.)
 - **Eval in CI:** the CLI script (`pnpm eval`) is set up to run against a deployed environment; gating PRs on eval pass-rate prevents silent regressions when changing prompts, models, or chunking.
 - **A model fallback chain via the AI Gateway:** if the primary model returns an error, automatically retry against a secondary. Vercel AI Gateway supports this natively.
 
@@ -125,20 +133,31 @@ The throughline: every one of these is "make the model and the prompt smarter" r
 src/
   app/
     api/
-      chat/route.ts       # Streaming chat with RAG + fallback
-      eval/route.ts       # Single-question eval endpoint
-    eval/page.tsx         # Live eval dashboard with side-by-side comparison
-    page.tsx              # Chat UI
+      chat/route.ts          # Streaming chat: rate-limit, classify, RAG, stream
+      feedback/route.ts      # User "flag for review" submission endpoint
+      eval/route.ts          # Single-question eval (run + LLM-as-judge)
+      eval/runs/route.ts     # Persist / list eval runs
+    about/page.tsx           # Architecture walkthrough
+    eval/page.tsx            # Live eval dashboard, side-by-side model comparison
+    eval/history/page.tsx    # Saved eval runs with score trends + sparklines
+    feedback/page.tsx        # Admin queue: low-confidence retrievals + user reports
+    page.tsx                 # Chat UI
     layout.tsx
+  components/
+    Nav.tsx                  # Shared header navigation
   lib/
-    rag.ts                # Embed, retrieve, build system prompt (shared)
-    supabase.ts           # Lazy Supabase client
+    rag.ts                   # Embed, retrieve, build system prompt
+    guardrails.ts            # Pre-flight query classifier (on/off-topic/harmful)
+    rate-limit.ts            # Upstash sliding-window rate limiter
+    feedback.ts              # Fire-and-forget feedback writes
+    eval-runs.ts             # Eval run persistence + summary aggregation
+    supabase.ts              # Lazy Supabase client
 scripts/
-  ingest.ts               # Scrape → chunk → embed → store
-  setup-db.sql            # Schema (also applied via Supabase MCP)
+  ingest.ts                  # Scrape → chunk → embed → store
+  setup-db.sql               # Schema (documents, feedback, eval_runs, eval_results)
 eval/
-  questions.json          # 15-question test set with criteria
-  run-eval.ts             # CLI eval (for CI / regression testing)
+  questions.json             # 15-question test set with criteria
+  run-eval.ts                # CLI eval (for CI / regression testing)
 ```
 
 ## Local development
@@ -172,13 +191,14 @@ The same eval — but with side-by-side comparison across multiple models — is
 
 ## Eval test set
 
-15 hand-picked questions covering Library SSO, certification, data fields, multi-role users, error codes, and one out-of-scope question (Secure Sync) to test the fallback boundary. See `eval/questions.json`.
+15 hand-picked questions spanning the full platform: Library SSO, certification, data fields, multi-role users, error codes, OAuth flows, the data model, and the audience-routing boundary (Q13: Secure Sync — the assistant should *answer* the documentation question **and** surface that Secure Sync requires a Clever Application Success Manager). Q16 is the genuine out-of-corpus test (account-specific support ticket — the assistant should decline and redirect to dev.clever.com). See `eval/questions.json`.
 
-Each answer is scored by an LLM-as-judge (`anthropic/claude-sonnet-4.6` — deliberately a different model family from two of three candidates to reduce same-family rating bias) on four rubric dimensions:
+Each answer is scored by an LLM-as-judge (`anthropic/claude-sonnet-4.6` — deliberately a different model family from two of three candidates to reduce same-family rating bias) on five rubric dimensions:
 1. **Correct** — nothing in the answer is factually wrong (maps to "must" criteria in the test set)
 2. **Complete** — the answer covers the required points (maps to "should" criteria)
 3. **Cites source** — does the answer reference a source doc?
 4. **No hallucination** — does the answer avoid fabricating information?
+5. **Formatting** — is the answer well-formed markdown (headers spaced, lists prefixed with `- `, code in backticks)?
 
 `Correct` and `complete` are kept separate on purpose. An answer like *"Yes, Clever Library is free to build on"* is *correct* — but if it omits the required *"you must offer free/freemium to end users"* clause, it's *incomplete*. Conflating these two failure modes hides actionable signal: incomplete answers are usable; wrong answers are dangerous.
 
