@@ -1,7 +1,12 @@
 -- Enable the pgvector extension (Supabase includes this by default)
 create extension if not exists vector;
 
--- Documents table: each row is one chunk of documentation
+-- Documents table: each row is one chunk of documentation.
+-- The `fts` tsvector column is a stored generated column — Postgres
+-- recomputes it automatically on every insert/update, so the ingest
+-- pipeline doesn't need to know about FTS. Title is weighted 'A' (highest)
+-- so pages whose title contains the keyword outrank pages that merely
+-- mention it in body text.
 create table if not exists documents (
   id bigserial primary key,
   content text not null,
@@ -9,8 +14,28 @@ create table if not exists documents (
   title text not null,
   chunk_index integer not null,
   integration_path text not null default 'general',
-  embedding vector(1536) -- text-embedding-3-small outputs 1536 dimensions
+  embedding vector(1536), -- text-embedding-3-small outputs 1536 dimensions
+  fts tsvector generated always as (
+    setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
+    setweight(to_tsvector('english', coalesce(content, '')), 'B')
+  ) stored
 );
+
+-- Existing deployments need the column added explicitly. The DO block
+-- is idempotent: re-running setup-db.sql against an upgraded database
+-- is a no-op.
+do $$
+begin
+  if not exists (
+    select 1 from information_schema.columns
+    where table_name = 'documents' and column_name = 'fts'
+  ) then
+    alter table documents add column fts tsvector generated always as (
+      setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
+      setweight(to_tsvector('english', coalesce(content, '')), 'B')
+    ) stored;
+  end if;
+end$$;
 
 -- Enable Row-Level Security on documents.
 -- The service-role key (used by /api/chat and ingestion) bypasses RLS,
@@ -26,10 +51,38 @@ create index if not exists documents_embedding_idx
   on documents
   using hnsw (embedding vector_cosine_ops);
 
--- Similarity search function used by the RAG retrieval layer.
--- Returns the top N most relevant chunks for a given query embedding.
+-- GIN index on the tsvector for fast full-text search.
+-- Pairs with the HNSW index above to power hybrid retrieval: vector for
+-- semantic similarity, FTS for exact-keyword recall.
+create index if not exists documents_fts_idx
+  on documents
+  using gin (fts);
+
+-- Drop the older single-vector signature so the hybrid version below is
+-- the only `match_documents` Postgres will resolve.
+drop function if exists match_documents(vector, int, float);
+
+-- Hybrid retrieval function used by the RAG layer.
+--
+-- Runs two independent rankings in parallel:
+--   • vector_pool — top-N by cosine similarity against `query_embedding`
+--   • fts_pool    — top-N by ts_rank_cd against `query_text` (websearch syntax)
+--
+-- Combines them with Reciprocal Rank Fusion (RRF, k=60), the standard
+-- score-agnostic fusion algorithm. RRF doesn't care that cosine similarity
+-- and ts_rank_cd live in different number spaces — it only cares about
+-- each chunk's rank within its own ranker.
+--
+-- The returned `similarity` is the *stronger* of the two signals expressed
+-- on a 0–1 scale. For vector-only matches, that's raw cosine similarity.
+-- For FTS-rescued matches (where embedding similarity was deceptively low
+-- because the evidence sits in code/JSON), the rank position maps to a
+-- confidence value designed to pass the application-side 0.6 confidence
+-- gate — so a chunk that exact-matched the query at rank 1 doesn't get
+-- thrown away just because the embedding model under-scored it.
 create or replace function match_documents(
   query_embedding vector(1536),
+  query_text text default null,
   match_count int default 5,
   match_threshold float default 0.5
 )
@@ -44,8 +97,50 @@ returns table (
 )
 language plpgsql
 as $$
+declare
+  ts_query tsquery := null;
+  pool_size int := greatest(match_count * 4, 20);
 begin
+  -- websearch_to_tsquery handles human-typed input gracefully — quoted
+  -- phrases, AND/OR, and stray punctuation all parse instead of throwing.
+  -- Skip FTS entirely when there's no query text (preserves the original
+  -- vector-only behavior for any caller that doesn't pass query_text).
+  if query_text is not null and length(trim(query_text)) > 0 then
+    ts_query := websearch_to_tsquery('english', query_text);
+  end if;
+
   return query
+  with vector_pool as (
+    select
+      d.id,
+      1 - (d.embedding <=> query_embedding) as vec_sim,
+      row_number() over (order by d.embedding <=> query_embedding) as vec_rank
+    from documents d
+    order by d.embedding <=> query_embedding
+    limit pool_size
+  ),
+  fts_pool as (
+    select
+      d.id,
+      ts_rank_cd(d.fts, ts_query) as fts_score,
+      row_number() over (order by ts_rank_cd(d.fts, ts_query) desc) as fts_rank
+    from documents d
+    where ts_query is not null and d.fts @@ ts_query
+    order by ts_rank_cd(d.fts, ts_query) desc
+    limit pool_size
+  ),
+  fused as (
+    select
+      coalesce(v.id, f.id) as id,
+      coalesce(v.vec_sim, 0) as vec_sim,
+      v.vec_rank,
+      f.fts_rank,
+      -- RRF fused score, used purely for final ordering.
+      coalesce(1.0 / (60 + v.vec_rank), 0)
+        + coalesce(1.0 / (60 + f.fts_rank), 0) as rrf_score
+    from vector_pool v
+    full outer join fts_pool f on v.id = f.id
+  )
   select
     d.id,
     d.content,
@@ -53,10 +148,29 @@ begin
     d.title,
     d.chunk_index,
     d.integration_path,
-    1 - (d.embedding <=> query_embedding) as similarity
-  from documents d
-  where 1 - (d.embedding <=> query_embedding) > match_threshold
-  order by d.embedding <=> query_embedding
+    -- "similarity" surfaced to the app. Max of (a) native cosine and
+    -- (b) FTS-rank-derived confidence. The rank curve was picked so
+    -- that an FTS-only top hit (rank 1) lands at 0.85, comfortably
+    -- above the 0.6 confidence threshold. Drops ~0.05 per rank.
+    greatest(
+      fused.vec_sim,
+      case
+        when fused.fts_rank is null then 0
+        when fused.fts_rank = 1 then 0.85
+        when fused.fts_rank = 2 then 0.78
+        when fused.fts_rank = 3 then 0.72
+        when fused.fts_rank = 4 then 0.66
+        when fused.fts_rank = 5 then 0.60
+        else 0.55
+      end
+    ) as similarity
+  from fused
+  join documents d on d.id = fused.id
+  -- Admit a chunk if EITHER signal qualifies: vector cleared the
+  -- threshold OR FTS matched at all. Without the OR, FTS rescues
+  -- would still be filtered out by the cosine-based gate.
+  where fused.vec_sim > match_threshold or fused.fts_rank is not null
+  order by fused.rrf_score desc
   limit match_count;
 end;
 $$;

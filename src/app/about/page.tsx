@@ -111,7 +111,7 @@ export default function AboutPage() {
                   icon={<SearchIcon />}
                   color="bg-clever-blue"
                   label="Retrieve"
-                  description="pgvector cosine similarity search matches the question against the full Clever developer docs corpus. The top chunks become the model&apos;s context."
+                  description="Hybrid retrieval: pgvector cosine similarity (semantic match) and Postgres full-text search (exact-keyword match) run in parallel, then fuse with Reciprocal Rank Fusion. Vector catches paraphrased questions; FTS catches keywords buried in code or JSON examples that embeddings tend to underweight."
                 />
 
                 {/* Branch: confidence gate */}
@@ -243,7 +243,7 @@ export default function AboutPage() {
                   icon={<StoreIcon />}
                   color="bg-clever-orange"
                   label="Embed &amp; store"
-                  description="Chunks are embedded in batches of 100 using text-embedding-3-small (1,536 dimensions) via the AI Gateway, then inserted into a Postgres table indexed with HNSW for fast cosine similarity search."
+                  description="Chunks are embedded in batches of 100 using text-embedding-3-small (1,536 dimensions) via the AI Gateway, then inserted into a Postgres table indexed with HNSW for vector similarity and a generated tsvector + GIN index for full-text search. Title text is weighted above body so keyword matches on a page&apos;s title outrank passing mentions."
                   isLast
                 />
               </div>
@@ -270,7 +270,7 @@ export default function AboutPage() {
               />
               <DecisionItem
                 term="pgvector over a dedicated vector DB"
-                definition="For ~200 chunks, Postgres with HNSW is sub-100ms, operationally simpler, and one less service to monitor. Migration point: when you need hybrid search at scale."
+                definition="For ~200 chunks, Postgres with HNSW is sub-100ms, operationally simpler, and one less service to monitor. Same Postgres also powers the lexical half of hybrid retrieval (tsvector + GIN), so vector and full-text search share one query path — no second service to run or sync."
               />
               <DecisionItem
                 term="Live eval as a product page"
