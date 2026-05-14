@@ -82,15 +82,18 @@ export function buildSystemPrompt(chunks: DocumentChunk[]): string {
   const hasRelevantContext =
     chunks.length > 0 && chunks[0].similarity > CONFIDENCE_THRESHOLD;
 
-  const context =
-    chunks.length > 0
-      ? chunks
-          .map((c) => {
-            const pathTag = c.integration_path ? ` | Path: ${c.integration_path}` : "";
-            return `[Source: ${c.title} — ${c.url}${pathTag}]\n${c.content}`;
-          })
-          .join("\n\n---\n\n")
-      : "No relevant documentation found for this query.";
+  // When the top match is below CONFIDENCE_THRESHOLD, suppress the weak
+  // context entirely rather than passing it alongside the fallback
+  // suffix — the model would otherwise receive contradictory signals
+  // ("here are some chunks" + "no strong matches were found").
+  const context = hasRelevantContext
+    ? chunks
+        .map((c) => {
+          const pathTag = c.integration_path ? ` | Path: ${c.integration_path}` : "";
+          return `[Source: ${c.title} — ${c.url}${pathTag}]\n${c.content}`;
+        })
+        .join("\n\n---\n\n")
+    : "No relevant documentation found for this query.";
 
   return (
     SYSTEM_PROMPT_TEMPLATE.replace("{context}", context) +

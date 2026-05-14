@@ -12,7 +12,7 @@ import {
   CONFIDENCE_THRESHOLD,
 } from "@/lib/rag";
 import { classifyQuery, CANNED_RESPONSES } from "@/lib/guardrails";
-import { rateLimiter } from "@/lib/rate-limit";
+import { getRateLimiter } from "@/lib/rate-limit";
 import { logFeedbackAsync } from "@/lib/feedback";
 
 // Vercel Function timeout. Generous enough for a long answer, low
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
-  const { success } = await rateLimiter.limit(ip);
+  const { success } = await getRateLimiter().limit(ip);
   if (!success) {
     return new Response("Too many requests. Please try again shortly.", {
       status: 429,
