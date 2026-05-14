@@ -38,7 +38,7 @@ Developer query
                   2. embed query (text-embedding-3-small)
                               │
                               ▼
-                  3. cosine search via Supabase pgvector
+                  3. hybrid retrieval: pgvector + Postgres FTS, fused via RRF
                               │
                               ▼
                   4. confidence gate → fallback if top sim < 0.6
@@ -63,7 +63,7 @@ Developer query
 | Model routing | **Vercel AI Gateway** | One env var (or OIDC on Vercel) for all providers. Cross-provider eval needs zero code changes. |
 | Default LLM | `openai/gpt-4o-mini` | Cheap and fast. For RAG, retrieval quality matters more than model size. |
 | Embeddings | `openai/text-embedding-3-small` | $0.02/1M tokens. Best cost/quality for this corpus size (~770 chunks). |
-| Vector store | **Supabase Postgres + pgvector** | Provisioned via Vercel Marketplace. Production-grade, generous free tier, HNSW index for fast ANN search. |
+| Vector store | **Supabase Postgres + pgvector** | Provisioned via Vercel Marketplace. Production-grade, generous free tier. HNSW index for vector similarity plus a generated `tsvector` + GIN index for full-text search — vector and lexical retrieval share one database. |
 | Hosting | Vercel | Fluid Compute functions, OIDC auth for AI Gateway. |
 
 ### Key architectural decisions
@@ -111,7 +111,7 @@ Expanding from a scoped Library-only subset to the full Clever developer docs co
 | Risk | What can go wrong | Current mitigation | What I'd add for prod |
 |---|---|---|---|
 | **Audience confusion** — an indie dev could be told how to set up Secure Sync without realizing they can't actually do it themselves | A developer wastes time pursuing the wrong integration path | System prompt has explicit AUDIENCE ROUTING rules: when answering district-tier questions (Secure Sync, LMS Connect), the model must surface the ASM requirement and suggest the self-serve alternative when relevant. Eval Q13 tests this behavior end-to-end. | An onboarding step that asks the user about their use case once and persists the context (e.g. "you're an indie dev building a Library integration") — used to bias retrieval and to tailor the audience-routing prompt |
-| **Topic-adjacent retrieval drift** — "What is Secure Sync?" pulls LMS Connect chunks because both are district-level products | Answer technically correct but sourced from the wrong neighborhood of the corpus, which can erode citation trust | Top-5 retrieval surfaces all close matches and the model picks the most relevant. The eval's "cites_source" dimension catches gross misattribution. | Hybrid retrieval (BM25 + semantic) so exact title/term matches outrank semantic adjacency. Or per-section pre-filtering when the query keyword is unambiguous (e.g. "secure sync" → restrict to Secure Sync URLs). |
+| **Topic-adjacent retrieval drift** — "What is Secure Sync?" pulls LMS Connect chunks because both are district-level products | Answer technically correct but sourced from the wrong neighborhood of the corpus, which can erode citation trust | Hybrid retrieval (pgvector semantic + Postgres FTS) fused with Reciprocal Rank Fusion: exact title/term matches outrank semantic adjacency because title text is weighted highest in the `tsvector`. Top-5 retrieval surfaces all close matches and the model picks the most relevant. The eval's "cites_source" dimension catches gross misattribution. | Per-section pre-filtering when the query keyword is unambiguous (e.g. "secure sync" → restrict to Secure Sync URLs). A cross-encoder reranker over the top-K candidates would push the right chunk to position 1 more reliably than rank-fused first-stage retrieval alone. |
 | **Stale corpus** — Clever updates docs and our snapshot drifts | Confidently wrong answers about features that have changed | None today — corpus is a one-time snapshot from when ingestion ran | Daily Vercel Cron that re-fetches the sitemap, content-hashes each chunk, and re-embeds only what changed (fast and cheap). Plus a published "last-ingested-at" timestamp shown in the UI footer. |
 | **Larger embedding bill on re-ingest** | Cost grows with corpus size on full re-runs | Negligible at this scale (~770 chunks × ~1k tokens × $0.02/1M = $0.015 per full re-ingest) | Same content-hash incremental approach — only changed chunks get re-embedded. Production scale (millions of chunks) makes this essential. |
 | **JSON-unsafe Unicode in scraped content** | Ingestion crashes on pages with malformed UTF-16 surrogate sequences | Strip lone surrogates before insertion (see `scripts/ingest.ts`). Lossy but safe; no displayable content is affected. | Better: detect and log the source URLs that needed sanitization. Lone surrogates often indicate broken upstream data — the docs team should know. |
