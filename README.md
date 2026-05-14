@@ -58,13 +58,13 @@ Developer query
 
 | Layer | Choice | Why |
 |---|---|---|
-| Framework | Next.js 16 (App Router) | Required by assessment. Server Components for the shell, Route Handlers for streaming. |
-| AI SDK | Vercel AI SDK v6 | Required. Provider-agnostic, streaming-first. |
+| Framework | Next.js 16 (App Router) | Server Components for the shell, Route Handlers for streaming. |
+| AI SDK | Vercel AI SDK v6 | Provider-agnostic, streaming-first. |
 | Model routing | **Vercel AI Gateway** | One env var (or OIDC on Vercel) for all providers. Cross-provider eval needs zero code changes. |
 | Default LLM | `openai/gpt-4o-mini` | Cheap and fast. For RAG, retrieval quality matters more than model size. |
 | Embeddings | `openai/text-embedding-3-small` | $0.02/1M tokens. Best cost/quality for this corpus size (~770 chunks across 86 doc pages). |
 | Vector store | **Supabase Postgres + pgvector** | Provisioned via Vercel Marketplace. Production-grade, generous free tier, HNSW index for fast ANN search. |
-| Hosting | Vercel | Required. Fluid Compute functions, OIDC auth for AI Gateway. |
+| Hosting | Vercel | Fluid Compute functions, OIDC auth for AI Gateway. |
 
 ### Key architectural decisions
 
@@ -74,14 +74,14 @@ Developer query
 
 **3. Confidence-based fallback.** When the top retrieval similarity is below 0.6, the system prompt switches to a fallback that explicitly tells the model to admit it doesn't know and direct the developer to support. Hallucinating certification requirements could waste a developer weeks on a bad submission.
 
-**4. Live eval, not just CI eval.** A `/eval` page that interviewers can click during the demo is more compelling than a CLI eval that ran "trust me, last week." It also matches how a real customer team would think about continuous evaluation.
+**4. Live eval, not just CI eval.** A `/eval` page deployed alongside the product means anyone evaluating the system — a customer team tuning prompts, a new engineer joining the project, an internal stakeholder checking quality — can see what it's actually doing right now: side-by-side model comparison, real USD cost per query, full rubric scores. A CLI eval that ran "trust me, last week" can't offer that. This is how a customer team would think about continuous evaluation.
 
 **4b. Feedback signal as a first-class feature.** A `/feedback` admin page surfaces two doc-gap signals in one queue:
 
 1. **Low-confidence retrievals** — every chat query whose top similarity falls below `CONFIDENCE_THRESHOLD` (0.6) is logged automatically by the chat route, with the query text, retrieved URLs, and the actual top similarity. These are the questions developers are asking that we can't answer well today — the strongest signal of where the docs need work.
 2. **User reports** — every assistant message has a "🚩 Flag for review" button. One tap opens an inline form with an optional note; submission posts to `/api/feedback`. These are the strongest signal that a specific answer was unhelpful even when retrieval *did* work.
 
-Both write to the same `feedback` table and render in the same admin view (filter chips for All / Low-confidence / User reports). In production this page would sit behind admin auth; for the take-home it's open since the data is doc-gap signal rather than user PII.
+Both write to the same `feedback` table and render in the same admin view (filter chips for All / Low-confidence / User reports). In production this page would sit behind admin auth; for now it's open since the data is doc-gap signal rather than user PII.
 
 **5. Cost transparency, not "trust me it's cheap."** The eval page surfaces real USD cost per query and aggregate cost per model, computed from token counts returned by the AI Gateway against published per-token prices. This makes the cost/quality trade-off concrete: on a sample reasoning question, `gpt-4o-mini` costs ~$0.00028 and answered incorrectly, while `gpt-5.4` costs ~$0.00817 (29x more) and answered correctly. That's the kind of finding that should drive a routing strategy — escalate hard questions, default to cheap on easy ones — rather than paying flagship prices on every query as insurance.
 
@@ -106,7 +106,7 @@ The chat and eval routes themselves don't need the service-role key for reads �
 
 ## Known risks with the comprehensive corpus
 
-Expanding from a scoped 23-page corpus to all 86 pages introduced trade-offs I deliberately took on. These are worth knowing about — and most of them have a planned mitigation that didn't make the take-home cut.
+Expanding from a scoped 23-page corpus to all 86 pages introduced trade-offs I deliberately took on. These are worth knowing about — and most of them have a planned mitigation that hasn't shipped yet.
 
 | Risk | What can go wrong | Current mitigation | What I'd add for prod |
 |---|---|---|---|
