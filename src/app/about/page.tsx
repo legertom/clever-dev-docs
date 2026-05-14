@@ -111,7 +111,7 @@ export default function AboutPage() {
                   icon={<SearchIcon />}
                   color="bg-clever-blue"
                   label="Retrieve"
-                  description="pgvector cosine similarity search matches the question against 86 pages of Clever docs. The top chunks become the model&apos;s context."
+                  description="pgvector cosine similarity search matches the question against the full Clever developer docs corpus. The top chunks become the model&apos;s context."
                 />
 
                 {/* Branch: confidence gate */}
@@ -224,7 +224,7 @@ export default function AboutPage() {
                   icon={<ScrapeIcon />}
                   color="bg-clever-blue"
                   label="Scrape"
-                  description="76 doc pages from dev.clever.com are fetched sequentially with a 500ms delay. Cheerio strips nav, sidebar, and footer elements, extracting text from headings, paragraphs, list items, code blocks, and table cells."
+                  description="Every public doc page listed in dev.clever.com&apos;s sitemap is fetched sequentially with a 500ms delay. Cheerio strips nav, sidebar, and footer elements, extracting text from headings, paragraphs, list items, code blocks, and table cells."
                   isFirst
                 />
                 <PipelineNode
