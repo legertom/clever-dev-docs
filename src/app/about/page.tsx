@@ -355,6 +355,87 @@ export default function AboutPage() {
             </div>
           </section>
 
+          {/* AI SDK toolkit */}
+          <section>
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
+              AI SDK toolkit
+            </h2>
+            <p className="text-clever-black/70 leading-relaxed mb-6 font-[family-name:var(--font-body)]">
+              The primitives from{" "}
+              <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">ai</code>,{" "}
+              <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">@ai-sdk/react</code>, and{" "}
+              <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">@ai-sdk/gateway</code>{" "}
+              that this app actually leans on.
+            </p>
+            <dl className="space-y-5">
+              <SdkItem
+                term={
+                  <>
+                    <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">useChat</code>
+                    {" + "}
+                    <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">DefaultChatTransport</code>
+                  </>
+                }
+                definition="Streaming chat state on the client, plus the transport that pipes messages to /api/chat."
+              />
+              <SdkItem
+                term={
+                  <>
+                    <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">streamText</code>
+                    {" → "}
+                    <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">.toUIMessageStreamResponse()</code>
+                  </>
+                }
+                definition="The streaming backbone of the chat route handler. Returns a stream useChat reads token-by-token."
+              />
+              <SdkItem
+                term={
+                  <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">
+                    convertToModelMessages
+                  </code>
+                }
+                definition="Converts UI message format to provider-native format on every multi-turn call — the same chat history works across providers."
+              />
+              <SdkItem
+                term={
+                  <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">
+                    createUIMessageStream
+                  </code>
+                }
+                definition="Synthesizes a stream in the guardrail canned-response path, so deflections render uniformly in the chat UI even when no model call happens."
+              />
+              <SdkItem
+                term={
+                  <>
+                    <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">embed</code>
+                    {" / "}
+                    <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">embedMany</code>
+                  </>
+                }
+                definition="Single-query embedding for retrieval, batched embedding for ingestion. Both share the same gateway.textEmbeddingModel() reference so query and corpus embeddings can't drift."
+              />
+              <SdkItem
+                term={
+                  <>
+                    <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">usage</code>
+                    {" token counts"}
+                  </>
+                }
+                definition="Captured after each generateText call to compute live USD cost on the eval page — the foundation of the cost-transparency story."
+              />
+              <SdkItem
+                term={
+                  <>
+                    {"Gateway model strings ("}
+                    <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1.5 py-0.5 rounded">provider/model</code>
+                    {")"}
+                  </>
+                }
+                definition="The Gateway routes by string. Swapping OpenAI for Anthropic on the eval page is a one-line allowlist change — no SDK install, no auth swap."
+              />
+            </dl>
+          </section>
+
           {/* Brand identity */}
           <section className="bg-clever-light-blue/30 rounded-2xl p-8 border border-clever-light-blue">
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
@@ -575,6 +656,23 @@ function DecisionItem({
   definition,
 }: {
   term: string;
+  definition: string;
+}) {
+  return (
+    <div className="pl-4 border-l-2 border-clever-light-blue">
+      <dt className="font-medium text-clever-navy font-[family-name:var(--font-body)]">{term}</dt>
+      <dd className="mt-1 text-sm text-clever-black/60 leading-relaxed font-[family-name:var(--font-body)]">
+        {definition}
+      </dd>
+    </div>
+  );
+}
+
+function SdkItem({
+  term,
+  definition,
+}: {
+  term: React.ReactNode;
   definition: string;
 }) {
   return (
