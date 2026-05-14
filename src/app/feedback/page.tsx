@@ -8,8 +8,8 @@
  *     UI. Strongest signal that a specific answer was unhelpful.
  *
  * In production this page would sit behind auth (e.g. Clerk + an
- * admin-role gate). For the take-home it's open — the data is signal
- * about doc gaps, not user PII.
+ * admin-role gate). For now it's open — the data is signal about doc
+ * gaps, not user PII.
  */
 
 import { getSupabase } from "@/lib/supabase";
