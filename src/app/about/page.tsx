@@ -361,13 +361,37 @@ export default function AboutPage() {
               Brand identity
             </h2>
             <p className="text-clever-black/70 leading-relaxed mb-6 font-[family-name:var(--font-body)]">
-              The interface follows the Clever Brand Guidelines (V7, August 2025).
-              Typography pairs Merriweather (serif headings, standing in for the
-              brand&apos;s ABC Arizona Mix) with Inter (sans-serif body text,
-              standing in for Messina Sans). Colors draw from the primary palette —
-              Clever Blue, white, and dark navy — with secondary accents for visual
-              expression.
+              The interface follows the Clever General Template
+              (V4, July 2025). Headlines are set in Merriweather, body
+              copy in Inter — the two typefaces specified in the
+              brand. Backgrounds stay white or light blue (the brand&apos;s
+              guidance for internal-facing surfaces), with navy reserved
+              for hero treatments. The full palette is below.
             </p>
+            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+              <div className="rounded-xl bg-white border border-clever-light-blue p-4">
+                <div className="text-[10px] uppercase tracking-wider text-clever-black/40 mb-2 font-[family-name:var(--font-body)]">
+                  Headlines
+                </div>
+                <div className="text-2xl text-clever-navy font-[family-name:var(--font-heading)] leading-tight">
+                  Merriweather
+                </div>
+                <div className="text-xs text-clever-black/50 mt-1 font-[family-name:var(--font-body)]">
+                  Serif. Used for every heading on every page.
+                </div>
+              </div>
+              <div className="rounded-xl bg-white border border-clever-light-blue p-4">
+                <div className="text-[10px] uppercase tracking-wider text-clever-black/40 mb-2 font-[family-name:var(--font-body)]">
+                  Body
+                </div>
+                <div className="text-2xl text-clever-navy font-[family-name:var(--font-body)] leading-tight">
+                  Inter
+                </div>
+                <div className="text-xs text-clever-black/50 mt-1 font-[family-name:var(--font-body)]">
+                  Sans-serif. Body copy, UI labels, captions.
+                </div>
+              </div>
+            </div>
             <div className="flex flex-wrap gap-3">
               <ColorSwatch color="bg-clever-blue" label="Clever Blue" hex="#1464FF" />
               <ColorSwatch color="bg-clever-navy" label="Navy" hex="#0A1E46" textLight />
