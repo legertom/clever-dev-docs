@@ -1,6 +1,6 @@
 # Clever Dev Docs RAG Assistant
 
-A RAG-powered chat assistant for Clever's developer documentation, built as a Vercel Solutions Architect take-home (Track B: AI Cloud).
+A RAG-powered chat assistant for Clever's developer documentation, built on Vercel with the AI SDK, AI Gateway, and Supabase pgvector.
 
 **Live demo:** https://clever-dev-docs.vercel.app
 **Eval dashboard:** https://clever-dev-docs.vercel.app/eval
@@ -62,13 +62,13 @@ Developer query
 | AI SDK | Vercel AI SDK v6 | Provider-agnostic, streaming-first. |
 | Model routing | **Vercel AI Gateway** | One env var (or OIDC on Vercel) for all providers. Cross-provider eval needs zero code changes. |
 | Default LLM | `openai/gpt-4o-mini` | Cheap and fast. For RAG, retrieval quality matters more than model size. |
-| Embeddings | `openai/text-embedding-3-small` | $0.02/1M tokens. Best cost/quality for this corpus size (~770 chunks across 86 doc pages). |
+| Embeddings | `openai/text-embedding-3-small` | $0.02/1M tokens. Best cost/quality for this corpus size (~770 chunks). |
 | Vector store | **Supabase Postgres + pgvector** | Provisioned via Vercel Marketplace. Production-grade, generous free tier, HNSW index for fast ANN search. |
 | Hosting | Vercel | Fluid Compute functions, OIDC auth for AI Gateway. |
 
 ### Key architectural decisions
 
-**1. Comprehensive corpus, audience-aware system prompt.** All ~86 public pages from `dev.clever.com/sitemap.xml` are ingested (Library, District SSO, Secure Sync, LMS Connect, Attendance, full API + data model). Earlier I considered scoping to just the indie-developer subset, but two things changed my mind: semantic search doesn't punish unrelated chunks (they just score low and get filtered), and a more useful product covers the *informational* questions across the whole platform. Where it matters — Secure Sync, LMS Connect, district-managed paths — the system prompt instructs the model to **answer the question AND surface that the path requires a Clever Application Success Manager**. The boundary is enforced in prompt logic, not by exclusion. This means an indie developer asking about Secure Sync gets an honest "here's what it is, but you'd need to coordinate with Clever to get access" instead of a refusal.
+**1. Comprehensive corpus, audience-aware system prompt.** All public pages from `dev.clever.com/sitemap.xml` are ingested (Library, District SSO, Secure Sync, LMS Connect, Attendance, full API + data model). Earlier I considered scoping to just the indie-developer subset, but two things changed my mind: semantic search doesn't punish unrelated chunks (they just score low and get filtered), and a more useful product covers the *informational* questions across the whole platform. Where it matters — Secure Sync, LMS Connect, district-managed paths — the system prompt instructs the model to **answer the question AND surface that the path requires a Clever Application Success Manager**. The boundary is enforced in prompt logic, not by exclusion. This means an indie developer asking about Secure Sync gets an honest "here's what it is, but you'd need to coordinate with Clever to get access" instead of a refusal.
 
 **2. AI Gateway over direct provider SDKs.** Going through `@ai-sdk/gateway` (rather than `@ai-sdk/openai`) means: one API key handles all providers, OIDC auth on deployed Vercel functions (no key in env vars), and the `/eval` page can compare OpenAI vs Anthropic with a single string change.
 
@@ -106,7 +106,7 @@ The chat and eval routes themselves don't need the service-role key for reads �
 
 ## Known risks with the comprehensive corpus
 
-Expanding from a scoped 23-page corpus to all 86 pages introduced trade-offs I deliberately took on. These are worth knowing about — and most of them have a planned mitigation that hasn't shipped yet.
+Expanding from a scoped Library-only subset to the full Clever developer docs corpus introduced trade-offs I deliberately took on. These are worth knowing about — and most of them have a planned mitigation that hasn't shipped yet.
 
 | Risk | What can go wrong | Current mitigation | What I'd add for prod |
 |---|---|---|---|
@@ -126,6 +126,7 @@ The throughline: every one of these is "make the model and the prompt smarter" r
 - **Pre-flight guardrails:** a lightweight `gpt-4o-mini` classifier categorizes every query as on-topic / off-topic / harmful / nonsense *before* RAG runs. Off-topic and harmful queries get a canned response and skip retrieval entirely, saving tokens and giving users an appropriate message instead of an unhelpful "I couldn't find that." (Shipped.)
 - **Eval in CI:** the CLI script (`pnpm eval`) is set up to run against a deployed environment; gating PRs on eval pass-rate prevents silent regressions when changing prompts, models, or chunking.
 - **A model fallback chain via the AI Gateway:** if the primary model returns an error, automatically retry against a secondary. Vercel AI Gateway supports this natively.
+- **Admin auth on demo surfaces:** `/eval`, `/eval/history`, and `/feedback` are intentionally open in this iteration so anyone evaluating the system can inspect quality, cost, and doc-gap signals firsthand. In production they'd sit behind admin auth (Clerk via the Vercel Marketplace) with additional rate limits on `/api/eval`, `/api/eval/runs`, and `/api/feedback`.
 
 ## Project structure
 
@@ -165,14 +166,17 @@ eval/
 ### Prerequisites
 - Node 22+, pnpm
 - A Vercel AI Gateway API key (https://vercel.com/[team]/~/ai-gateway/api-keys)
-- A Supabase project with the schema in `scripts/setup-db.sql` applied
-- Optional: `vercel link` followed by `vercel env pull` to pull env vars from your linked Vercel project
+- A Supabase project with the schema in `scripts/setup-db.sql` applied (tables: `documents`, `eval_runs`, `eval_results`, `feedback`)
+- An Upstash Redis instance (Vercel Marketplace provisions one; provides `KV_REST_API_URL` and `KV_REST_API_TOKEN`)
+- Recommended: `vercel link` followed by `vercel env pull` so all env vars come from your linked Vercel project in one step
 
 ### Setup
 ```bash
 pnpm install
 cp .env.local.example .env.local
-# Fill in AI_GATEWAY_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+# Fill in AI_GATEWAY_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
+# KV_REST_API_URL, KV_REST_API_TOKEN
+# (Or `vercel env pull` to pull them all at once.)
 
 # One-time: ingest the docs
 pnpm ingest

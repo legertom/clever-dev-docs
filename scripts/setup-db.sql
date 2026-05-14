@@ -12,6 +12,13 @@ create table if not exists documents (
   embedding vector(1536) -- text-embedding-3-small outputs 1536 dimensions
 );
 
+-- Enable Row-Level Security on documents.
+-- The service-role key (used by /api/chat and ingestion) bypasses RLS,
+-- so runtime behavior is unchanged. This is defense-in-depth: if anon
+-- or publishable keys ever gain access to this table, the absence of
+-- a SELECT policy fails closed rather than leaking.
+alter table documents enable row level security;
+
 -- HNSW index for fast approximate nearest-neighbor search.
 -- HNSW is preferred over IVFFlat for small-to-medium datasets (<100k rows)
 -- because it requires no training step and has better recall at low row counts.
@@ -94,3 +101,29 @@ create table if not exists eval_results (
 
 create index if not exists eval_results_run_id_idx
   on eval_results(run_id);
+
+-- ── Feedback queue ──────────────────────────────────────────
+-- Dual-signal queue for surfacing doc gaps and answer issues:
+--   - kind='low_confidence' — auto-logged by /api/chat when retrieval
+--     similarity falls below CONFIDENCE_THRESHOLD
+--   - kind='user_report' — explicit "flag for review" submissions from
+--     the chat UI via /api/feedback
+--   - kind='guardrail' — queries blocked pre-RAG by the classifier
+--     (off-topic / harmful / nonsense)
+-- Read by /feedback admin page; written by /api/chat and /api/feedback.
+
+create table if not exists feedback (
+  id bigserial primary key,
+  created_at timestamptz not null default now(),
+  kind text not null check (kind in ('low_confidence', 'user_report', 'guardrail')),
+  query text,
+  response text,
+  user_note text,
+  retrieved_urls text[],
+  top_similarity float,
+  category text,
+  ip text
+);
+
+create index if not exists feedback_kind_idx on feedback(kind);
+create index if not exists feedback_created_at_idx on feedback(created_at desc);
