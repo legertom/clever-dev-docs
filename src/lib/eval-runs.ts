@@ -35,6 +35,12 @@ export interface EvalRunSummary {
   >;
 }
 
+export interface ChunkConfig {
+  match_count: number;
+  match_threshold: number;
+  retrieval_mode?: "vector" | "hybrid";
+}
+
 export interface SavedEvalRun {
   id: string;
   created_at: string;
@@ -43,7 +49,7 @@ export interface SavedEvalRun {
   total_questions: number;
   summary: EvalRunSummary;
   system_prompt_hash: string | null;
-  chunk_config: { match_count: number; match_threshold: number } | null;
+  chunk_config: ChunkConfig | null;
 }
 
 export function hashSystemPromptTemplate(template: string): string {
@@ -82,7 +88,7 @@ export async function saveEvalRun(opts: {
   label?: string;
   results: EvalResultRow[];
   systemPromptHash?: string;
-  chunkConfig?: { match_count: number; match_threshold: number };
+  chunkConfig?: ChunkConfig;
 }): Promise<string> {
   const models = [...new Set(opts.results.map((r) => r.model))];
   const questionIds = new Set(opts.results.map((r) => r.question_id));

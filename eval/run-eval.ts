@@ -20,6 +20,7 @@ import {
   retrieveRelevantChunks,
   buildSystemPrompt,
   DEFAULT_CHAT_MODEL,
+  type RetrievalMode,
 } from "../src/lib/rag";
 import {
   saveEvalRun,
@@ -50,9 +51,10 @@ interface EvalResult {
 }
 
 async function runQuestion(
-  q: (typeof questions)[number]
+  q: (typeof questions)[number],
+  mode: RetrievalMode
 ): Promise<EvalResult> {
-  const chunks = await retrieveRelevantChunks(q.question, 5, 0.5);
+  const chunks = await retrieveRelevantChunks(q.question, 5, 0.5, mode);
   const systemPrompt = buildSystemPrompt(chunks);
 
   const { text: answer } = await generateText({
@@ -137,14 +139,30 @@ Respond ONLY with this exact JSON (no markdown, no prose):
   };
 }
 
+function parseArgs(): { mode: RetrievalMode; label: string | null } {
+  let mode: RetrievalMode = "vector";
+  let label: string | null = null;
+  for (const arg of process.argv.slice(2)) {
+    if (arg.startsWith("--mode=")) {
+      const value = arg.slice("--mode=".length);
+      if (value === "vector" || value === "hybrid") mode = value;
+      else throw new Error(`Invalid --mode value: ${value}`);
+    } else if (!arg.startsWith("--")) {
+      label = arg;
+    }
+  }
+  return { mode, label };
+}
+
 async function main() {
-  console.log(`\n🧪 Running eval on ${questions.length} questions...\n`);
+  const { mode, label: cliLabel } = parseArgs();
+  console.log(`\n🧪 Running eval on ${questions.length} questions (mode=${mode})...\n`);
 
   const results: EvalResult[] = [];
 
   for (const q of questions) {
     process.stdout.write(`  Q${q.id}: ${q.question.slice(0, 60)}... `);
-    const result = await runQuestion(q);
+    const result = await runQuestion(q, mode);
     results.push(result);
     console.log(result.pass ? "✅" : "❌");
     await new Promise((r) => setTimeout(r, 500));
@@ -205,7 +223,7 @@ async function main() {
   fs.writeFileSync("eval/results.json", JSON.stringify(output, null, 2));
   console.log("  Results written to eval/results.json\n");
 
-  const label = process.argv[2] || null;
+  const label = cliLabel ?? `cli-${mode}`;
 
   try {
     const { buildSystemPrompt: getTemplate } = await import("../src/lib/rag");
@@ -226,10 +244,10 @@ async function main() {
     }));
 
     const runId = await saveEvalRun({
-      label: label ?? undefined,
+      label,
       results: evalRows,
       systemPromptHash: templateHash,
-      chunkConfig: { match_count: 5, match_threshold: 0.5 },
+      chunkConfig: { match_count: 5, match_threshold: 0.5, retrieval_mode: mode },
     });
 
     console.log(`  Saved to DB as run ${runId}`);
