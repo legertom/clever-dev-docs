@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import TableOfContents, { type TocItem } from "@/components/TableOfContents";
 
 export const metadata: Metadata = {
   title: "About — Clever Dev Docs Assistant",
@@ -6,9 +7,22 @@ export const metadata: Metadata = {
     "How this RAG-powered assistant works: architecture, design decisions, and production thinking.",
 };
 
+const tocItems: TocItem[] = [
+  { id: "what-this-is", label: "What this is" },
+  { id: "audience", label: "Who it's for" },
+  { id: "how-it-works", label: "How it works" },
+  { id: "guardrails", label: "Guardrails" },
+  { id: "ingestion", label: "Knowledge base" },
+  { id: "design-decisions", label: "Design decisions" },
+  { id: "production", label: "Production thinking" },
+  { id: "stack", label: "Stack" },
+  { id: "ai-sdk", label: "AI SDK toolkit" },
+  { id: "brand", label: "Brand identity" },
+];
+
 export default function AboutPage() {
   return (
-    <div className="flex-1 overflow-y-auto bg-white">
+    <div className="flex-1 overflow-y-auto bg-white scroll-smooth">
       {/* Hero header with navy background */}
       <header className="bg-clever-navy px-6 pt-10 pb-16 relative overflow-hidden">
         {/* Decorative brand shapes */}
@@ -27,9 +41,10 @@ export default function AboutPage() {
       </header>
 
       <main className="flex-1 px-6 -mt-10">
-        <article className="max-w-3xl mx-auto space-y-12 pb-16">
+        <div className="max-w-3xl lg:max-w-[1120px] mx-auto lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-12">
+          <article className="space-y-12 pb-16 min-w-0">
           {/* Intro card overlapping the hero */}
-          <section className="bg-white rounded-2xl border border-clever-light-blue p-8 shadow-md relative z-10">
+          <section id="what-this-is" className="bg-white rounded-2xl border border-clever-light-blue p-8 shadow-md relative z-10 scroll-mt-6">
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               What this is
             </h2>
@@ -51,7 +66,7 @@ export default function AboutPage() {
           </section>
 
           {/* Audience */}
-          <section>
+          <section id="audience" className="scroll-mt-6">
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               Who it&apos;s for
             </h2>
@@ -66,7 +81,7 @@ export default function AboutPage() {
           </section>
 
           {/* Architecture — illustrated pipeline */}
-          <section>
+          <section id="how-it-works" className="scroll-mt-6">
             <h2 className="text-2xl text-clever-navy mb-8 font-[family-name:var(--font-heading)]">
               How it works
             </h2>
@@ -151,7 +166,7 @@ export default function AboutPage() {
           </section>
 
           {/* Guardrails */}
-          <section>
+          <section id="guardrails" className="scroll-mt-6">
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               Guardrails
             </h2>
@@ -205,7 +220,7 @@ export default function AboutPage() {
           </section>
 
           {/* Ingestion pipeline — illustrated */}
-          <section>
+          <section id="ingestion" className="scroll-mt-6">
             <h2 className="text-2xl text-clever-navy mb-3 font-[family-name:var(--font-heading)]">
               Building the knowledge base
             </h2>
@@ -251,7 +266,7 @@ export default function AboutPage() {
           </section>
 
           {/* Key decisions */}
-          <section>
+          <section id="design-decisions" className="scroll-mt-6">
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               Design decisions
             </h2>
@@ -280,7 +295,7 @@ export default function AboutPage() {
           </section>
 
           {/* Production thinking */}
-          <section>
+          <section id="production" className="scroll-mt-6">
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               Production thinking
             </h2>
@@ -305,7 +320,7 @@ export default function AboutPage() {
           </section>
 
           {/* Stack */}
-          <section>
+          <section id="stack" className="scroll-mt-6">
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               Stack
             </h2>
@@ -360,7 +375,7 @@ export default function AboutPage() {
           </section>
 
           {/* AI SDK toolkit */}
-          <section>
+          <section id="ai-sdk" className="scroll-mt-6">
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               AI SDK toolkit
             </h2>
@@ -441,7 +456,7 @@ export default function AboutPage() {
           </section>
 
           {/* Brand identity */}
-          <section className="bg-clever-light-blue/30 rounded-2xl p-8 border border-clever-light-blue">
+          <section id="brand" className="bg-clever-light-blue/30 rounded-2xl p-8 border border-clever-light-blue scroll-mt-6">
             <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
               Brand identity
             </h2>
@@ -486,7 +501,12 @@ export default function AboutPage() {
               <ColorSwatch color="bg-clever-green" label="Green" hex="#4ECC97" />
             </div>
           </section>
-        </article>
+          </article>
+
+          <aside className="hidden lg:block pt-12">
+            <TableOfContents items={tocItems} />
+          </aside>
+        </div>
       </main>
 
       <footer className="border-t border-clever-light-blue px-6 py-4">
