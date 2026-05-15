@@ -215,6 +215,11 @@ export default function Home() {
                 role="radio"
                 aria-checked={retrievalMode === m}
                 onClick={() => setRetrievalMode(m)}
+                title={
+                  m === "hybrid"
+                    ? "Embedding similarity + Postgres full-text search, fused (RRF). Rescues exact-keyword matches embeddings underweight. Default."
+                    : "Embedding cosine similarity only — pure semantic match."
+                }
                 disabled={isLoading}
                 className={`px-3 py-1 text-xs capitalize transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   retrievalMode === m
