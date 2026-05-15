@@ -200,7 +200,7 @@ begin
     -- "similarity" surfaced to the app. Max of (a) native cosine and
     -- (b) FTS-rank-derived confidence. The rank curve was picked so
     -- that an FTS-only top hit (rank 1) lands at 0.85, comfortably
-    -- above the 0.6 confidence threshold. Drops ~0.05 per rank.
+    -- above the 0.6 confidence threshold. Drops ~0.06 per rank.
     greatest(
       fused.vec_sim,
       case

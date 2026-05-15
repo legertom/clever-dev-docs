@@ -1,11 +1,16 @@
 /**
  * /feedback — admin viewer for the feedback table.
  *
- * Two signal types share the table:
+ * Three signal types share the feedback table (low_confidence,
+ * user_report, guardrail — see src/lib/feedback.ts). This admin view
+ * surfaces the two that represent answer-quality / doc-gap signal:
  *   - low_confidence: server-logged whenever retrieval fell below the
  *     similarity threshold. Strongest signal of doc gaps.
  *   - user_report: explicit "flag for review" submissions from the chat
  *     UI. Strongest signal that a specific answer was unhelpful.
+ * guardrail rows (blocked off-topic/harmful/nonsense queries) are
+ * written by /api/chat but intentionally not shown here — they track
+ * abuse patterns, not doc quality.
  *
  * In production this page would sit behind auth (e.g. Clerk + an
  * admin-role gate). For now it's open — the data is signal about doc

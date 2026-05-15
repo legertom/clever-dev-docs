@@ -212,9 +212,10 @@ export async function retrieveRelevantChunks(
     : retrieveVectorOnly(query, matchCount, matchThreshold);
 }
 
-// ── Embedding (for ingestion) ────────────────────────────────
-// Batch-embeds text chunks during the ingestion pipeline.
-// The AI SDK's embedMany handles batching and rate-limit retries.
+// ── Embedding helper ─────────────────────────────────────────
+// Batch-embeds text via embedMany at EMBEDDING_MODEL. Currently
+// unused: the ingestion pipeline (scripts/ingest.ts) inlines its
+// own embedMany call rather than importing this helper.
 export async function generateEmbeddings(
   texts: string[]
 ): Promise<number[][]> {
