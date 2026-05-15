@@ -96,6 +96,9 @@ export default function EvalPage() {
   const [saving, setSaving] = useState(false);
   const [savedRunId, setSavedRunId] = useState<string | null>(null);
   const [saveLabel, setSaveLabel] = useState("");
+  const [retrievalMode, setRetrievalMode] = useState<"hybrid" | "vector">(
+    "hybrid"
+  );
 
   async function runQuestion(
     q: (typeof questions)[number],
@@ -111,6 +114,7 @@ export default function EvalPage() {
         criteria: q.criteria,
         expected_source: q.expected_source,
         model,
+        retrievalMode,
       }),
     });
     const data = await res.json();
@@ -210,6 +214,11 @@ export default function EvalPage() {
         body: JSON.stringify({
           label: saveLabel || null,
           results: evalResults,
+          chunkConfig: {
+            match_count: 5,
+            match_threshold: 0.5,
+            retrieval_mode: retrievalMode,
+          },
         }),
       });
       const data = await res.json();
@@ -326,6 +335,30 @@ export default function EvalPage() {
             >
               History
             </a>
+            <div
+              role="radiogroup"
+              aria-label="Retrieval mode"
+              className="inline-flex rounded-lg border border-clever-light-blue overflow-hidden font-[family-name:var(--font-body)]"
+              title="Which retrieval strategy each question runs through"
+            >
+              {(["hybrid", "vector"] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  role="radio"
+                  aria-checked={retrievalMode === m}
+                  onClick={() => setRetrievalMode(m)}
+                  disabled={running}
+                  className={`px-3 py-2 text-xs capitalize transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                    retrievalMode === m
+                      ? "bg-clever-blue text-white"
+                      : "bg-white text-clever-navy hover:bg-clever-light-blue/40"
+                  }`}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
             <button
               onClick={runEval}
               disabled={running}

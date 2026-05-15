@@ -13,7 +13,11 @@
  */
 
 import { generateText } from "ai";
-import { retrieveRelevantChunks, buildSystemPrompt } from "@/lib/rag";
+import {
+  retrieveRelevantChunks,
+  buildSystemPrompt,
+  type RetrievalMode,
+} from "@/lib/rag";
 
 export const maxDuration = 60;
 
@@ -78,6 +82,7 @@ interface EvalRequest {
   criteria: string[];
   expected_source: string | null;
   model: string;
+  retrievalMode?: string;
 }
 
 function calculateCost(
@@ -100,8 +105,18 @@ export async function POST(req: Request) {
     );
   }
 
-  // 1. Retrieve relevant doc chunks
-  const chunks = await retrieveRelevantChunks(body.question);
+  // 1. Retrieve relevant doc chunks. Mode is an explicit per-run choice
+  // from the eval UI; fall back to the env default when absent/invalid.
+  const requestedMode: RetrievalMode | undefined =
+    body.retrievalMode === "vector" || body.retrievalMode === "hybrid"
+      ? body.retrievalMode
+      : undefined;
+  const chunks = await retrieveRelevantChunks(
+    body.question,
+    5,
+    0.5,
+    requestedMode
+  );
   const systemPrompt = buildSystemPrompt(chunks);
 
   // 2. Generate answer with the requested model. Capture usage so we can
