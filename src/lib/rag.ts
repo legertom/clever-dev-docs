@@ -102,52 +102,107 @@ export function buildSystemPrompt(chunks: DocumentChunk[]): string {
 }
 
 // ── Retrieval ────────────────────────────────────────────────
-// Given a user query, embed it and find the most relevant doc chunks.
-// match_count and match_threshold are tunable per-environment:
-//   - Higher threshold = fewer but more precise results (less hallucination risk)
-//   - Lower threshold = broader recall (useful for vague queries)
 //
-// The match_documents RPC currently has a 4-arg signature including an
-// optional `query_text` for hybrid retrieval, but the body is vector-only
-// while we debug a regression where the 4-arg call returned zero chunks
-// in production. Omitting query_text here keeps the call shape identical
-// to the original 3-arg pattern.
-export async function retrieveRelevantChunks(
-  query: string,
-  matchCount = 5,
-  matchThreshold = 0.5
-): Promise<DocumentChunk[]> {
+// Two SQL functions back retrieval, intentionally living under
+// different names so neither can shadow the other:
+//   • match_documents          — vector-only (cosine similarity)
+//   • match_documents_hybrid   — vector + Postgres FTS, fused via
+//                                Reciprocal Rank Fusion in SQL
+//                                (see scripts/setup-db.sql)
+//
+// PR #15's outage came from app-code calling a 4-arg signature that
+// did not exist in prod. Keeping the hybrid path under its own SQL
+// name removes every overload-resolution failure mode: PostgREST
+// resolves by name first, so flipping RETRIEVAL_MODE cannot touch
+// the vector-only function or its callers.
+//
+// Default mode is "vector". Set RETRIEVAL_MODE=hybrid in the
+// runtime env to switch the public retriever without redeploying.
+//
+// match_count / match_threshold tuning:
+//   - Higher threshold = fewer but more precise results
+//   - Lower threshold  = broader recall (useful for vague queries)
+//   match_threshold gates the vector pool only; hybrid always
+//   admits FTS-rescued chunks regardless of cosine score.
+
+export type RetrievalMode = "vector" | "hybrid";
+
+function defaultRetrievalMode(): RetrievalMode {
+  return process.env.RETRIEVAL_MODE === "hybrid" ? "hybrid" : "vector";
+}
+
+async function embedQuery(query: string): Promise<number[]> {
   const { embedding } = await embed({
     model: gateway.textEmbeddingModel(EMBEDDING_MODEL),
     value: query,
   });
+  return embedding;
+}
 
+type RetrievalRow = {
+  content: string;
+  url: string;
+  title: string;
+  similarity: number;
+  integration_path?: string;
+};
+
+function toChunks(data: RetrievalRow[] | null): DocumentChunk[] {
+  return (data ?? []).map((row) => ({
+    content: row.content,
+    url: row.url,
+    title: row.title,
+    similarity: row.similarity,
+    integration_path: row.integration_path,
+  }));
+}
+
+async function retrieveVectorOnly(
+  query: string,
+  matchCount: number,
+  matchThreshold: number
+): Promise<DocumentChunk[]> {
+  const embedding = await embedQuery(query);
   const { data, error } = await getSupabase().rpc("match_documents", {
     query_embedding: embedding,
     match_count: matchCount,
     match_threshold: matchThreshold,
   });
-
   if (error) {
     console.error("Vector search failed:", error);
     return [];
   }
+  return toChunks(data);
+}
 
-  return (data ?? []).map(
-    (row: {
-      content: string;
-      url: string;
-      title: string;
-      similarity: number;
-      integration_path?: string;
-    }) => ({
-      content: row.content,
-      url: row.url,
-      title: row.title,
-      similarity: row.similarity,
-      integration_path: row.integration_path,
-    })
-  );
+export async function retrieveRelevantChunksHybrid(
+  query: string,
+  matchCount = 5,
+  matchThreshold = 0.5
+): Promise<DocumentChunk[]> {
+  const embedding = await embedQuery(query);
+  const { data, error } = await getSupabase().rpc("match_documents_hybrid", {
+    query_embedding: embedding,
+    query_text: query,
+    match_count: matchCount,
+    match_threshold: matchThreshold,
+  });
+  if (error) {
+    console.error("Hybrid search failed:", error);
+    return [];
+  }
+  return toChunks(data);
+}
+
+export async function retrieveRelevantChunks(
+  query: string,
+  matchCount = 5,
+  matchThreshold = 0.5,
+  mode: RetrievalMode = defaultRetrievalMode()
+): Promise<DocumentChunk[]> {
+  return mode === "hybrid"
+    ? retrieveRelevantChunksHybrid(query, matchCount, matchThreshold)
+    : retrieveVectorOnly(query, matchCount, matchThreshold);
 }
 
 // ── Embedding (for ingestion) ────────────────────────────────

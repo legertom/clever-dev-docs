@@ -44,3 +44,6 @@ next-env.d.ts
 
 # internal notes (kept local, not published)
 INTERVIEW.md
+
+# local eval artifacts (DB-saved runs are the source of truth)
+eval/results.json

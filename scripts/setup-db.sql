@@ -58,11 +58,51 @@ create index if not exists documents_fts_idx
   on documents
   using gin (fts);
 
--- Drop the older single-vector signature so the hybrid version below is
--- the only `match_documents` Postgres will resolve.
-drop function if exists match_documents(vector, int, float);
+-- ── Retrieval functions ────────────────────────────────────────────────
+-- Two functions back retrieval, intentionally under different names so
+-- neither can shadow the other in PostgREST function-resolution. App code
+-- chooses between them via the RETRIEVAL_MODE env flag (see src/lib/rag.ts).
+--
+--   match_documents          — vector-only (cosine similarity)
+--   match_documents_hybrid   — vector + Postgres FTS, fused via RRF
+--
+-- Defensive cleanup: an earlier (now-superseded) migration tried to
+-- replace `match_documents` with a 4-arg hybrid signature. That overload
+-- is dropped here so any dev DB that ran it ends up with a single,
+-- unambiguous `match_documents`. No-op against prod.
+drop function if exists match_documents(vector, text, int, float);
 
--- Hybrid retrieval function used by the RAG layer.
+-- Vector-only retrieval. Kept as the default and as the hot path used by
+-- /api/chat under `RETRIEVAL_MODE=vector` (the default).
+create or replace function match_documents(
+  query_embedding vector(1536),
+  match_count int default 5,
+  match_threshold float default 0.5
+)
+returns table (
+  id bigint,
+  content text,
+  url text,
+  title text,
+  chunk_index integer,
+  integration_path text,
+  similarity float
+)
+language plpgsql
+as $$
+begin
+  return query
+  select
+    d.id, d.content, d.url, d.title, d.chunk_index, d.integration_path,
+    1 - (d.embedding <=> query_embedding) as similarity
+  from documents d
+  where 1 - (d.embedding <=> query_embedding) > match_threshold
+  order by d.embedding <=> query_embedding
+  limit match_count;
+end;
+$$;
+
+-- Hybrid retrieval function.
 --
 -- Runs two independent rankings in parallel:
 --   • vector_pool — top-N by cosine similarity against `query_embedding`
@@ -80,7 +120,7 @@ drop function if exists match_documents(vector, int, float);
 -- confidence value designed to pass the application-side 0.6 confidence
 -- gate — so a chunk that exact-matched the query at rank 1 doesn't get
 -- thrown away just because the embedding model under-scored it.
-create or replace function match_documents(
+create or replace function match_documents_hybrid(
   query_embedding vector(1536),
   query_text text default null,
   match_count int default 5,
@@ -101,12 +141,21 @@ declare
   ts_query tsquery := null;
   pool_size int := greatest(match_count * 4, 20);
 begin
-  -- websearch_to_tsquery handles human-typed input gracefully — quoted
-  -- phrases, AND/OR, and stray punctuation all parse instead of throwing.
-  -- Skip FTS entirely when there's no query text (preserves the original
-  -- vector-only behavior for any caller that doesn't pass query_text).
+  -- Build a stopword-stripped, OR-joined tsquery from query_text.
+  --
+  -- Why not websearch_to_tsquery: it ANDs all content words, so a
+  -- natural-language question like "is the created date shared by
+  -- default?" demands a single chunk containing 'created' AND 'date'
+  -- AND 'shared' AND 'default' — almost no chunk does, killing recall.
+  -- to_tsvector handles tokenization, stemming, and English-stopword
+  -- removal for free, and joining the surviving lexemes with ' | '
+  -- admits any chunk matching at least one keyword. ts_rank_cd then
+  -- promotes chunks with more overlap to the top.
   if query_text is not null and length(trim(query_text)) > 0 then
-    ts_query := websearch_to_tsquery('english', query_text);
+    select string_agg(lexeme, ' | ')::tsquery
+    into ts_query
+    from unnest(tsvector_to_array(to_tsvector('english', query_text))) as lexeme
+    where lexeme <> '';
   end if;
 
   return query
