@@ -323,41 +323,42 @@ export default function EvalPage() {
   );
   const bothModes = modesPresent.length > 1;
 
-  const summary = MODELS.flatMap((model) =>
-    (modesPresent.length > 0 ? modesPresent : (["hybrid"] as ResultMode[])).map(
-      (mode) => {
-        const modelResults = results.flatMap((r) =>
-          r.results.filter((mr) => mr.model === model && mr.mode === mode)
-        );
-        const totalCost = modelResults.reduce((s, r) => s + r.usage.cost, 0);
-        return {
-          model,
-          mode,
-          key: `${model}::${mode}`,
-          total: modelResults.length,
-          correct: modelResults.filter((r) => r.scores.correct).length,
-          complete: modelResults.filter((r) => r.scores.complete).length,
-          cites_source: modelResults.filter((r) => r.scores.cites_source)
-            .length,
-          no_hallucination: modelResults.filter(
-            (r) => r.scores.no_hallucination
-          ).length,
-          formatting: modelResults.filter((r) => r.scores.formatting).length,
-          avgDurationMs:
-            modelResults.length === 0
-              ? 0
-              : Math.round(
-                  modelResults.reduce((s, r) => s + r.durationMs, 0) /
-                    modelResults.length
-                ),
-          totalCost,
-          avgCost:
-            modelResults.length === 0
-              ? 0
-              : totalCost / modelResults.length,
-        };
-      }
-    )
+  // Mode-outer, model-inner ordering so the rendered grid reads as a
+  // matrix: one row per mode (vector on top, hybrid below), one column
+  // per model. In single-mode this collapses to the original 3 cards.
+  const summary = (
+    modesPresent.length > 0 ? modesPresent : (["hybrid"] as ResultMode[])
+  ).flatMap((mode) =>
+    MODELS.map((model) => {
+      const modelResults = results.flatMap((r) =>
+        r.results.filter((mr) => mr.model === model && mr.mode === mode)
+      );
+      const totalCost = modelResults.reduce((s, r) => s + r.usage.cost, 0);
+      return {
+        model,
+        mode,
+        key: `${model}::${mode}`,
+        total: modelResults.length,
+        correct: modelResults.filter((r) => r.scores.correct).length,
+        complete: modelResults.filter((r) => r.scores.complete).length,
+        cites_source: modelResults.filter((r) => r.scores.cites_source)
+          .length,
+        no_hallucination: modelResults.filter(
+          (r) => r.scores.no_hallucination
+        ).length,
+        formatting: modelResults.filter((r) => r.scores.formatting).length,
+        avgDurationMs:
+          modelResults.length === 0
+            ? 0
+            : Math.round(
+                modelResults.reduce((s, r) => s + r.durationMs, 0) /
+                  modelResults.length
+              ),
+        totalCost,
+        avgCost:
+          modelResults.length === 0 ? 0 : totalCost / modelResults.length,
+      };
+    })
   ).filter((s) => s.total > 0);
 
   const maxDuration = Math.max(...summary.map((s) => s.avgDurationMs), 1);
@@ -456,7 +457,13 @@ export default function EvalPage() {
             <h2 className="text-lg font-[family-name:var(--font-heading)] text-clever-navy mb-4">
               Summary
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div
+              className={`grid grid-cols-1 gap-4 ${
+                bothModes
+                  ? "md:grid-cols-3"
+                  : "md:grid-cols-2 lg:grid-cols-3"
+              }`}
+            >
               {summary.map((s) => {
                 const accent = MODEL_THEMES[s.model];
                 const speedPct =
