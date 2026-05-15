@@ -128,7 +128,14 @@ export function buildSystemPrompt(chunks: DocumentChunk[]): string {
 export type RetrievalMode = "vector" | "hybrid";
 
 function defaultRetrievalMode(): RetrievalMode {
-  return process.env.RETRIEVAL_MODE === "hybrid" ? "hybrid" : "vector";
+  // Trim/lowercase before comparison: `vercel env add` from `echo "hybrid"`
+  // stores the trailing newline as part of the value, which silently
+  // breaks strict equality and falls through to the default. Defensive
+  // normalization here means env-var hygiene cannot cause hybrid to look
+  // disabled when it shouldn't be.
+  return process.env.RETRIEVAL_MODE?.trim().toLowerCase() === "hybrid"
+    ? "hybrid"
+    : "vector";
 }
 
 async function embedQuery(query: string): Promise<number[]> {
