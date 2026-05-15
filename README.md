@@ -70,7 +70,7 @@ Developer query
 
 **1. Comprehensive corpus, audience-aware system prompt.** All public pages from `dev.clever.com/sitemap.xml` are ingested (Library, District SSO, Secure Sync, LMS Connect, Attendance, full API + data model). Earlier I considered scoping to just the indie-developer subset, but two things changed my mind: semantic search doesn't punish unrelated chunks (they just score low and get filtered), and a more useful product covers the *informational* questions across the whole platform. Where it matters — Secure Sync, LMS Connect, district-managed paths — the system prompt instructs the model to **answer the question AND surface that the path requires a Clever Application Success Manager**. The boundary is enforced in prompt logic, not by exclusion. This means an indie developer asking about Secure Sync gets an honest "here's what it is, but you'd need to coordinate with Clever to get access" instead of a refusal.
 
-**2. AI Gateway over direct provider SDKs.** Going through `@ai-sdk/gateway` (rather than `@ai-sdk/openai`) means: one API key handles all providers, OIDC auth on deployed Vercel functions (no key in env vars), and the `/eval` page can compare OpenAI vs Anthropic with a single string change.
+**2. AI Gateway over direct provider SDKs.** Going through `@ai-sdk/gateway` (rather than `@ai-sdk/openai`) means: one API key handles all providers, OIDC auth on deployed Vercel functions (no key in env vars), and the `/eval` page can compare OpenAI vs Anthropic by adding a model string to the UI list and the route's allowlist — no SDK install or auth swap.
 
 **3. Confidence-based fallback.** When the top retrieval similarity is below 0.6, the system prompt switches to a fallback that explicitly tells the model to admit it doesn't know and direct the developer to support. Hallucinating certification requirements could waste a developer weeks on a bad submission.
 
@@ -79,11 +79,11 @@ Developer query
 **4b. Feedback signal as a first-class feature.** A `/feedback` admin page surfaces two doc-gap signals in one queue:
 
 1. **Low-confidence retrievals** — every chat query whose top similarity falls below `CONFIDENCE_THRESHOLD` (0.6) is logged automatically by the chat route, with the query text, retrieved URLs, and the actual top similarity. These are the questions developers are asking that we can't answer well today — the strongest signal of where the docs need work.
-2. **User reports** — every assistant message has a "🚩 Flag for review" button. One tap opens an inline form with an optional note; submission posts to `/api/feedback`. These are the strongest signal that a specific answer was unhelpful even when retrieval *did* work.
+2. **User reports** — every assistant message has a "Flag for review" button. One tap opens an inline form with an optional note; submission posts to `/api/feedback`. These are the strongest signal that a specific answer was unhelpful even when retrieval *did* work.
 
 Both write to the same `feedback` table and render in the same admin view (filter chips for All / Low-confidence / User reports). In production this page would sit behind admin auth; for now it's open since the data is doc-gap signal rather than user PII.
 
-**5. Cost transparency, not "trust me it's cheap."** The eval page surfaces real USD cost per query and aggregate cost per model, computed from token counts returned by the AI Gateway against published per-token prices. This makes the cost/quality trade-off concrete: on a sample reasoning question, `gpt-4o-mini` costs ~$0.00028 and answered incorrectly, while `gpt-5.4` costs ~$0.00817 (29x more) and answered correctly. That's the kind of finding that should drive a routing strategy — escalate hard questions, default to cheap on easy ones — rather than paying flagship prices on every query as insurance.
+**5. Cost transparency, not "trust me it's cheap."** The eval page surfaces real USD cost per query and aggregate cost per model, computed from token counts returned by the AI Gateway against published per-token prices. This makes the cost/quality trade-off concrete: in observed eval runs, individual questions where `gpt-4o-mini` answered incorrectly have cost a small fraction of a cent, while the equivalent `gpt-5.4` call (often on the order of 20-30x more expensive per question) answered correctly. The exact numbers shift with each run — see the live `/eval` page for current results. That's the kind of finding that should drive a routing strategy — escalate hard questions, default to cheap on easy ones — rather than paying flagship prices on every query as insurance.
 
 ## Security: secret-handling posture
 
@@ -141,7 +141,7 @@ src/
     about/page.tsx           # Architecture walkthrough
     eval/page.tsx            # Live eval dashboard, side-by-side model comparison
     eval/history/page.tsx    # Saved eval runs with score trends + sparklines
-    feedback/page.tsx        # Admin queue: low-confidence retrievals + user reports
+    feedback/page.tsx        # Admin queue: low-confidence retrievals, user reports, guardrail events
     page.tsx                 # Chat UI
     layout.tsx
   components/
