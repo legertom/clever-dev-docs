@@ -288,6 +288,10 @@ export default function AboutPage() {
                 definition="For a corpus this size (~770 chunks), Postgres with HNSW is sub-100ms, operationally simpler, and one less service to monitor. Same Postgres also powers the lexical half of hybrid retrieval (tsvector + GIN), so vector and full-text search share one query path — no second service to run or sync."
               />
               <DecisionItem
+                term="Vector vs. hybrid — the retrieval toggle"
+                definition="Same Postgres, two query strategies. Vector ranks chunks purely by embedding cosine similarity — strong on paraphrased questions, but it underweights exact tokens buried in code or JSON. Hybrid runs that same vector search and a Postgres full-text search, fused with Reciprocal Rank Fusion, so keyword hits the embedding missed get rescued (a question like “is the created date shared by default?” returns nothing under vector and five chunks under hybrid). Hybrid is the default; a toggle on the chat and eval pages runs either one — or both side by side — on the same question. In the eval set, hybrid passes more questions and hallucinates less; the live numbers are on the eval page."
+              />
+              <DecisionItem
                 term="Live eval as a product page"
                 definition="Not just a CI script. Putting the eval in the app means you can see what the system is actually doing — cost per query, cross-provider comparison, rubric scores — right now."
               />

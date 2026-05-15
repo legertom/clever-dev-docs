@@ -52,8 +52,14 @@ interface Usage {
   cost: number; // USD
 }
 
+// The toggle has three positions; an individual result is always run
+// under exactly one concrete mode ("both" fans out into the two).
+type ResultMode = "vector" | "hybrid";
+type RetrievalChoice = ResultMode | "both";
+
 interface ModelResult {
   model: Model;
+  mode: ResultMode;
   answer: string;
   scores: Scores;
   sources: Source[];
@@ -96,13 +102,13 @@ export default function EvalPage() {
   const [saving, setSaving] = useState(false);
   const [savedRunId, setSavedRunId] = useState<string | null>(null);
   const [saveLabel, setSaveLabel] = useState("");
-  const [retrievalMode, setRetrievalMode] = useState<"hybrid" | "vector">(
-    "hybrid"
-  );
+  const [retrievalMode, setRetrievalMode] =
+    useState<RetrievalChoice>("hybrid");
 
   async function runQuestion(
     q: (typeof questions)[number],
-    model: Model
+    model: Model,
+    mode: ResultMode
   ): Promise<ModelResult> {
     const start = Date.now();
     const res = await fetch("/api/eval", {
@@ -114,12 +120,13 @@ export default function EvalPage() {
         criteria: q.criteria,
         expected_source: q.expected_source,
         model,
-        retrievalMode,
+        retrievalMode: mode,
       }),
     });
     const data = await res.json();
     return {
       model,
+      mode,
       answer: data.answer ?? "ERROR",
       scores: data.scores ?? {
         correct: false,
@@ -154,8 +161,12 @@ export default function EvalPage() {
         if (i >= questions.length) return;
 
         const q = questions[i];
+        const modesToRun: ResultMode[] =
+          retrievalMode === "both" ? ["vector", "hybrid"] : [retrievalMode];
         const modelResults = await Promise.all(
-          MODELS.map((m) => runQuestion(q, m))
+          MODELS.flatMap((m) =>
+            modesToRun.map((mode) => runQuestion(q, m, mode))
+          )
         );
 
         setResults((prev) =>
@@ -184,11 +195,18 @@ export default function EvalPage() {
     setSavedRunId(null);
   }
 
-  async function saveRun() {
-    setSaving(true);
-    try {
-      const evalResults = results.flatMap((qr) =>
-        qr.results.map((mr) => ({
+  // Persist one run for a single retrieval mode. "both" runs are saved
+  // as two separate rows (one per mode) so the history Mode column and
+  // the per-model summary aggregation — which keys by model only — stay
+  // correct instead of silently averaging vector and hybrid together.
+  async function saveOneRun(
+    mode: ResultMode,
+    label: string | null
+  ): Promise<string | null> {
+    const evalResults = results.flatMap((qr) =>
+      qr.results
+        .filter((mr) => mr.mode === mode)
+        .map((mr) => ({
           question_id: qr.questionId,
           question: qr.question,
           model: mr.model,
@@ -206,23 +224,44 @@ export default function EvalPage() {
           input_tokens: mr.usage.inputTokens,
           output_tokens: mr.usage.outputTokens,
         }))
-      );
+    );
+    if (evalResults.length === 0) return null;
 
-      const res = await fetch("/api/eval/runs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          label: saveLabel || null,
-          results: evalResults,
-          chunkConfig: {
-            match_count: 5,
-            match_threshold: 0.5,
-            retrieval_mode: retrievalMode,
-          },
-        }),
-      });
-      const data = await res.json();
-      if (data.id) setSavedRunId(data.id);
+    const res = await fetch("/api/eval/runs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        label,
+        results: evalResults,
+        chunkConfig: {
+          match_count: 5,
+          match_threshold: 0.5,
+          retrieval_mode: mode,
+        },
+      }),
+    });
+    const data = await res.json();
+    return data.id ?? null;
+  }
+
+  async function saveRun() {
+    setSaving(true);
+    try {
+      const base = saveLabel || null;
+      if (retrievalMode === "both") {
+        const vId = await saveOneRun(
+          "vector",
+          base ? `${base} (vector)` : "vector"
+        );
+        const hId = await saveOneRun(
+          "hybrid",
+          base ? `${base} (hybrid)` : "hybrid"
+        );
+        if (hId || vId) setSavedRunId(hId ?? vId);
+      } else {
+        const id = await saveOneRun(retrievalMode, base);
+        if (id) setSavedRunId(id);
+      }
     } finally {
       setSaving(false);
     }
@@ -275,42 +314,51 @@ export default function EvalPage() {
     disagreement: results.filter((r) => matchesFilter(r, { kind: "disagreement" })).length,
   };
 
-  // ── Aggregate scores per model ─────────────────────────────
-  const summary = MODELS.map((model) => {
-    const modelResults = results.flatMap((r) =>
-      r.results.filter((mr) => mr.model === model)
-    );
-    if (modelResults.length === 0) {
-      return {
-        model,
-        total: 0,
-        correct: 0,
-        complete: 0,
-        cites_source: 0,
-        no_hallucination: 0,
-        formatting: 0,
-        avgDurationMs: 0,
-        totalCost: 0,
-        avgCost: 0,
-      };
-    }
-    const totalCost = modelResults.reduce((s, r) => s + r.usage.cost, 0);
-    return {
-      model,
-      total: modelResults.length,
-      correct: modelResults.filter((r) => r.scores.correct).length,
-      complete: modelResults.filter((r) => r.scores.complete).length,
-      cites_source: modelResults.filter((r) => r.scores.cites_source).length,
-      no_hallucination: modelResults.filter((r) => r.scores.no_hallucination)
-        .length,
-      formatting: modelResults.filter((r) => r.scores.formatting).length,
-      avgDurationMs: Math.round(
-        modelResults.reduce((s, r) => s + r.durationMs, 0) / modelResults.length
-      ),
-      totalCost,
-      avgCost: totalCost / modelResults.length,
-    };
-  });
+  // ── Aggregate scores per (model, mode) ─────────────────────
+  // Which retrieval modes actually appear in the current results —
+  // derived from results, not the toggle, so the view stays correct
+  // even if the toggle is changed after a run completes.
+  const modesPresent: ResultMode[] = (["vector", "hybrid"] as const).filter(
+    (mode) => results.some((r) => r.results.some((mr) => mr.mode === mode))
+  );
+  const bothModes = modesPresent.length > 1;
+
+  const summary = MODELS.flatMap((model) =>
+    (modesPresent.length > 0 ? modesPresent : (["hybrid"] as ResultMode[])).map(
+      (mode) => {
+        const modelResults = results.flatMap((r) =>
+          r.results.filter((mr) => mr.model === model && mr.mode === mode)
+        );
+        const totalCost = modelResults.reduce((s, r) => s + r.usage.cost, 0);
+        return {
+          model,
+          mode,
+          key: `${model}::${mode}`,
+          total: modelResults.length,
+          correct: modelResults.filter((r) => r.scores.correct).length,
+          complete: modelResults.filter((r) => r.scores.complete).length,
+          cites_source: modelResults.filter((r) => r.scores.cites_source)
+            .length,
+          no_hallucination: modelResults.filter(
+            (r) => r.scores.no_hallucination
+          ).length,
+          formatting: modelResults.filter((r) => r.scores.formatting).length,
+          avgDurationMs:
+            modelResults.length === 0
+              ? 0
+              : Math.round(
+                  modelResults.reduce((s, r) => s + r.durationMs, 0) /
+                    modelResults.length
+                ),
+          totalCost,
+          avgCost:
+            modelResults.length === 0
+              ? 0
+              : totalCost / modelResults.length,
+        };
+      }
+    )
+  ).filter((s) => s.total > 0);
 
   const maxDuration = Math.max(...summary.map((s) => s.avgDurationMs), 1);
   const maxCost = Math.max(...summary.map((s) => s.totalCost), 0.0001);
@@ -324,8 +372,12 @@ export default function EvalPage() {
               RAG Evaluation
             </h1>
             <p className="text-sm text-clever-black/50 mt-1 font-[family-name:var(--font-body)]">
-              {questions.length} test questions × {MODELS.length} models ={" "}
-              {questions.length * MODELS.length} runs
+              {questions.length} questions × {MODELS.length} models
+              {retrievalMode === "both" ? " × 2 modes" : ""} ={" "}
+              {questions.length *
+                MODELS.length *
+                (retrievalMode === "both" ? 2 : 1)}{" "}
+              runs
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -341,7 +393,7 @@ export default function EvalPage() {
               className="inline-flex rounded-lg border border-clever-light-blue overflow-hidden font-[family-name:var(--font-body)]"
               title="Which retrieval strategy each question runs through"
             >
-              {(["hybrid", "vector"] as const).map((m) => (
+              {(["hybrid", "vector", "both"] as const).map((m) => (
                 <button
                   key={m}
                   type="button"
@@ -349,6 +401,11 @@ export default function EvalPage() {
                   aria-checked={retrievalMode === m}
                   onClick={() => setRetrievalMode(m)}
                   disabled={running}
+                  title={
+                    m === "both"
+                      ? "Run every question through vector AND hybrid (~2x cost)"
+                      : `Run every question through ${m} retrieval`
+                  }
                   className={`px-3 py-2 text-xs capitalize transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     retrievalMode === m
                       ? "bg-clever-blue text-white"
@@ -408,7 +465,7 @@ export default function EvalPage() {
                   (s.totalCost / maxCost) * 100;
                 return (
                   <div
-                    key={s.model}
+                    key={s.key}
                     className="rounded-xl border border-clever-light-blue bg-white overflow-hidden"
                   >
                     <div
@@ -432,6 +489,17 @@ export default function EvalPage() {
                             <h3 className="font-mono text-sm font-medium text-clever-navy">
                               {s.model}
                             </h3>
+                            {bothModes && (
+                              <span
+                                className={`rounded px-1.5 py-0.5 text-[10px] font-medium font-mono ${
+                                  s.mode === "hybrid"
+                                    ? "bg-clever-blue/10 text-clever-blue"
+                                    : "bg-zinc-100 text-zinc-500"
+                                }`}
+                              >
+                                {s.mode}
+                              </span>
+                            )}
                           </div>
                           <span className="text-[11px] text-clever-black/40 font-mono">
                             {formatCost(s.avgCost)}/q
@@ -761,103 +829,156 @@ export default function EvalPage() {
         )}
 
         {/* Per-question results */}
-        {visibleResults.map((r) => (
-          <section
-            key={r.questionId}
-            className="rounded-xl border border-clever-light-blue bg-white overflow-hidden"
-          >
-            <div className="px-5 py-4 border-b border-clever-light-blue bg-clever-light-blue/20">
-              <div className="flex items-baseline gap-3">
-                <span className="text-xs font-mono text-clever-black/40">
-                  Q{r.questionId}
-                </span>
-                <h3 className="font-medium text-clever-navy font-[family-name:var(--font-body)]">
-                  {r.question}
-                </h3>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-clever-light-blue">
-              {r.results.map((mr) => (
-                <div key={mr.model} className="p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-mono text-xs font-medium text-clever-navy">
-                      {mr.model}
-                    </span>
-                    <span className="text-xs text-clever-black/40 font-mono">
-                      {mr.durationMs}ms · {formatCost(mr.usage.cost)} ·{" "}
-                      {mr.usage.inputTokens}↓ {mr.usage.outputTokens}↑
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5 mb-3">
-                    <ScoreBadge label="correct" value={mr.scores.correct} />
-                    <ScoreBadge label="complete" value={mr.scores.complete} />
-                    <ScoreBadge
-                      label="cites"
-                      value={mr.scores.cites_source}
-                    />
-                    <ScoreBadge
-                      label="no halluc."
-                      value={mr.scores.no_hallucination}
-                    />
-                    <ScoreBadge
-                      label="format"
-                      value={mr.scores.formatting}
-                    />
-                  </div>
-                  <div className="prose prose-sm max-w-none mb-3 text-clever-black [&_a]:text-clever-blue [&_a]:underline [&_strong]:text-clever-navy [&_table]:text-xs [&_th]:bg-clever-light-blue/40 [&_th]:px-2 [&_th]:py-1 [&_td]:px-2 [&_td]:py-1 [&_th]:border [&_td]:border [&_th]:border-clever-light-blue [&_td]:border-clever-light-blue">
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm, remarkBreaks]}
-                      components={{
-                        a: ({ href, children }) => (
-                          <a
-                            href={href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {children}
-                          </a>
-                        ),
-                      }}
-                    >
-                      {mr.answer}
-                    </ReactMarkdown>
-                  </div>
-                  {mr.scores.reasoning && (
-                    <p className="text-xs text-clever-black/50 italic mb-3">
-                      Judge: {mr.scores.reasoning}
-                    </p>
-                  )}
-                  {mr.sources.length > 0 && (
-                    <details className="text-xs text-clever-black/50">
-                      <summary className="cursor-pointer hover:text-clever-navy transition-colors">
-                        {mr.sources.length} sources retrieved
-                      </summary>
-                      <ul className="mt-2 space-y-1 ml-4">
-                        {mr.sources.map((s, i) => (
-                          <li key={i}>
-                            <a
-                              href={s.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-clever-blue hover:text-clever-navy transition-colors"
-                            >
-                              {s.title}
-                            </a>{" "}
-                            <span className="text-clever-black/30">
-                              (sim: {s.similarity.toFixed(2)})
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  )}
+        {visibleResults.map((r) => {
+          // Group a question's results by model, vector before hybrid,
+          // so "both" mode reads left-to-right the way the toggle does.
+          const order: Record<ResultMode, number> = { vector: 0, hybrid: 1 };
+          const byModel = MODELS.map((m) => ({
+            model: m,
+            entries: r.results
+              .filter((mr) => mr.model === m)
+              .sort((a, b) => order[a.mode] - order[b.mode]),
+          })).filter((g) => g.entries.length > 0);
+
+          return (
+            <section
+              key={r.questionId}
+              className="rounded-xl border border-clever-light-blue bg-white overflow-hidden"
+            >
+              <div className="px-5 py-4 border-b border-clever-light-blue bg-clever-light-blue/20">
+                <div className="flex items-baseline gap-3">
+                  <span className="text-xs font-mono text-clever-black/40">
+                    Q{r.questionId}
+                  </span>
+                  <h3 className="font-medium text-clever-navy font-[family-name:var(--font-body)]">
+                    {r.question}
+                  </h3>
                 </div>
-              ))}
-            </div>
-          </section>
-        ))}
+              </div>
+
+              {bothModes ? (
+                <div className="divide-y divide-clever-light-blue">
+                  {byModel.map((g) => (
+                    <div key={g.model} className="p-5">
+                      <div className="font-mono text-xs font-medium text-clever-navy mb-3">
+                        {g.model}
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {g.entries.map((mr) => (
+                          <div
+                            key={mr.mode}
+                            className="rounded-lg border border-clever-light-blue p-4"
+                          >
+                            <ResultCard mr={mr} heading={mr.mode} headingIsMode />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-clever-light-blue">
+                  {r.results.map((mr) => (
+                    <div key={`${mr.model}-${mr.mode}`} className="p-5">
+                      <ResultCard mr={mr} heading={mr.model} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          );
+        })}
       </main>
     </div>
+  );
+}
+
+// One model's result for one question. `heading` is the model name in
+// single-mode and the retrieval mode in "both" mode (where the model
+// name is the section header instead).
+function ResultCard({
+  mr,
+  heading,
+  headingIsMode,
+}: {
+  mr: ModelResult;
+  heading: string;
+  headingIsMode?: boolean;
+}) {
+  return (
+    <>
+      <div className="flex items-center justify-between mb-3">
+        {headingIsMode ? (
+          <span
+            className={`rounded px-1.5 py-0.5 text-[10px] font-medium font-mono ${
+              heading === "hybrid"
+                ? "bg-clever-blue/10 text-clever-blue"
+                : "bg-zinc-100 text-zinc-500"
+            }`}
+          >
+            {heading}
+          </span>
+        ) : (
+          <span className="font-mono text-xs font-medium text-clever-navy">
+            {heading}
+          </span>
+        )}
+        <span className="text-xs text-clever-black/40 font-mono">
+          {mr.durationMs}ms · {formatCost(mr.usage.cost)} ·{" "}
+          {mr.usage.inputTokens}↓ {mr.usage.outputTokens}↑
+        </span>
+      </div>
+      <div className="flex flex-wrap gap-1.5 mb-3">
+        <ScoreBadge label="correct" value={mr.scores.correct} />
+        <ScoreBadge label="complete" value={mr.scores.complete} />
+        <ScoreBadge label="cites" value={mr.scores.cites_source} />
+        <ScoreBadge label="no halluc." value={mr.scores.no_hallucination} />
+        <ScoreBadge label="format" value={mr.scores.formatting} />
+      </div>
+      <div className="prose prose-sm max-w-none mb-3 text-clever-black [&_a]:text-clever-blue [&_a]:underline [&_strong]:text-clever-navy [&_table]:text-xs [&_th]:bg-clever-light-blue/40 [&_th]:px-2 [&_th]:py-1 [&_td]:px-2 [&_td]:py-1 [&_th]:border [&_td]:border [&_th]:border-clever-light-blue [&_td]:border-clever-light-blue">
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm, remarkBreaks]}
+          components={{
+            a: ({ href, children }) => (
+              <a href={href} target="_blank" rel="noopener noreferrer">
+                {children}
+              </a>
+            ),
+          }}
+        >
+          {mr.answer}
+        </ReactMarkdown>
+      </div>
+      {mr.scores.reasoning && (
+        <p className="text-xs text-clever-black/50 italic mb-3">
+          Judge: {mr.scores.reasoning}
+        </p>
+      )}
+      {mr.sources.length > 0 && (
+        <details className="text-xs text-clever-black/50">
+          <summary className="cursor-pointer hover:text-clever-navy transition-colors">
+            {mr.sources.length} sources retrieved
+          </summary>
+          <ul className="mt-2 space-y-1 ml-4">
+            {mr.sources.map((s, i) => (
+              <li key={i}>
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-clever-blue hover:text-clever-navy transition-colors"
+                >
+                  {s.title}
+                </a>{" "}
+                <span className="text-clever-black/30">
+                  (sim: {s.similarity.toFixed(2)})
+                </span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </>
   );
 }
 
