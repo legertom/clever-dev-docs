@@ -395,7 +395,9 @@ async function embedAndStore(chunks: Chunk[]): Promise<void> {
     console.error("Warning: could not clear existing documents:", deleteError);
   }
 
-  // Batch embed in groups of 100 (OpenAI limit for embedMany)
+  // Self-imposed batch size, not an API limit — OpenAI's embeddings
+  // endpoint accepts far larger input arrays. 100 just keeps each
+  // request and its failure blast-radius small.
   const batchSize = 100;
   for (let i = 0; i < chunks.length; i += batchSize) {
     const batch = chunks.slice(i, i + batchSize);

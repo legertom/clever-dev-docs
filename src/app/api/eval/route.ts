@@ -134,7 +134,8 @@ export async function POST(req: Request) {
   const cost = calculateCost(body.model, inputTokens, outputTokens);
 
   // 3. Score with LLM-as-judge.
-  // Four dimensions, with correct vs complete deliberately separated:
+  // Five dimensions (correct, complete, cites_source, no_hallucination,
+  // formatting), with correct vs complete deliberately separated:
   //   - correct      = nothing the answer says is wrong
   //   - complete     = the answer covers the key points the question demands
   // An answer can be correct but incomplete (e.g. "Yes, free to build" —

@@ -2,10 +2,12 @@
  * CLI RAG evaluation script
  *
  * Sends each test question through the full RAG pipeline (retrieve → generate)
- * and uses an LLM-as-judge to score the response on three dimensions:
- *   1. Correctness: Does the answer accurately reflect the docs?
- *   2. Citation: Does it reference a source?
- *   3. No hallucination: Does it invent information not in the docs?
+ * and uses an LLM-as-judge to score the response on five dimensions:
+ *   1. Correct: Nothing in the answer is factually wrong (maps to "must" criteria).
+ *   2. Complete: Covers the key points the question demands (maps to "should").
+ *   3. Cites source: References or links to a source document.
+ *   4. No hallucination: Doesn't fabricate info absent from retrieved sources.
+ *   5. Formatting: Well-formed, scannable markdown.
  *
  * Usage: pnpm eval
  *
@@ -63,7 +65,7 @@ async function runQuestion(
     prompt: q.question,
   });
 
-  // See src/app/api/eval/route.ts for the full rationale on the four
+  // See src/app/api/eval/route.ts for the full rationale on the five
   // dimensions. Short version: correct vs complete are deliberately
   // separated — an answer can be true but missing required context.
   const judgePrompt = `You are evaluating a RAG system's answer about Clever developer documentation.
