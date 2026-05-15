@@ -102,23 +102,16 @@ export function buildSystemPrompt(chunks: DocumentChunk[]): string {
 }
 
 // ── Retrieval ────────────────────────────────────────────────
-// Hybrid retrieval: vector similarity (semantic) + Postgres full-text
-// search (lexical), fused with Reciprocal Rank Fusion in the SQL RPC.
-// See scripts/setup-db.sql for the fusion algorithm.
-//
-// Why hybrid: pure vector retrieval underweights code/JSON evidence.
-// A question like "is the created date shared by default?" scored 0.55
-// cosine against an events-api page whose JSON example literally shows
-// a `"created"` field — below the 0.6 confidence threshold, so the
-// system used to refuse. FTS catches the keyword match directly and
-// rescues the chunk into the result set with a confidence value that
-// passes the same threshold.
-//
+// Given a user query, embed it and find the most relevant doc chunks.
 // match_count and match_threshold are tunable per-environment:
 //   - Higher threshold = fewer but more precise results (less hallucination risk)
 //   - Lower threshold = broader recall (useful for vague queries)
-// match_threshold only gates the vector pool — FTS-rescued chunks are
-// admitted regardless of cosine score.
+//
+// The match_documents RPC currently has a 4-arg signature including an
+// optional `query_text` for hybrid retrieval, but the body is vector-only
+// while we debug a regression where the 4-arg call returned zero chunks
+// in production. Omitting query_text here keeps the call shape identical
+// to the original 3-arg pattern.
 export async function retrieveRelevantChunks(
   query: string,
   matchCount = 5,
@@ -131,13 +124,12 @@ export async function retrieveRelevantChunks(
 
   const { data, error } = await getSupabase().rpc("match_documents", {
     query_embedding: embedding,
-    query_text: query,
     match_count: matchCount,
     match_threshold: matchThreshold,
   });
 
   if (error) {
-    console.error("Hybrid search failed:", error);
+    console.error("Vector search failed:", error);
     return [];
   }
 
