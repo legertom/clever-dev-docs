@@ -137,7 +137,11 @@ export default function Home() {
                       return (
                         <div
                           key={i}
-                          className="prose prose-sm max-w-none [&_a]:text-clever-blue [&_a]:underline font-[family-name:var(--font-body)]"
+                          className={`prose prose-sm max-w-none [&_a]:underline font-[family-name:var(--font-body)] ${
+                            message.role === "user"
+                              ? "prose-invert [&_a]:text-white"
+                              : "[&_a]:text-clever-blue"
+                          }`}
                         >
                           <ReactMarkdown
                             remarkPlugins={[remarkGfm, remarkBreaks]}
