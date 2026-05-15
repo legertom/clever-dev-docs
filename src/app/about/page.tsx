@@ -285,7 +285,7 @@ export default function AboutPage() {
               />
               <DecisionItem
                 term="pgvector over a dedicated vector DB"
-                definition="For ~200 chunks, Postgres with HNSW is sub-100ms, operationally simpler, and one less service to monitor. Same Postgres also powers the lexical half of hybrid retrieval (tsvector + GIN), so vector and full-text search share one query path — no second service to run or sync."
+                definition="For a corpus this size (~770 chunks), Postgres with HNSW is sub-100ms, operationally simpler, and one less service to monitor. Same Postgres also powers the lexical half of hybrid retrieval (tsvector + GIN), so vector and full-text search share one query path — no second service to run or sync."
               />
               <DecisionItem
                 term="Live eval as a product page"
@@ -301,8 +301,8 @@ export default function AboutPage() {
             </h2>
             <ul className="space-y-3 text-clever-black/70 font-[family-name:var(--font-body)]">
               <ProductionItem
-                title="Re-ingestion"
-                text="Content-hash chunks, only re-embed what changed. A daily cron polls the sitemap for diffs."
+                title="Re-ingestion (planned)"
+                text="Today every ingest is a full rebuild. The production path: content-hash each chunk, re-embed only what changed, and a daily cron that polls the sitemap for diffs."
               />
               <ProductionItem
                 title="Low-confidence queue"
@@ -313,8 +313,8 @@ export default function AboutPage() {
                 text="Upstash Redis enforces a 20-request-per-minute sliding window per IP. Blocked requests return 429 before touching the AI Gateway."
               />
               <ProductionItem
-                title="Eval in CI"
-                text="The test suite gates PRs on pass-rate, preventing silent regressions when prompts or models change."
+                title="Eval in CI (planned)"
+                text="A pnpm eval CLI already scores the test set on demand. The next step: run it in CI to gate PRs on pass-rate, preventing silent regressions when prompts or models change."
               />
             </ul>
           </section>
