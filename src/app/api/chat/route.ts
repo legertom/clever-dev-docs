@@ -10,6 +10,7 @@ import {
   buildSystemPrompt,
   DEFAULT_CHAT_MODEL,
   CONFIDENCE_THRESHOLD,
+  type RetrievalMode,
 } from "@/lib/rag";
 import { classifyQuery, CANNED_RESPONSES } from "@/lib/guardrails";
 import { getRateLimiter } from "@/lib/rate-limit";
@@ -31,7 +32,15 @@ export async function POST(req: Request) {
     });
   }
 
-  const { messages }: { messages: UIMessage[] } = await req.json();
+  const body: { messages: UIMessage[]; retrievalMode?: string } = await req.json();
+  const { messages } = body;
+  // Validate per-request override; fall back to the env default if absent
+  // or invalid. The retriever's 4th arg already reads RETRIEVAL_MODE from
+  // env when no explicit mode is passed, so undefined here means "use env".
+  const requestedMode: RetrievalMode | undefined =
+    body.retrievalMode === "vector" || body.retrievalMode === "hybrid"
+      ? body.retrievalMode
+      : undefined;
 
   // Pull out the latest user query for retrieval.
   // For multi-turn chat, we use the most recent user message as the
@@ -69,7 +78,12 @@ export async function POST(req: Request) {
     return createUIMessageStreamResponse({ stream });
   }
 
-  const chunks = await retrieveRelevantChunks(queryText);
+  const chunks = await retrieveRelevantChunks(
+    queryText,
+    5,
+    0.5,
+    requestedMode
+  );
   const systemPrompt = buildSystemPrompt(chunks);
 
   // Doc-gap signal: if retrieval falls below the confidence threshold,

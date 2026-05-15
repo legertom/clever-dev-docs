@@ -31,6 +31,9 @@ export default function Home() {
     transport,
   });
   const [input, setInput] = useState("");
+  const [retrievalMode, setRetrievalMode] = useState<"hybrid" | "vector">(
+    "hybrid"
+  );
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const isLoading = status === "submitted" || status === "streaming";
@@ -42,7 +45,7 @@ export default function Home() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-    sendMessage({ text: input });
+    sendMessage({ text: input }, { body: { retrievalMode } });
     setInput("");
   }
 
@@ -54,7 +57,7 @@ export default function Home() {
 
   function handleSuggestion(q: string) {
     if (isLoading) return;
-    sendMessage({ text: q });
+    sendMessage({ text: q }, { body: { retrievalMode } });
   }
 
   return (
@@ -198,6 +201,32 @@ export default function Home() {
 
       {/* Input */}
       <footer className="border-t border-clever-light-blue bg-white px-6 py-4 flex-shrink-0">
+        <div className="max-w-3xl mx-auto mb-2 flex items-center justify-end gap-2 font-[family-name:var(--font-body)]">
+          <span className="text-xs text-clever-black/50">Retrieval:</span>
+          <div
+            role="radiogroup"
+            aria-label="Retrieval mode"
+            className="inline-flex rounded-lg border border-clever-light-blue overflow-hidden"
+          >
+            {(["hybrid", "vector"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                role="radio"
+                aria-checked={retrievalMode === m}
+                onClick={() => setRetrievalMode(m)}
+                disabled={isLoading}
+                className={`px-3 py-1 text-xs capitalize transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                  retrievalMode === m
+                    ? "bg-clever-blue text-white"
+                    : "bg-white text-clever-navy hover:bg-clever-light-blue/40"
+                }`}
+              >
+                {m}
+              </button>
+            ))}
+          </div>
+        </div>
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto flex gap-3">
           <input
             value={input}
