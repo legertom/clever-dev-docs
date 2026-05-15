@@ -43,6 +43,31 @@ function scoreBg(pct: number): string {
   return "bg-red-50";
 }
 
+function ModeBadge({ run }: { run: SavedEvalRun }) {
+  const mode = run.chunk_config?.retrieval_mode;
+  if (!mode) {
+    return (
+      <span
+        className="text-[10px] text-zinc-400 italic"
+        title="Retrieval mode not recorded for this run (predates per-run mode tracking)"
+      >
+        unknown
+      </span>
+    );
+  }
+  return (
+    <span
+      className={`inline-block rounded px-1.5 py-0.5 text-[10px] font-medium font-mono ${
+        mode === "hybrid"
+          ? "bg-clever-blue/10 text-clever-blue"
+          : "bg-zinc-100 text-zinc-500"
+      }`}
+    >
+      {mode}
+    </span>
+  );
+}
+
 function TrendArrow({ runs, model, dim }: { runs: SavedEvalRun[]; model: string; dim: Dimension }) {
   const chronological = [...runs].reverse();
   if (chronological.length < 2) return null;
@@ -167,6 +192,7 @@ export default async function EvalHistoryPage() {
                   <tr className="border-b border-clever-light-blue text-left text-xs text-clever-black/50 font-[family-name:var(--font-body)]">
                     <th className="px-4 py-3 font-medium">Date</th>
                     <th className="px-4 py-3 font-medium">Label</th>
+                    <th className="px-4 py-3 font-medium">Mode</th>
                     <th className="px-4 py-3 font-medium">Model</th>
                     <th className="px-4 py-3 font-medium">Questions</th>
                     {DIMENSION_COLS.map(({ key, label }) => (
@@ -189,6 +215,9 @@ export default async function EvalHistoryPage() {
                           </td>
                           <td className="px-4 py-3 text-clever-navy font-[family-name:var(--font-body)]">
                             {run.label || <span className="text-zinc-400 italic">no label</span>}
+                          </td>
+                          <td className="px-4 py-3">
+                            <ModeBadge run={run} />
                           </td>
                           <td className="px-4 py-3 font-mono text-xs" colSpan={DIMENSION_COLS.length + 3}>
                             {run.models.join(", ")}
@@ -218,6 +247,12 @@ export default async function EvalHistoryPage() {
                                 rowSpan={modelKeys.length}
                               >
                                 {run.label || <span className="text-zinc-400 italic">no label</span>}
+                              </td>
+                              <td
+                                className="px-4 py-3"
+                                rowSpan={modelKeys.length}
+                              >
+                                <ModeBadge run={run} />
                               </td>
                             </>
                           )}
