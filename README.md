@@ -98,7 +98,7 @@ Developer query
 
 **4b. Feedback signal as a first-class feature.** A `/feedback` admin page surfaces two doc-gap signals in one queue:
 
-1. **Low-confidence retrievals** — every chat query whose top similarity falls below `CONFIDENCE_THRESHOLD` (0.6) is logged automatically by the chat route, with the query text, retrieved URLs, and the actual top similarity. These are the questions developers are asking that we can't answer well today — the strongest signal of where the docs need work.
+1. **Low-confidence retrievals** — every chat query whose **raw vector similarity** falls below `CONFIDENCE_THRESHOLD` (0.6) is logged automatically by the chat route, with the query text, retrieved URLs, and the actual score. The log fires on the underlying semantic match — *not* on the rescued similarity that decides whether the chat shows a fallback message — so it catches doc gaps even when keyword search rescued a chunk that let the chat answer the user anyway. These are the strongest signal of where the docs need work, including the silent failures the user never saw.
 2. **User reports** — every assistant message has a "Flag for review" button. One tap opens an inline form with an optional note; submission posts to `/api/feedback`. These are the strongest signal that a specific answer was unhelpful even when retrieval *did* work.
 
 Both write to the same `feedback` table and render in the same admin view (filter chips for All / Low-confidence / User reports). In production this page would sit behind admin auth; for now it's open since the data is doc-gap signal rather than user PII.
