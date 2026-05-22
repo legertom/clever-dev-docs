@@ -311,9 +311,47 @@ export default function AboutPage() {
             <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-4">
               <strong className="text-clever-navy">Hybrid retrieval</strong>{" "}
               runs both at the same time and merges the results, using a
-              method called Reciprocal Rank Fusion. Whichever search finds
+              technique called Reciprocal Rank Fusion. Whichever search finds
               the right page wins — we don&apos;t have to choose in advance.
             </p>
+
+            {/* RRF explainer callout — explains the term used above */}
+            <div className="rounded-xl border border-clever-light-blue bg-clever-light-blue/20 p-5 my-6">
+              <div className="text-xs uppercase tracking-wider text-clever-navy/60 mb-3 font-[family-name:var(--font-body)]">
+                What is Reciprocal Rank Fusion?
+              </div>
+              <p className="text-sm text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-3">
+                The two searches produce scores on completely different
+                scales. Vector similarity is a number between 0 and 1
+                (how close two meanings are); keyword relevance is
+                unbounded and depends on word frequency. Averaging the
+                two directly would be like averaging Celsius and
+                Fahrenheit — the result is meaningless.
+              </p>
+              <p className="text-sm text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-3">
+                RRF sidesteps the problem by ignoring the raw scores
+                and looking only at the{" "}
+                <em>rankings</em>{" "}each method produced. For every
+                chunk that either search returned, it computes{" "}
+                <code className="text-xs bg-white/70 text-clever-navy px-1 rounded">1 / (60 + rank)</code>{" "}
+                in each list and sums those values. A chunk that ranks
+                #1 in keyword search and #3 in vector search gets a
+                high combined score; a chunk that ranks well in only
+                one list scores lower. Chunks that both methods
+                strongly agree on bubble to the top.
+              </p>
+              <p className="text-sm text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)]">
+                The 60 is a smoothing constant from the original RRF
+                paper (Cormack et al., 2009) — it dampens the
+                dominance of any single #1 result, so a chunk that
+                ranks #2 in both lists can outrank one that ranks #1
+                in only one. That&apos;s the whole algorithm —
+                three lines of SQL. The reason it&apos;s the standard
+                fusion method for hybrid search is precisely that it
+                doesn&apos;t need to know anything about the scoring
+                systems it&apos;s combining.
+              </p>
+            </div>
 
             {/* Concrete example callout */}
             <div className="rounded-xl border border-clever-light-blue bg-clever-light-blue/20 p-5 my-6">
