@@ -15,6 +15,7 @@ import {
 import { classifyQuery, CANNED_RESPONSES } from "@/lib/guardrails";
 import { getRateLimiter } from "@/lib/rate-limit";
 import { logFeedbackAsync } from "@/lib/feedback";
+import { condenseQuery } from "@/lib/query-rewrite";
 
 // Vercel Function timeout. Generous enough for a long answer, low
 // enough that a stuck request doesn't burn budget. In production you'd
@@ -42,12 +43,8 @@ export async function POST(req: Request) {
       ? body.retrievalMode
       : undefined;
 
-  // Pull out the latest user query for retrieval.
-  // For multi-turn chat, we use the most recent user message as the
-  // retrieval query. A more sophisticated approach would condense the
-  // whole conversation into a single retrieval query — relevant when
-  // follow-up questions reference prior context (e.g. "what about
-  // student email?" after asking about Library data fields).
+  // Pull out the latest user message text for classification and as the
+  // fallback retrieval query.
   const lastUserMessage = [...messages]
     .reverse()
     .find((m) => m.role === "user");
@@ -78,8 +75,22 @@ export async function POST(req: Request) {
     return createUIMessageStreamResponse({ stream });
   }
 
+  // Condense the conversation into a single self-contained question
+  // before retrieval. On single-turn conversations this is a no-op
+  // (returns queryText unchanged); on multi-turn it makes a cheap LLM
+  // call to expand follow-ups like "what about student email?" into a
+  // full question that captures the context from prior turns. Errors
+  // fall back to queryText, so a rewrite failure never breaks the chat.
+  const { queryForRetrieval, didRewrite } = await condenseQuery(
+    messages,
+    queryText
+  );
+  if (didRewrite) {
+    console.log(`[query-rewrite] "${queryText}" → "${queryForRetrieval}"`);
+  }
+
   const chunks = await retrieveRelevantChunks(
-    queryText,
+    queryForRetrieval,
     5,
     0.5,
     requestedMode
@@ -100,10 +111,15 @@ export async function POST(req: Request) {
   // back to `similarity` (which IS raw cosine in that mode).
   const topChunk = chunks[0];
   const triggerScore = topChunk?.vec_sim ?? topChunk?.similarity ?? 0;
-  if (triggerScore <= CONFIDENCE_THRESHOLD && queryText) {
+  if (triggerScore <= CONFIDENCE_THRESHOLD && queryForRetrieval) {
+    // Log the rewritten query so the docs team sees what was actually
+    // searched on — a bare follow-up like "what about email?" isn't
+    // actionable, but its rewritten form ("what student email fields
+    // does Clever Library expose?") is. For single-turn conversations
+    // queryForRetrieval === queryText, so behavior is unchanged.
     logFeedbackAsync({
       kind: "low_confidence",
-      query: queryText,
+      query: queryForRetrieval,
       retrieved_urls: chunks.map((c) => c.url),
       top_similarity: triggerScore,
     });

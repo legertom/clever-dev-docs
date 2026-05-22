@@ -167,6 +167,14 @@ export default function AboutPage() {
                 />
 
                 <PipelineNode
+                  icon={<RewriteIcon />}
+                  color="bg-clever-yellow"
+                  label="Rewrite"
+                  description="In a back-and-forth conversation, a follow-up like “what about student email?” only makes sense in context. A quick LLM call rewrites it into a single self-contained question (“what student email fields does Clever Library expose?”) before search runs — so retrieval sees the real question, not just the latest fragment. Skipped entirely for the first question of a conversation."
+                  isBranch
+                />
+
+                <PipelineNode
                   icon={<EmbedIcon />}
                   color="bg-clever-blue"
                   label="Embed"
@@ -798,6 +806,16 @@ function ShieldIcon() {
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" fill="white" opacity="0.9" />
       <path d="M10 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
+    </svg>
+  );
+}
+
+function RewriteIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M14 4l6 6-10 10H4v-6L14 4z" stroke="white" strokeWidth="2" strokeLinejoin="round" opacity="0.9" />
+      <path d="M14 4l6 6" stroke="white" strokeWidth="2" opacity="0.5" />
+      <path d="M4 20l4-4" stroke="white" strokeWidth="1.5" opacity="0.5" />
     </svg>
   );
 }

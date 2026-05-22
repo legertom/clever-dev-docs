@@ -45,19 +45,24 @@ Developer query
                      (off-topic / harmful queries skip pipeline)
                               │
                               ▼
-                  2. embed query (text-embedding-3-small)
+                  2. condense multi-turn conversation into a
+                     single self-contained query (skipped for
+                     the first turn)
                               │
                               ▼
-                  3. hybrid retrieval: pgvector + Postgres FTS, fused via RRF
+                  3. embed query (text-embedding-3-small)
                               │
                               ▼
-                  4. confidence gate → fallback if top sim < 0.6
+                  4. hybrid retrieval: pgvector + Postgres FTS, fused via RRF
                               │
                               ▼
-                  5. build system prompt with retrieved chunks
+                  5. confidence gate → fallback if top sim < 0.6
                               │
                               ▼
-                  6. stream completion via Vercel AI Gateway
+                  6. build system prompt with retrieved chunks
+                              │
+                              ▼
+                  7. stream completion via Vercel AI Gateway
                      ↓
               [openai/gpt-4o-mini] (default)
               [openai/gpt-5.4]      (eval comparison)
@@ -159,6 +164,7 @@ src/
   lib/
     rag.ts                   # Embed, retrieve, build system prompt
     guardrails.ts            # Pre-flight query classifier (on/off-topic/harmful)
+    query-rewrite.ts         # Multi-turn condensation: rewrites follow-ups into self-contained queries
     rate-limit.ts            # Upstash sliding-window rate limiter
     feedback.ts              # Fire-and-forget feedback writes
     eval-runs.ts             # Eval run persistence + summary aggregation
