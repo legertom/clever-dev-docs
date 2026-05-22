@@ -541,8 +541,8 @@ export default function AboutPage() {
                 definition="At ~$0.0003 per query, the cheap model handles factual lookups where retrieval does the heavy lifting. The eval shows exactly which questions need a smarter model."
               />
               <DecisionItem
-                term="Layered defense, ascending cost"
-                definition="Every chat query passes through three filters in cheap-to-expensive order: a gpt-4o-mini classifier (~$0.00002) catches off-topic and harmful queries before retrieval runs; a confidence gate (~$0.0005) catches in-domain questions the docs can't answer and politely declines; full RAG generation (~$0.0003–$0.008) only runs when both checks pass. Front-loading the cheap layer means bad traffic gets bounced before flagship costs are paid — same pattern as a CDN with edge caches in front of origin."
+                term="Front-loaded cost filters, downstream quality gate"
+                definition="Rate limit (Upstash, ~free) bounces abusive IPs entirely. A gpt-4o-mini classifier (~$0.00002) catches off-topic and harmful queries with a canned response — saving the cost of embedding, retrieval, and generation that would otherwise follow. For on-topic queries the full pipeline runs (~$0.0003–$0.008 per query depending on output length); the confidence gate doesn't skip generation, it switches the prompt to a fallback when retrieval was weak so the model admits uncertainty instead of guessing. The pattern: cheap filters absorb bad traffic upfront; the gate downstream guards against the more expensive failure mode — a confidently wrong answer."
               />
               <DecisionItem
                 term="AI Gateway over provider SDKs"
