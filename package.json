@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "ingest": "tsx --env-file=.env.local scripts/ingest.ts",
-    "eval": "tsx --env-file=.env.local eval/run-eval.ts"
+    "eval": "tsx --env-file=.env.local eval/run-eval.ts",
+    "test:feedback": "tsx scripts/test-feedback.ts"
   },
   "dependencies": {
     "@ai-sdk/gateway": "^3.0.112",
