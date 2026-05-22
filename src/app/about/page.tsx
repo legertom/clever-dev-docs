@@ -10,7 +10,9 @@ export const metadata: Metadata = {
 const tocItems: TocItem[] = [
   { id: "what-this-is", label: "What this is" },
   { id: "audience", label: "Who it's for" },
+  { id: "background", label: "Background: what is RAG?" },
   { id: "how-it-works", label: "How it works" },
+  { id: "hybrid", label: "Why hybrid retrieval?" },
   { id: "guardrails", label: "Guardrails" },
   { id: "ingestion", label: "Knowledge base" },
   { id: "design-decisions", label: "Design decisions" },
@@ -78,6 +80,51 @@ export default function AboutPage() {
               widget routes through a decision tree; this gives everyone answers
               directly from the docs, instantly.
             </p>
+          </section>
+
+          {/* RAG background — plain-English primer for non-experts */}
+          <section id="background" className="scroll-mt-6">
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
+              Background: what is RAG?
+            </h2>
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-4">
+              A docs assistant powered by a language model has two problems.
+              First, the model doesn&apos;t know about Clever specifically — it
+              was trained on the public internet, not on Clever&apos;s
+              documentation. Second, asking a model to answer from its general
+              knowledge produces plausible-sounding answers that are sometimes
+              subtly (and sometimes wildly) wrong.
+            </p>
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-4">
+              <strong className="text-clever-navy">Retrieval-Augmented Generation (RAG)</strong>{" "}
+              solves both. Before generating an answer, the system{" "}
+              <em>retrieves</em> the most relevant pieces of documentation and
+              feeds them to the model as context. The model&apos;s job becomes
+              &ldquo;answer this question using only these facts,&rdquo; not
+              &ldquo;remember what you know.&rdquo; Answers are phrased in
+              natural language, but the facts come from a known, citable source
+              — so we can show the developer exactly where each claim came from.
+            </p>
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)]">
+              This is the same pattern any organization uses to build an AI
+              assistant over its own content: internal wikis, customer support
+              knowledge bases, code documentation, legal libraries.
+            </p>
+            <div className="rounded-xl border border-clever-light-blue bg-clever-light-blue/20 p-5 mt-6">
+              <p className="text-sm text-clever-black/70 font-[family-name:var(--font-body)]">
+                <strong className="text-clever-navy">New to RAG?</strong>{" "}
+                DeepLearning.AI&apos;s{" "}
+                <a
+                  href="https://www.deeplearning.ai/courses/retrieval-augmented-generation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-clever-blue hover:text-clever-navy underline transition-colors"
+                >
+                  Retrieval-Augmented Generation
+                </a>{" "}
+                course is a good conceptual introduction.
+              </p>
+            </div>
           </section>
 
           {/* Architecture — illustrated pipeline */}
@@ -163,6 +210,141 @@ export default function AboutPage() {
                 />
               </div>
             </div>
+          </section>
+
+          {/* Why hybrid retrieval — deep-dive on the key design choice */}
+          <section id="hybrid" className="scroll-mt-6">
+            <h2 className="text-2xl text-clever-navy mb-4 font-[family-name:var(--font-heading)]">
+              Why hybrid retrieval?
+            </h2>
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-2">
+              Retrieval — the step above where the system finds the right
+              pieces of the docs to feed the model — is where most of the
+              answer quality comes from. There are two distinct ways to do
+              it, and they catch different kinds of questions.
+            </p>
+
+            {/* Side-by-side: vector vs keyword */}
+            <div className="grid sm:grid-cols-2 gap-4 my-6">
+              <div className="rounded-xl border border-clever-light-blue bg-white p-5">
+                <div className="text-xs uppercase tracking-wider text-clever-blue mb-2 font-[family-name:var(--font-body)]">
+                  Vector search
+                </div>
+                <div className="text-base font-medium text-clever-navy mb-3 font-[family-name:var(--font-heading)]">
+                  Matches on meaning
+                </div>
+                <p className="text-sm text-clever-black/60 leading-relaxed font-[family-name:var(--font-body)]">
+                  The question gets turned into a numerical fingerprint, and
+                  the system finds doc chunks whose fingerprints are similar.
+                  Great for paraphrased questions: ask &ldquo;how do I sign in
+                  users?&rdquo; and it finds the page about authentication
+                  even if that page never uses the word &ldquo;sign in.&rdquo;
+                  This is what most RAG tutorials teach.
+                </p>
+              </div>
+              <div className="rounded-xl border border-clever-light-blue bg-white p-5">
+                <div className="text-xs uppercase tracking-wider text-clever-orange mb-2 font-[family-name:var(--font-body)]">
+                  Keyword search
+                </div>
+                <div className="text-base font-medium text-clever-navy mb-3 font-[family-name:var(--font-heading)]">
+                  Matches on exact words
+                </div>
+                <p className="text-sm text-clever-black/60 leading-relaxed font-[family-name:var(--font-body)]">
+                  Sounds primitive, but catches a specific failure mode of
+                  vector search. When the answer hinges on an exact field
+                  name buried in a JSON example — like{" "}
+                  <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1 rounded">section_id</code>{" "}
+                  or{" "}
+                  <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1 rounded">created</code>{" "}
+                  — vector search often misses it. The page doesn&apos;t{" "}
+                  <em>describe</em> the field in prose; it just shows the
+                  field in a code block. Embeddings don&apos;t pick up code well.
+                </p>
+              </div>
+            </div>
+
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-4">
+              <strong className="text-clever-navy">Hybrid retrieval</strong>{" "}
+              runs both at the same time and merges the results, using a
+              method called Reciprocal Rank Fusion. Whichever search finds
+              the right page wins — we don&apos;t have to choose in advance.
+            </p>
+
+            {/* Concrete example callout */}
+            <div className="rounded-xl border border-clever-light-blue bg-clever-light-blue/20 p-5 my-6">
+              <div className="text-xs uppercase tracking-wider text-clever-navy/60 mb-3 font-[family-name:var(--font-body)]">
+                Concrete example
+              </div>
+              <p className="text-sm text-clever-black/70 font-[family-name:var(--font-body)] mb-3">
+                A developer asks:{" "}
+                <strong className="text-clever-navy">
+                  &ldquo;is the created date shared by default?&rdquo;
+                </strong>
+              </p>
+              <ul className="space-y-2 text-sm text-clever-black/60 font-[family-name:var(--font-body)]">
+                <li>
+                  <strong className="text-clever-navy">Vector alone:</strong>{" "}
+                  returns nothing it&apos;s confident in. The assistant tells
+                  the developer it can&apos;t find the answer.
+                </li>
+                <li>
+                  <strong className="text-clever-navy">Keyword alone:</strong>{" "}
+                  finds the contacts page immediately because{" "}
+                  <code className="text-xs bg-white/70 text-clever-navy px-1 rounded">created</code>{" "}
+                  appears as a literal field name in a JSON example on that
+                  page.
+                </li>
+                <li>
+                  <strong className="text-clever-navy">Hybrid:</strong> the
+                  keyword half rescues the right page, and the developer
+                  gets the answer with a citation.
+                </li>
+              </ul>
+            </div>
+
+            <h3 className="text-lg text-clever-navy mt-8 mb-3 font-[family-name:var(--font-heading)]">
+              The tradeoff
+            </h3>
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-4">
+              Keyword search adds a parallel database query, and the merged
+              result set is slightly larger, so the model sees a few hundred
+              extra tokens of context per question. Hybrid costs a fraction
+              of a cent more per query and adds roughly 50–100ms of latency.
+            </p>
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-4">
+              What you get for that cost: across our eval set, hybrid
+              retrieval{" "}
+              <strong className="text-clever-navy">
+                hallucinates less often
+              </strong>{" "}
+              than vector alone — the failure mode that matters most for a
+              docs assistant, since a confidently wrong answer about
+              certification could send a developer down a multi-week dead
+              end. Correctness rates are comparable and vary between runs;
+              on already-strong models, vector can occasionally edge ahead
+              on speed or cost.
+            </p>
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)]">
+              Hybrid is the default because lower hallucination is the right
+              tradeoff for a docs assistant. It&apos;s a deliberate choice,
+              not a clean win — and you can verify it yourself: the toggle
+              on the{" "}
+              <a
+                href="/"
+                className="text-clever-blue hover:text-clever-navy underline transition-colors"
+              >
+                chat
+              </a>{" "}
+              and{" "}
+              <a
+                href="/eval"
+                className="text-clever-blue hover:text-clever-navy underline transition-colors"
+              >
+                eval
+              </a>{" "}
+              pages runs either mode, or both side by side, and shows the
+              live numbers.
+            </p>
           </section>
 
           {/* Guardrails */}
@@ -286,10 +468,6 @@ export default function AboutPage() {
               <DecisionItem
                 term="pgvector over a dedicated vector DB"
                 definition="For a corpus this size (~770 chunks), Postgres with HNSW is sub-100ms — no dedicated vector database to run, monitor, or keep in sync. Full-text search lives in the same Postgres (a generated tsvector + GIN index), so the lexical half of retrieval adds zero extra infrastructure either. This decision is purely operational: what to run."
-              />
-              <DecisionItem
-                term="Vector vs. hybrid — the retrieval toggle"
-                definition="Given that one database (above), two ways to query it — this is about retrieval quality, not infrastructure. Vector search matches on meaning: cheap, fast, good at paraphrased questions, but it can miss when the answer hinges on an exact word — a field literally named “created” in a JSON example looks unremarkable to an embedding. Hybrid runs vector search and a plain keyword search side by side and merges the two rankings, so those exact-word matches resurface. Concretely: ask “is the created date shared by default?” and vector alone finds nothing it’s confident enough to answer with, so the assistant says it can’t find it; add the keyword half and the right doc page comes back. The catch: the extra retrieved text makes the prompt longer, so hybrid costs a bit more per query and runs slightly slower. Across the eval set it consistently hallucinates less — the failure mode that matters most for a docs assistant — while correctness is comparable and varies run to run; on already-strong models, vector can edge it on cost and correctness. Hybrid is the default for the lower hallucination rate: a deliberate tradeoff, not a clean win. The toggle on the chat and eval pages runs either, or both side by side, so you can judge it on the live numbers."
               />
               <DecisionItem
                 term="Live eval as a demo surface"

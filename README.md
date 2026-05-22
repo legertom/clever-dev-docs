@@ -20,6 +20,16 @@ This assistant lets developers ask natural-language questions across the full Cl
 - **Fallback behavior** — when retrieval has low confidence, the assistant tells the developer it doesn't know rather than hallucinating
 - **Live eval dashboard** at `/eval` — run the test set against three models side-by-side
 
+## Background: what is RAG?
+
+A docs assistant powered by a language model has two problems. First, the model doesn't know about Clever specifically — it was trained on the public internet, not on Clever's documentation. Second, asking a model to answer from its general knowledge produces plausible-sounding answers that are sometimes subtly (and sometimes wildly) wrong.
+
+**Retrieval-Augmented Generation (RAG)** solves both. Before generating an answer, the system *retrieves* the most relevant pieces of documentation and feeds them to the model as context. The model's job becomes "answer this question using only these facts," not "remember what you know." Answers are phrased in natural language, but the facts come from a known, citable source — so we can show the developer exactly where each claim came from.
+
+This is the same pattern any organization uses to build an AI assistant over its own content: internal wikis, customer support knowledge bases, code documentation, legal libraries.
+
+> **New to RAG?** DeepLearning.AI's [Retrieval-Augmented Generation](https://www.deeplearning.ai/courses/retrieval-augmented-generation) course is a good conceptual introduction.
+
 ## Architecture
 
 ```
