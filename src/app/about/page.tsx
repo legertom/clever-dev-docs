@@ -98,7 +98,7 @@ export default function AboutPage() {
             <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-4">
               <strong className="text-clever-navy">Retrieval-Augmented Generation (RAG)</strong>{" "}
               solves both. Before generating an answer, the system{" "}
-              <em>retrieves</em> the most relevant pieces of documentation and
+              <em>retrieves</em>{" "}the most relevant pieces of documentation and
               feeds them to the model as context. The model&apos;s job becomes
               &ldquo;answer this question using only these facts,&rdquo; not
               &ldquo;remember what you know.&rdquo; Answers are phrased in
@@ -294,7 +294,7 @@ export default function AboutPage() {
                   or{" "}
                   <code className="text-xs bg-clever-light-blue/60 text-clever-navy px-1 rounded">created</code>{" "}
                   — vector search often misses it. The page doesn&apos;t{" "}
-                  <em>describe</em> the field in prose; it just shows the
+                  <em>describe</em>{" "}the field in prose; it just shows the
                   field in a code block. Embeddings don&apos;t pick up code well.
                 </p>
               </div>
@@ -332,7 +332,7 @@ export default function AboutPage() {
                   page.
                 </li>
                 <li>
-                  <strong className="text-clever-navy">Hybrid:</strong> the
+                  <strong className="text-clever-navy">Hybrid:</strong>{" "}the
                   keyword half rescues the right page, and the developer
                   gets the answer with a citation.
                 </li>
