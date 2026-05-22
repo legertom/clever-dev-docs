@@ -515,6 +515,10 @@ export default function AboutPage() {
                 definition="For a corpus this size (~770 chunks), Postgres with HNSW is sub-100ms — no dedicated vector database to run, monitor, or keep in sync. Full-text search lives in the same Postgres (a generated tsvector + GIN index), so the lexical half of retrieval adds zero extra infrastructure either. This decision is purely operational: what to run."
               />
               <DecisionItem
+                term="Multi-turn query rewriting before classify and retrieve"
+                definition="A bare follow-up like “what about student email?” makes sense reading the conversation but means nothing to a retrieval system — and looks off-topic to the pre-flight classifier. A cheap LLM call condenses the whole conversation into a single self-contained question before downstream steps run, so the classifier judges the expanded form and retrieval embeds and searches on it. Single-turn conversations skip the rewrite entirely (no history to condense), so the first message of a chat costs nothing extra and existing eval scores don't move. Errors fall back to the raw last message, so a rewrite failure never breaks the chat."
+              />
+              <DecisionItem
                 term="Live eval as a demo surface"
                 definition="This is for demonstration, not production monitoring. The eval page exists so anyone evaluating this project can run the test set on demand and watch it work — model-vs-model comparison, real USD cost per query, full rubric scores — instead of taking a CLI pass-rate on faith."
               />
