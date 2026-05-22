@@ -193,7 +193,7 @@ export default function AboutPage() {
                   icon={<GateIcon />}
                   color="bg-clever-orange"
                   label="Confidence gate"
-                  description="If no doc chunk is a strong enough match, two things happen: the system tells the model to admit it doesn't know rather than guess, and the question is logged to the doc-gap queue so the docs team can see what developers are asking that we can't answer well today."
+                  description="The system runs two independent checks against retrieval quality. (1) If the semantic match is weak, the question is logged to the doc-gap queue — even when keyword search rescued a chunk that let the chat answer anyway. (2) If no rescued chunk is strong enough either, the prompt is switched to a fallback that tells the model to admit it doesn't know rather than guess."
                   isBranch
                 />
 
@@ -575,7 +575,7 @@ export default function AboutPage() {
               />
               <ProductionItem
                 title="Low-confidence queue"
-                text='Every "I couldn&apos;t find it" gets logged — the strongest signal of doc gaps the support team should see.'
+                text="Every query where the underlying semantic match was weak gets logged — even when keyword rescue let the chat answer the user anyway. Catches doc gaps the user never sees, so the support team can fix them before they cause real frustration."
               />
               <ProductionItem
                 title="Rate limiting"
