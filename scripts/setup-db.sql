@@ -120,6 +120,17 @@ $$;
 -- confidence value designed to pass the application-side 0.6 confidence
 -- gate — so a chunk that exact-matched the query at rank 1 doesn't get
 -- thrown away just because the embedding model under-scored it.
+--
+-- `vec_sim` is also returned separately: the raw cosine similarity
+-- without rescue inflation. The chat route uses this (not the rescued
+-- `similarity`) to decide whether to log a low_confidence feedback
+-- row, so the doc-gap alarm tracks actual semantic match quality
+-- rather than always-inflated rescue scores.
+
+-- Return signature changed (added vec_sim column). Drop first so
+-- `create or replace` doesn't error on the signature mismatch.
+drop function if exists match_documents_hybrid(vector, text, int, float);
+
 create or replace function match_documents_hybrid(
   query_embedding vector(1536),
   query_text text default null,
@@ -133,7 +144,8 @@ returns table (
   title text,
   chunk_index integer,
   integration_path text,
-  similarity float
+  similarity float,
+  vec_sim float
 )
 language plpgsql
 as $$
@@ -212,7 +224,11 @@ begin
         when fused.fts_rank = 5 then 0.60
         else 0.55
       end
-    ) as similarity
+    ) as similarity,
+    -- Raw cosine, unaffected by FTS rescue. Used by the chat route's
+    -- low_confidence trigger so the doc-gap alarm reflects semantic
+    -- match quality, not the rescue-inflated score.
+    fused.vec_sim as vec_sim
   from fused
   join documents d on d.id = fused.id
   -- Admit a chunk if EITHER signal qualifies: vector cleared the

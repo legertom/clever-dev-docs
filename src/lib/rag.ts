@@ -7,6 +7,12 @@ export interface DocumentChunk {
   url: string;
   title: string;
   similarity: number;
+  // Raw cosine similarity, before any FTS-rescue inflation. Only
+  // populated by the hybrid retrieval function — undefined in
+  // vector-only mode (where `similarity` is already raw cosine).
+  // The chat route reads this in preference to `similarity` when
+  // deciding whether to log low_confidence feedback rows.
+  vec_sim?: number;
   integration_path?: string;
 }
 
@@ -151,6 +157,7 @@ type RetrievalRow = {
   url: string;
   title: string;
   similarity: number;
+  vec_sim?: number;
   integration_path?: string;
 };
 
@@ -160,6 +167,7 @@ function toChunks(data: RetrievalRow[] | null): DocumentChunk[] {
     url: row.url,
     title: row.title,
     similarity: row.similarity,
+    vec_sim: row.vec_sim,
     integration_path: row.integration_path,
   }));
 }

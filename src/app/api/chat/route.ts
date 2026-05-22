@@ -90,13 +90,22 @@ export async function POST(req: Request) {
   // record the query so the docs/support team can see what developers
   // are asking that we can't answer well today. Fire-and-forget so the
   // user's response is never delayed by the log write.
-  const topSimilarity = chunks[0]?.similarity ?? 0;
-  if (topSimilarity <= CONFIDENCE_THRESHOLD && queryText) {
+  //
+  // Read the raw cosine score (`vec_sim`) when available, not the
+  // post-rescue `similarity`. Under hybrid retrieval, `similarity` is
+  // intentionally inflated to clear the 0.6 gate for FTS-rescued
+  // chunks (see scripts/setup-db.sql) — using it here would silence
+  // the doc-gap alarm whenever ANY keyword hits, which is almost
+  // always. Vector-only mode doesn't return `vec_sim`, so we fall
+  // back to `similarity` (which IS raw cosine in that mode).
+  const topChunk = chunks[0];
+  const triggerScore = topChunk?.vec_sim ?? topChunk?.similarity ?? 0;
+  if (triggerScore <= CONFIDENCE_THRESHOLD && queryText) {
     logFeedbackAsync({
       kind: "low_confidence",
       query: queryText,
       retrieved_urls: chunks.map((c) => c.url),
-      top_similarity: topSimilarity,
+      top_similarity: triggerScore,
     });
   }
 
