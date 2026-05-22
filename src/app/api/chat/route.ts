@@ -54,12 +54,29 @@ export async function POST(req: Request) {
       .map((p) => p.text)
       .join(" ") ?? "";
 
-  const category = await classifyQuery(queryText);
+  // Condense BEFORE classifying. A bare follow-up like "what about
+  // student email?" looks off-topic to the classifier in isolation —
+  // bouncing it would break the conversation. The rewritten form
+  // ("what student email fields does Clever Library expose?") carries
+  // the context the classifier needs to judge correctly.
+  //
+  // On single-turn conversations condenseQuery is a no-op, so the
+  // classifier sees queryText unchanged. Errors fall back to queryText
+  // too, so a rewrite failure never alters classification behavior.
+  const { queryForRetrieval, didRewrite } = await condenseQuery(
+    messages,
+    queryText
+  );
+  if (didRewrite) {
+    console.log(`[query-rewrite] "${queryText}" → "${queryForRetrieval}"`);
+  }
+
+  const category = await classifyQuery(queryForRetrieval);
 
   if (category !== "on_topic") {
     logFeedbackAsync({
       kind: "guardrail",
-      query: queryText,
+      query: queryForRetrieval,
       category,
       ip,
     });
@@ -73,20 +90,6 @@ export async function POST(req: Request) {
       },
     });
     return createUIMessageStreamResponse({ stream });
-  }
-
-  // Condense the conversation into a single self-contained question
-  // before retrieval. On single-turn conversations this is a no-op
-  // (returns queryText unchanged); on multi-turn it makes a cheap LLM
-  // call to expand follow-ups like "what about student email?" into a
-  // full question that captures the context from prior turns. Errors
-  // fall back to queryText, so a rewrite failure never breaks the chat.
-  const { queryForRetrieval, didRewrite } = await condenseQuery(
-    messages,
-    queryText
-  );
-  if (didRewrite) {
-    console.log(`[query-rewrite] "${queryText}" → "${queryForRetrieval}"`);
   }
 
   const chunks = await retrieveRelevantChunks(

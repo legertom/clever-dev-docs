@@ -41,28 +41,33 @@ Developer query
 │ (useChat UI) │◀───│  streamText        │
 └──────────────┘    └─────────┬──────────┘
                               │
-                  1. rate-limit (Upstash) + classify query
-                     (off-topic / harmful queries skip pipeline)
+                  1. rate-limit (Upstash)
                               │
                               ▼
                   2. condense multi-turn conversation into a
                      single self-contained query (skipped for
-                     the first turn)
+                     the first turn). Rewriting BEFORE classify
+                     keeps contextual follow-ups from getting
+                     bounced as off-topic.
                               │
                               ▼
-                  3. embed query (text-embedding-3-small)
+                  3. classify query (off-topic / harmful → canned
+                     response, skip pipeline)
                               │
                               ▼
-                  4. hybrid retrieval: pgvector + Postgres FTS, fused via RRF
+                  4. embed query (text-embedding-3-small)
                               │
                               ▼
-                  5. confidence gate → fallback if top sim < 0.6
+                  5. hybrid retrieval: pgvector + Postgres FTS, fused via RRF
                               │
                               ▼
-                  6. build system prompt with retrieved chunks
+                  6. confidence gate → fallback if top sim < 0.6
                               │
                               ▼
-                  7. stream completion via Vercel AI Gateway
+                  7. build system prompt with retrieved chunks
+                              │
+                              ▼
+                  8. stream completion via Vercel AI Gateway
                      ↓
               [openai/gpt-4o-mini] (default)
               [openai/gpt-5.4]      (eval comparison)

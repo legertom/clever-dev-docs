@@ -159,18 +159,18 @@ export default function AboutPage() {
                 />
 
                 <PipelineNode
-                  icon={<ShieldIcon />}
-                  color="bg-clever-orange"
-                  label="Classify"
-                  description="A lightweight LLM call classifies the query as on-topic, off-topic, harmful, or nonsense. Off-topic and harmful queries get a canned response — the RAG pipeline never runs."
+                  icon={<RewriteIcon />}
+                  color="bg-clever-yellow"
+                  label="Rewrite"
+                  description="In a back-and-forth conversation, a follow-up like “what about student email?” only makes sense in context. A quick LLM call rewrites it into a single self-contained question (“what student email fields does Clever Library expose?”) — so every downstream step sees the real question, not just the latest fragment. Skipped entirely for the first question of a conversation."
                   isBranch
                 />
 
                 <PipelineNode
-                  icon={<RewriteIcon />}
-                  color="bg-clever-yellow"
-                  label="Rewrite"
-                  description="In a back-and-forth conversation, a follow-up like “what about student email?” only makes sense in context. A quick LLM call rewrites it into a single self-contained question (“what student email fields does Clever Library expose?”) before search runs — so retrieval sees the real question, not just the latest fragment. Skipped entirely for the first question of a conversation."
+                  icon={<ShieldIcon />}
+                  color="bg-clever-orange"
+                  label="Classify"
+                  description="A lightweight LLM call classifies the rewritten query as on-topic, off-topic, harmful, or nonsense. Off-topic and harmful queries get a canned response — the rest of the pipeline never runs. Classifying after the rewrite means a contextual follow-up like “what about student email?” gets judged on its expanded meaning, not the bare fragment."
                   isBranch
                 />
 
