@@ -129,9 +129,13 @@ export default function AboutPage() {
 
           {/* Architecture — illustrated pipeline */}
           <section id="how-it-works" className="scroll-mt-6">
-            <h2 className="text-2xl text-clever-navy mb-8 font-[family-name:var(--font-heading)]">
+            <h2 className="text-2xl text-clever-navy mb-3 font-[family-name:var(--font-heading)]">
               How it works
             </h2>
+            <p className="text-clever-black/70 leading-relaxed font-[family-name:var(--font-body)] mb-8">
+              Here&apos;s the runtime path of a single question — from the
+              moment a developer hits send to the cited answer they read back.
+            </p>
             <div className="relative">
               {/* Vertical connector line */}
               <div className="absolute left-6 sm:left-8 top-10 bottom-10 w-px bg-gradient-to-b from-clever-blue via-clever-green to-clever-orange" aria-hidden="true" />
@@ -166,14 +170,14 @@ export default function AboutPage() {
                   icon={<EmbedIcon />}
                   color="bg-clever-blue"
                   label="Embed"
-                  description="The question is converted into a 1,536-dimension vector using text-embedding-3-small via the AI Gateway."
+                  description="The question is converted into a numerical fingerprint — a list of 1,536 numbers — that captures its meaning. Two questions with similar meanings produce similar fingerprints. (Done by OpenAI's text-embedding-3-small via the AI Gateway.)"
                 />
 
                 <PipelineNode
                   icon={<SearchIcon />}
                   color="bg-clever-blue"
                   label="Retrieve"
-                  description="Hybrid retrieval: pgvector cosine similarity (semantic match) and Postgres full-text search (exact-keyword match) run in parallel, then fuse with Reciprocal Rank Fusion. Vector catches paraphrased questions; FTS catches keywords buried in code or JSON examples that embeddings tend to underweight."
+                  description="The system searches the docs two ways at once — by meaning and by exact keywords — then merges the results. The next section, “Why hybrid retrieval?”, explains why both."
                 />
 
                 {/* Branch: confidence gate */}
@@ -181,16 +185,15 @@ export default function AboutPage() {
                   icon={<GateIcon />}
                   color="bg-clever-orange"
                   label="Confidence gate"
-                  description="Below 0.6 similarity, the system prompt switches modes — the model admits uncertainty instead of improvising."
+                  description="If no doc chunk is a strong enough match, two things happen: the system tells the model to admit it doesn't know rather than guess, and the question is logged to the doc-gap queue so the docs team can see what developers are asking that we can't answer well today."
                   isBranch
                 />
 
                 <PipelineNode
                   icon={<RouteIcon />}
                   color="bg-clever-yellow"
-                  label="Audience routing"
-                  description="Chunks are tagged by integration path (Library, Secure Sync, LMS Connect). When answers differ by path, the model presents both variants."
-                  isBranch
+                  label="Prompt assembly"
+                  description="The retrieved chunks and the system instructions are combined into the prompt the model will see. The instructions cover how to cite sources, how to handle questions that span multiple integration paths (see callout below), and — when confidence was low — to admit uncertainty rather than guess."
                 />
 
                 <PipelineNode
@@ -208,6 +211,40 @@ export default function AboutPage() {
                   description="The developer gets a grounded answer with source links back to dev.clever.com."
                   isLast
                 />
+              </div>
+            </div>
+
+            {/* Two key guarantees that fall out of the pipeline above —
+                pulled into callouts so non-experts don't have to extract
+                them from the per-step descriptions. */}
+            <div className="grid sm:grid-cols-2 gap-4 mt-10">
+              <div className="rounded-xl border border-clever-light-blue bg-white p-5">
+                <div className="text-xs uppercase tracking-wider text-clever-green mb-2 font-[family-name:var(--font-body)]">
+                  Why this avoids hallucinations
+                </div>
+                <p className="text-sm text-clever-black/60 leading-relaxed font-[family-name:var(--font-body)]">
+                  The model sees only the retrieved doc chunks as context
+                  — it cannot draw on memorized training-data answers
+                  about Clever. If a fact isn&apos;t in the retrieved
+                  chunks, the model has no source for it. Combined with
+                  the confidence gate, this is what keeps the assistant
+                  honest: it answers from the docs or admits it
+                  doesn&apos;t know.
+                </p>
+              </div>
+              <div className="rounded-xl border border-clever-light-blue bg-white p-5">
+                <div className="text-xs uppercase tracking-wider text-clever-orange mb-2 font-[family-name:var(--font-body)]">
+                  Audience-aware answers
+                </div>
+                <p className="text-sm text-clever-black/60 leading-relaxed font-[family-name:var(--font-body)]">
+                  Every doc chunk is tagged at ingest time with which
+                  integration path it covers — Library, Secure Sync,
+                  LMS Connect. The system prompt instructs the model to
+                  surface the right path: an indie developer asking
+                  about Secure Sync gets a real answer about what it
+                  is, plus a note that the path requires working with a
+                  Clever Application Success Manager.
+                </p>
               </div>
             </div>
           </section>
