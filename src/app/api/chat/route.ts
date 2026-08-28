@@ -13,7 +13,7 @@ import {
   type RetrievalMode,
 } from "@/lib/rag";
 import { classifyQuery, CANNED_RESPONSES } from "@/lib/guardrails";
-import { getRateLimiter } from "@/lib/rate-limit";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { logFeedbackAsync } from "@/lib/feedback";
 import { condenseQuery } from "@/lib/query-rewrite";
 
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
-  const { success } = await getRateLimiter().limit(ip);
+  const { success } = await checkRateLimit(ip);
   if (!success) {
     return new Response("Too many requests. Please try again shortly.", {
       status: 429,
